@@ -29,8 +29,9 @@ class Settings extends Model
     public static function get(?User $user, ?Project $project, $setting, $default = null)
     {
         $ent = static::where('user_id', $user?->id)->where('project_id', $project?->id)->where('setting', $setting)->first();
-        if (is_null($ent))
+        if (is_null($ent)) {
             return $default;
+        }
         return unserialize($ent->data);
     }
 

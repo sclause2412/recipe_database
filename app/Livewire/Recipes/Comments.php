@@ -3,13 +3,7 @@
 namespace App\Livewire\Recipes;
 
 use App\Actions\Livewire\CleanupInput;
-use App\Constants\LevelConstants;
-use App\Constants\RightConstants;
 use App\Models\RecipeComment;
-use App\Models\Right;
-use App\Models\User;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
@@ -60,7 +54,7 @@ class Comments extends Component
 
 
         if (is_null($comment)) {
-            $comment = new RecipeComment;
+            $comment = new RecipeComment();
             $comment->recipe_id = $this->recipe->id;
             $comment->step = $this->recipe->comments->count() + 1;
         }
@@ -91,8 +85,9 @@ class Comments extends Component
     {
         $this->authorize('update', $this->recipe);
 
-        if ($comment->step <= 1)
+        if ($comment->step <= 1) {
             return;
+        }
 
         $row = $this->recipe->comments()->where('step', $comment->step - 1)->first();
         if (!is_null($row)) {
@@ -108,8 +103,9 @@ class Comments extends Component
     {
         $this->authorize('update', $this->recipe);
 
-        if ($comment->step >= $this->recipe->comments->count())
+        if ($comment->step >= $this->recipe->comments->count()) {
             return;
+        }
 
         $row = $this->recipe->comments()->where('step', $comment->step + 1)->first();
         if (!is_null($row)) {

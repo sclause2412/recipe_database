@@ -13,11 +13,11 @@ trait PasswordValidationRules
      */
     protected function passwordRules(): array
     {
-        return ['required', 'string', (new Password)->length(1), 'confirmed'];
+        return ['required', 'string', (new Password())->length(1), 'confirmed'];
     }
 
     protected function passwordRulesNullable(): array
     {
-        return ['nullable', 'string', (new Password)->length(1), 'confirmed'];
+        return ['nullable', 'string', (new Password())->length(1), 'confirmed'];
     }
 }

@@ -82,8 +82,9 @@ class UserController extends Controller
                 $mail->addFile($file->path(), 'idcard.' . $file->guessExtension());
             }
 
-            foreach (User::where('admin', true)->where('active', true)->whereNotNull('email')->get() as $user)
+            foreach (User::where('admin', true)->where('active', true)->whereNotNull('email')->get() as $user) {
                 Mail::to($user->email)->send($mail);
+            }
         }
 
         return back()->with('status', __('Your request was sent.'));
@@ -101,8 +102,9 @@ class UserController extends Controller
         ]);
 
         $user = Auth::user();
-        if (is_null($user))
+        if (is_null($user)) {
             return redirect()->route('welcome');
+        }
 
         $user->policy_accepted = true;
         /** @var \App\Models\User $user */
@@ -125,8 +127,9 @@ class UserController extends Controller
 
         $usernames = User::where('email', $request->email)->pluck('name')->toArray();
 
-        if (count($usernames) > 0)
+        if (count($usernames) > 0) {
             Notification::route('mail', $request->email)->notify(new UserList($usernames));
+        }
 
         return back()->with('status', __('We sent a email with the usernames we know.'));
     }
@@ -162,8 +165,9 @@ class UserController extends Controller
             $mail->addFile($file->path(), 'idcard.' . $file->guessExtension());
         }
 
-        foreach (User::where('admin', true)->where('active', true)->whereNotNull('email')->get() as $user)
+        foreach (User::where('admin', true)->where('active', true)->whereNotNull('email')->get() as $user) {
             Mail::to($user->email)->send($mail);
+        }
 
         return backorhome()->with('status', __('Your request was sent.'));
     }
@@ -171,10 +175,12 @@ class UserController extends Controller
     public function elevate()
     {
         $user = Auth::user();
-        if (is_null($user))
+        if (is_null($user)) {
             return backorhome()->with('message', ['text' => __('You must be logged in.'), 'title' => __('Admin'), 'icon' => 'error']);
-        if (!$user->admin)
+        }
+        if (!$user->admin) {
             return backorhome()->with('message', ['text' => __('You must be an admin.'), 'title' => __('Admin'), 'icon' => 'error']);
+        }
         if ($user->elevated) {
             $user->elevated = true;
             return backorhome();
@@ -186,25 +192,28 @@ class UserController extends Controller
     {
         /** @var \App\Model\User */
         $user = Auth::user();
-        if (is_null($user))
+        if (is_null($user)) {
             return backorhome();
+        }
 
         $user->elevated = true;
 
         $forward = $request->get('forward', url('/'));
 
-        if ($user->elevated)
+        if ($user->elevated) {
             return redirect($forward)->with('message', ['text' => __('You now have high level admin rights.') . '<br />' . __('Use them wisely.'), 'title' => __('Admin'), 'icon' => 'success']);
-        else
+        } else {
             return redirect($forward)->with('message', ['text' => __('There was an error setting your rights. Please try again later.'), 'title' => __('Admin'), 'icon' => 'error']);
+        }
     }
 
     public function elevate_drop()
     {
         /** @var \App\Model\User */
         $user = Auth::user();
-        if (!is_null($user))
+        if (!is_null($user)) {
             $user->elevated = false;
+        }
 
         return redirect(url()->previous());
     }

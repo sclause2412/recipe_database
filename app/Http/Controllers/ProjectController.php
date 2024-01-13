@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 
 class ProjectController extends Controller
 {
-
     public function __construct()
     {
         $this->authorizeResource(Project::class, 'project');

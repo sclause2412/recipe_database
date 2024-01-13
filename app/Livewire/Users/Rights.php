@@ -4,7 +4,6 @@ namespace App\Livewire\Users;
 
 use App\Constants\RightConstants;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
@@ -25,8 +24,9 @@ class Rights extends Component
         $this->admin = $this->user->admin;
         $this->active = $this->user->active;
         $this->single_login = $this->user->single_login;
-        foreach (RightConstants::scope('G')->values() as $right)
+        foreach (RightConstants::scope('G')->values() as $right) {
             $this->rights[$right] = $this->user->get_right($right);
+        }
     }
 
     public function render()
@@ -53,8 +53,9 @@ class Rights extends Component
         $this->user->single_login = $this->single_login;
         $this->user->save();
 
-        foreach (RightConstants::scope('G')->values() as $right)
+        foreach (RightConstants::scope('G')->values() as $right) {
             $this->user->set_right($right, $this->rights[$right]);
+        }
 
         $this->notification()->success(__('Rights saved'), __('Rights are updated'));
 

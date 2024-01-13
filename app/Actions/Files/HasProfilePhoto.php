@@ -5,9 +5,7 @@ namespace App\Actions\Files;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
-
 
 trait HasProfilePhoto
 {
@@ -72,11 +70,13 @@ trait HasProfilePhoto
     public function profilePhotoUrl(): Attribute
     {
         return Attribute::get(function () {
-            if (is_null($this->profile_photo_path))
+            if (is_null($this->profile_photo_path)) {
                 $this->createDefaultProfilePhoto();
+            }
 
-            if (!Storage::exists('public/' . $this->profile_photo_path))
+            if (!Storage::exists('public/' . $this->profile_photo_path)) {
                 $this->createDefaultProfilePhoto();
+            }
 
             return Storage::url($this->profile_photo_path);
         });
@@ -94,8 +94,9 @@ trait HasProfilePhoto
         $destFile = $path . '/' . md5(uniqid()) . '.png';
 
         $initials = substr(replace_umlaut($this->firstname), 0, 1) . substr(replace_umlaut($this->lastname), 0, 1);
-        if ($initials == '')
+        if ($initials == '') {
             $initials = substr(replace_umlaut($this->name), 0, 1);
+        }
 
         $size = config('image.profile.size', 200);
         $h = random_float(0, 360);

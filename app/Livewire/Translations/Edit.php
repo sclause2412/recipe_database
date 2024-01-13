@@ -3,10 +3,7 @@
 namespace App\Livewire\Translations;
 
 use App\Actions\Livewire\CleanupInput;
-use App\Models\Recipe;
 use App\Models\Translation;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
@@ -56,17 +53,20 @@ class Edit extends Component
     {
         $this->authorize('view', Translation::class);
 
-        if (!in_array($this->dir, [null, 'asc', 'desc']))
+        if (!in_array($this->dir, [null, 'asc', 'desc'])) {
             $this->dir = 'asc';
+        }
 
         $entries = Translation::where('locale', $this->locale);
 
         $entries = $entries->search(['group', 'key', 'value'], $this->search);
 
-        if ($this->filter == 'O')
+        if ($this->filter == 'O') {
             $entries = $entries->where('done', false);
-        if ($this->filter == 'D')
+        }
+        if ($this->filter == 'D') {
             $entries = $entries->where('done', true);
+        }
 
 
         switch ($this->sort) {

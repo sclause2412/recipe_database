@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Translation;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\Finder\Finder;
 
 class TranslationController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
@@ -56,10 +53,9 @@ class TranslationController extends Controller
         $translations = Translation::whereNot('locale', $locale)->whereNotIn(
             'key',
             Translation::where('locale', $locale)->pluck('key')->toArray()
-
         )->orderBy('key')->orderBy('done', 'desc')->groupBy(['group', 'key'])->select(['group', 'key'])->get();
         foreach ($translations as $entry) {
-            $trans = new Translation;
+            $trans = new Translation();
             $trans->locale = $locale;
             $trans->group = $entry->group == '-' ? '_json' : $entry->group;
             $trans->key = $entry->key;
@@ -82,8 +78,9 @@ class TranslationController extends Controller
             $ext = $file->getExtension();
             $path = explode(DIRECTORY_SEPARATOR, $file->getRelativePath());
             if (strtolower($ext) == 'json') {
-                if ($path[0] != '') // no support for json files in subdirectories
+                if ($path[0] != '') { // no support for json files in subdirectories
                     continue;
+                }
                 $group = '_json';
                 $locale = $name;
                 $data = json_decode($file->getContents(), true);
@@ -92,8 +89,9 @@ class TranslationController extends Controller
                 }
             }
             if (strtolower($ext) == 'php') {
-                if ($path[0] == '') // no support for php files not in locale directory
+                if ($path[0] == '') { // no support for php files not in locale directory
                     continue;
+                }
                 $locale = $path[0];
                 if (count($path) > 1) {
                     array_shift($path);
@@ -102,7 +100,7 @@ class TranslationController extends Controller
                     $group = $name;
                 }
 
-                $fs = new Filesystem;
+                $fs = new Filesystem();
                 $data = $fs->getRequire($filename);
 
                 $data = Arr::dot($data);
@@ -163,8 +161,9 @@ class TranslationController extends Controller
                                     $group = '_json';
                                     array_push($allkeys, $key);
                                 }
-                                if (!isset($data[$locale][$group][$key]))
+                                if (!isset($data[$locale][$group][$key])) {
                                     $data[$locale][$group][$key] = null;
+                                }
                             }
                         }
                     }
@@ -179,7 +178,7 @@ class TranslationController extends Controller
 
                     $translation = Translation::where('locale', $locale)->where('key', $key)->first();
                     if (is_null($translation)) {
-                        $translation = new Translation;
+                        $translation = new Translation();
                         $translation->locale = $locale;
                         $translation->key = $key;
                     }
@@ -206,7 +205,7 @@ class TranslationController extends Controller
         }
 
         $langPath = realpath(App::langPath());
-        $fs = new Filesystem;
+        $fs = new Filesystem();
         $ds = DIRECTORY_SEPARATOR;
         $lf = PHP_EOL;
 

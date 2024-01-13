@@ -14,27 +14,30 @@ class Constants
 
     public function __construct($constants = null)
     {
-        if (is_array($constants))
+        if (is_array($constants)) {
             $this->constants = $constants;
+        }
     }
 
     public function __call($method, $parameters)
     {
         $fmethod = 'facade' . ucfirst($method) . 'Method';
-        if (method_exists($this, $fmethod))
+        if (method_exists($this, $fmethod)) {
             return $this->$fmethod(...$parameters);
-        else
+        } else {
             throw new Exception('The function ' . $method . ' does not exist in this class');
+        }
     }
 
     public static function __callStatic($method, $parameters)
     {
         $fmethod = 'facade' . ucfirst($method) . 'Method';
-        $class = new static;
-        if (method_exists($class, $fmethod))
+        $class = new static();
+        if (method_exists($class, $fmethod)) {
             return $class->$fmethod(...$parameters);
-        else
+        } else {
             throw new Exception('The function "' . $method . '" does not exist in this class');
+        }
     }
 
     /**
@@ -45,13 +48,15 @@ class Constants
      */
     protected function facadeScopeMethod($scope = null)
     {
-        if ($this->scopefiltered)
+        if ($this->scopefiltered) {
             return;
-        if (is_null($scope))
+        }
+        if (is_null($scope)) {
             $scope = $this->defaultscope;
+        }
 
-        $values = array_filter($this->constants, fn($v) => is_array($v) ? isset($v[$scope]) : true);
-        $values = array_map(fn($v) => is_array($v) ? $v[$scope] : $v, $values);
+        $values = array_filter($this->constants, fn ($v) => is_array($v) ? isset($v[$scope]) : true);
+        $values = array_map(fn ($v) => is_array($v) ? $v[$scope] : $v, $values);
         $this->constants = $values;
         $this->scopefiltered = true;
 
@@ -121,10 +126,11 @@ class Constants
     {
         $this->scope();
 
-        if (!is_array($filter))
+        if (!is_array($filter)) {
             $filter = [$filter];
+        }
 
-        $values = array_filter($this->constants, fn($k) => in_array($k, $filter), ARRAY_FILTER_USE_KEY);
+        $values = array_filter($this->constants, fn ($k) => in_array($k, $filter), ARRAY_FILTER_USE_KEY);
 
         $this->constants = $values;
 
@@ -150,8 +156,9 @@ class Constants
     protected function facadeGetMethod($value)
     {
         $this->scope();
-        if (!isset($this->constants[$value]))
+        if (!isset($this->constants[$value])) {
             return null;
+        }
 
         $pair = new \stdClass();
         $pair->value = $value;
@@ -171,7 +178,7 @@ class Constants
 
         $description = strtolower($description);
 
-        $values = array_filter($this->constants, fn($v) => strpos(strtolower($v), $description) !== false);
+        $values = array_filter($this->constants, fn ($v) => strpos(strtolower($v), $description) !== false);
 
         $this->constants = $values;
 

@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Ingredient;
 use App\Models\Unit;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class MetaSeeder extends Seeder

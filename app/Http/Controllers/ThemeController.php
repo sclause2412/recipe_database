@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Settings;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ThemeController extends Controller
@@ -12,8 +11,9 @@ class ThemeController extends Controller
     {
         $style = from_array(strtolower($style), ['system', 'light', 'dark']);
         session(['theme.style' => $style]);
-        if (!is_null(Auth::user()))
+        if (!is_null(Auth::user())) {
             Settings::set(Auth::user(), null, 'theme.style', $style);
+        }
         return backorhome();
     }
 
@@ -21,8 +21,9 @@ class ThemeController extends Controller
     {
         $font = from_array(strtolower($font), ['sans', 'serif', 'mono'], 'sans');
         session(['theme.font' => $font]);
-        if (!is_null(Auth::user()))
+        if (!is_null(Auth::user())) {
             Settings::set(Auth::user(), null, 'theme.font', $font);
+        }
         return backorhome();
     }
 
@@ -30,14 +31,16 @@ class ThemeController extends Controller
     {
         $locale = from_array($locale, TranslationController::available_locales(), config('app.locale', config('app.fallback_locale', 'en')));
         session(['locale' => $locale]);
-        if (!is_null(Auth::user()))
+        if (!is_null(Auth::user())) {
             Settings::set(Auth::user(), null, 'locale', $locale);
+        }
         return backorhome();
     }
     public static function load_user_settings()
     {
-        if (is_null(Auth::user()))
+        if (is_null(Auth::user())) {
             return;
+        }
 
         $style = Settings::get(Auth::user(), null, 'theme.style');
         $style = from_array(strtolower($style), ['system', 'light', 'dark']);

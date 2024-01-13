@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -12,7 +11,8 @@ use Illuminate\Queue\SerializesModels;
 
 class AdminMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $content = '';
     public $url;
@@ -25,8 +25,9 @@ class AdminMail extends Mailable
     public function __construct($title = null)
     {
         $this->url = url('/');
-        if ($title)
+        if ($title) {
             $this->title = $title;
+        }
     }
 
     public function addFile($path, $name)

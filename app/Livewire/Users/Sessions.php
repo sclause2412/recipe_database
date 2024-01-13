@@ -4,7 +4,6 @@ namespace App\Livewire\Users;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Laravel\Jetstream\Agent;
@@ -52,7 +51,7 @@ class Sessions extends Component
 
     protected function createAgent($session)
     {
-        return tap(new Agent(), fn($agent) => $agent->setUserAgent($session->user_agent));
+        return tap(new Agent(), fn ($agent) => $agent->setUserAgent($session->user_agent));
     }
 
     public function logoutSessions()
@@ -72,17 +71,19 @@ class Sessions extends Component
 
         $this->notification()->success(__('Logged out'), __('All your sessions are closed now.'));
 
-        if ($this->user->current)
+        if ($this->user->current) {
             return redirect()->route('login');
+        }
     }
 
     public function logoutSession($id)
     {
         $this->resetErrorBag();
-        if (!(is_elevated() || $this->user->current))
+        if (!(is_elevated() || $this->user->current)) {
             throw ValidationException::withMessages([
                 '-' => [__('You have no rights to execute this function.')],
             ]);
+        }
 
         if (config('session.driver') !== 'database') {
             return;
@@ -98,7 +99,8 @@ class Sessions extends Component
 
         $this->notification()->success(__('Logged out'), __('The session is closed now.'));
 
-        if (request()->session()->getId() === $id)
+        if (request()->session()->getId() === $id) {
             return redirect()->route('login');
+        }
     }
 }

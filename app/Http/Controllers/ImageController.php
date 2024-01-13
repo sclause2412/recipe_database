@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Faker\Provider\File;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class ImageController extends Controller
 {
-
     private static function check_size($size)
     {
         $validsize = config('image.thumbnail.validsize', [100]);
 
-        if (in_array($size, $validsize))
+        if (in_array($size, $validsize)) {
             return $size;
+        }
 
         $nextsmall = min($validsize);
         foreach ($validsize as $vs) {
-            if ($vs < $size)
+            if ($vs < $size) {
                 $nextsmall = max($nextsmall, $vs);
+            }
         }
 
         return $nextsmall;
@@ -33,10 +32,12 @@ class ImageController extends Controller
 
     private static function create_404($sizex, $sizey)
     {
-        if (is_null($sizex))
+        if (is_null($sizex)) {
             $sizex = $sizey;
-        if (is_null($sizey))
+        }
+        if (is_null($sizey)) {
             $sizey = $sizex;
+        }
         $destPath = 'images/404/';
         $destFile = $destPath . $sizex . '_' . $sizey . '.jpg';
         if (Storage::fileExists($destFile)) {
@@ -101,8 +102,9 @@ class ImageController extends Controller
 
     public static function save($img, $path)
     {
-        if (self::exists($path))
+        if (self::exists($path)) {
             self::delete($path);
+        }
 
         $destFile = 'images/upload/' . $path . '.jpg';
         $destPath = substr($destFile, 0, strrpos($destFile, '/'));
@@ -114,8 +116,9 @@ class ImageController extends Controller
 
     public static function upload($file, $path)
     {
-        if (self::exists($path))
+        if (self::exists($path)) {
             self::delete($path);
+        }
 
         $imgSource = Image::make($file);
         $destFile = 'images/upload/' . $path . '.jpg';
@@ -149,8 +152,9 @@ class ImageController extends Controller
             default:
                 $destFile = 'images/upload/' . $path . '.jpg';
         }
-        if (is_null($destFile))
+        if (is_null($destFile)) {
             return false;
+        }
         return Storage::exists($destFile);
     }
 
@@ -171,8 +175,9 @@ class ImageController extends Controller
 
     public static function rename($oldpath, $newpath)
     {
-        if (!Storage::exists('images/upload/' . $oldpath . '.jpg'))
+        if (!Storage::exists('images/upload/' . $oldpath . '.jpg')) {
             return false;
+        }
 
         self::_move('images/upload/' . $oldpath . '.jpg', 'images/upload/' . $newpath . '.jpg');
         self::_move('images/thumbnail/' . $oldpath, 'images/thumbnail/' . $newpath);
@@ -182,8 +187,9 @@ class ImageController extends Controller
     public static function orig($path)
     {
         $image =  self::get_orig($path);
-        if (is_null($image))
+        if (is_null($image)) {
             abort(404);
+        }
         return self::response($image);
     }
 
@@ -192,8 +198,9 @@ class ImageController extends Controller
         $sizex = self::check_size($sizex);
 
         $image =  self::create_thumb($sizex, null, $path, 'w', $sizex, true);
-        if (is_null($image))
+        if (is_null($image)) {
             abort(404);
+        }
         return self::response($image);
     }
 
@@ -202,8 +209,9 @@ class ImageController extends Controller
         $sizey = self::check_size($sizey);
 
         $image =  self::create_thumb(null, $sizey, $path, 'h', $sizey, true);
-        if (is_null($image))
+        if (is_null($image)) {
             abort(404);
+        }
         return self::response($image);
     }
 
@@ -213,8 +221,9 @@ class ImageController extends Controller
         $sizey = self::check_size($sizey);
 
         $image =  self::create_thumb($sizex, $sizey, $path, 'f', $sizex . '_' . $sizey, true);
-        if (is_null($image))
+        if (is_null($image)) {
             abort(404);
+        }
         return self::response($image);
     }
 
@@ -224,8 +233,9 @@ class ImageController extends Controller
         $sizey = self::check_size($sizey);
 
         $image =  self::create_thumb($sizex, $sizey, $path, 'c', $sizex . '_' . $sizey, true, true);
-        if (is_null($image))
+        if (is_null($image)) {
             abort(404);
+        }
         return self::response($image);
     }
 
@@ -235,8 +245,9 @@ class ImageController extends Controller
         $sizey = self::check_size($sizey);
 
         $image =  self::create_thumb($sizex, $sizey, $path, 's', $sizex . '_' . $sizey, false);
-        if (is_null($image))
+        if (is_null($image)) {
             abort(404);
+        }
         return self::response($image);
     }
 }

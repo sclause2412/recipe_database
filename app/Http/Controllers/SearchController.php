@@ -31,19 +31,19 @@ class SearchController extends Controller
                 switch ($model) {
                     case 'category':
                         $idcol = 'id';
-                        $display = fn($r) => $r->name;
+                        $display = fn ($r) => $r->name;
                         $fields = ['name'];
                         $new = true;
                         break;
                     case 'ingredient':
                         $idcol = 'id';
-                        $display = fn($r) => $r->name;
+                        $display = fn ($r) => $r->name;
                         $fields = ['name'];
                         $new = true;
                         break;
                     case 'unit':
                         $idcol = 'id';
-                        $display = fn($r) => $r->name;
+                        $display = fn ($r) => $r->name;
                         $fields = ['name', 'unit'];
                         $new = false;
                         break;

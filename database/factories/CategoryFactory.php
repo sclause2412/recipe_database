@@ -3,11 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Category;
-use App\Models\Team;
-use App\Models\Ingredient;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use Laravel\Jetstream\Features;
 
 class CategoryFactory extends Factory
 {

@@ -2,17 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Fortify\PasswordValidationRules;
-use App\Mail\AdminMail;
-use App\Models\User;
-use App\Notifications\UserList;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Jetstream\Jetstream;
 
 class GlobalSettingsController extends Controller
 {
@@ -21,8 +11,9 @@ class GlobalSettingsController extends Controller
      */
     public function index()
     {
-        if (!is_elevated())
+        if (!is_elevated()) {
             abort(403);
+        }
         return view('globalsettings');
     }
 
@@ -31,12 +22,14 @@ class GlobalSettingsController extends Controller
 
     private static function load()
     {
-        if (!is_null(static::$config))
+        if (!is_null(static::$config)) {
             return;
+        }
 
         $config = Storage::json('globalconfig.json');
-        if (is_null($config))
+        if (is_null($config)) {
             $config = [];
+        }
         static::$config = $config;
     }
 

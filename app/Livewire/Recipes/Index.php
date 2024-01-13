@@ -3,8 +3,6 @@
 namespace App\Livewire\Recipes;
 
 use App\Models\Recipe;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -36,8 +34,9 @@ class Index extends Component
 
     public function render()
     {
-        if (!in_array($this->dir, [null, 'asc', 'desc']))
+        if (!in_array($this->dir, [null, 'asc', 'desc'])) {
             $this->dir = 'asc';
+        }
 
         if (check_read('recipe')) {
             $recipes = Recipe::query();

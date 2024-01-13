@@ -3,12 +3,8 @@
 namespace App\Livewire\Translations;
 
 use App\Actions\Livewire\CleanupInput;
-use App\Models\Recipe;
 use App\Models\Translation;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 
 class Export extends Component
@@ -56,10 +52,12 @@ class Export extends Component
         ]);
 
         $translations = Translation::where('locale', $this->locale);
-        if ($this->status == 'O')
+        if ($this->status == 'O') {
             $translations = $translations->where('done', false);
-        if ($this->status == 'D')
+        }
+        if ($this->status == 'D') {
             $translations = $translations->where('done', true);
+        }
 
         $translations = $translations->orderBy('group')->orderBy('key')->get();
 
@@ -68,53 +66,60 @@ class Export extends Component
             switch ($this->type) {
                 case 'G':
                     if ($this->key == 'Y') {
-                        if ($this->done == 'Y')
+                        if ($this->done == 'Y') {
                             $data[$entry->group][$entry->key] = ['value' => $entry->value, 'done' => $entry->done];
-                        else {
-                            if ($this->simple == 'Y')
+                        } else {
+                            if ($this->simple == 'Y') {
                                 $data[$entry->group][$entry->key] = $entry->value;
-                            else
+                            } else {
                                 $data[$entry->group][$entry->key] = ['value' => $entry->value];
+                            }
                         }
                     } else {
-                        if ($this->done == 'Y')
+                        if ($this->done == 'Y') {
                             $data[$entry->group][] = ['key' => $entry->key, 'value' => $entry->value, 'done' => $entry->done];
-                        else
+                        } else {
                             $data[$entry->group][] = ['key' => $entry->key, 'value' => $entry->value];
+                        }
                     }
                     break;
                 case 'L':
                     if ($this->key == 'Y') {
-                        if ($this->done == 'Y')
+                        if ($this->done == 'Y') {
                             $data[$entry->key] = ['group' => $entry->group, 'value' => $entry->value, 'done' => $entry->done];
-                        else
+                        } else {
                             $data[$entry->key] = ['group' => $entry->group, 'value' => $entry->value];
+                        }
                     } else {
-                        if ($this->done == 'Y')
+                        if ($this->done == 'Y') {
                             $data[] = ['group' => $entry->group, 'key' => $entry->key, 'value' => $entry->value, 'done' => $entry->done];
-                        else
+                        } else {
                             $data[] = ['group' => $entry->group, 'key' => $entry->key, 'value' => $entry->value];
+                        }
                     }
                     break;
                 case 'D':
-                    if ($entry->group == '_json')
+                    if ($entry->group == '_json') {
                         $key = $entry->key;
-                    else
+                    } else {
                         $key = $entry->group . '.' . $entry->key;
+                    }
                     if ($this->key == 'Y') {
-                        if ($this->done == 'Y')
+                        if ($this->done == 'Y') {
                             $data[$key] = ['value' => $entry->value, 'done' => $entry->done];
-                        else {
-                            if ($this->simple == 'Y')
+                        } else {
+                            if ($this->simple == 'Y') {
                                 $data[$key] = $entry->value;
-                            else
+                            } else {
                                 $data[$key] = ['value' => $entry->value];
+                            }
                         }
                     } else {
-                        if ($this->done == 'Y')
+                        if ($this->done == 'Y') {
                             $data[] = ['key' => $key, 'value' => $entry->value, 'done' => $entry->done];
-                        else
+                        } else {
                             $data[] = ['key' => $key, 'value' => $entry->value];
+                        }
                     }
                     break;
             }

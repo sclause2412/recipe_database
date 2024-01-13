@@ -4,10 +4,6 @@ namespace App\Livewire\Categories;
 
 use App\Actions\Livewire\CleanupInput;
 use App\Models\Category;
-use App\Models\Recipe;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
@@ -29,8 +25,9 @@ class Index extends Component
 
     public function editCategory(Category $category)
     {
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $this->rid = $category->id;
         $this->name = $category->name;
@@ -38,8 +35,9 @@ class Index extends Component
 
     public function saveCategory()
     {
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $this->rid = $this->cleanInput($this->rid);
         $this->name = $this->cleanInput($this->name);
@@ -55,7 +53,7 @@ class Index extends Component
 
 
         if (is_null($category)) {
-            $category = new Category;
+            $category = new Category();
         }
 
         $category->name = $this->name;
@@ -70,8 +68,9 @@ class Index extends Component
 
     public function deleteCategory(Category $category)
     {
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $category->delete();
     }

@@ -122,7 +122,7 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
      */
     protected function getPayload($userid, $token)
     {
-        return ['user_id' => $userid, 'token' => $this->hasher->make($token), 'created_at' => new Carbon];
+        return ['user_id' => $userid, 'token' => $this->hasher->make($token), 'created_at' => new Carbon()];
     }
 
     /**

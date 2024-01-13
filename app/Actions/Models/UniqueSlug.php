@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 
 trait UniqueSlug
 {
-
     private $slug_source = null;
 
     public static function bootUniqueSlug()
@@ -35,8 +34,9 @@ trait UniqueSlug
             } else {
 
                 foreach ($columns as $column) {
-                    if ($column == 'id' || $column == 'slug')
+                    if ($column == 'id' || $column == 'slug') {
                         continue;
+                    }
                     if (strpos($column, 'name') !== false) {
                         $this->slug_source = $column;
                         break;

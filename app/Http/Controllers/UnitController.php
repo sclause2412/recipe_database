@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Unit;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UnitController extends Controller
 {
-
     public function __construct()
     {
         $this->authorizeResource(Unit::class, 'unit');

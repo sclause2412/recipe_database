@@ -2,10 +2,7 @@
 
 namespace App\Livewire\Translations;
 
-use App\Models\Recipe;
 use App\Models\Translation;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 

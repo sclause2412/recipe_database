@@ -7,8 +7,6 @@ use App\Models\RecipeComment;
 use App\Models\RecipeIngredient;
 use App\Models\RecipeStep;
 use App\Overrides\ConfirmsPasswords;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
 class Copydelete extends Component
@@ -47,7 +45,7 @@ class Copydelete extends Component
 
         $source = $this->recipe;
 
-        $recipe = new Recipe;
+        $recipe = new Recipe();
         $recipe->name = __('Copy of ') . $source->name;
         $recipe->category_id = $source->category_id;
         $recipe->cooked = $source->cooked;
@@ -59,7 +57,7 @@ class Copydelete extends Component
         $recipe->save();
 
         foreach ($source->ingredients as $row) {
-            $ent = new RecipeIngredient;
+            $ent = new RecipeIngredient();
             $ent->recipe_id = $recipe->id;
             $ent->ingredient_id = $row->ingredient_id;
             $ent->group = $row->group;
@@ -69,7 +67,7 @@ class Copydelete extends Component
         }
 
         foreach ($source->steps as $row) {
-            $ent = new RecipeStep;
+            $ent = new RecipeStep();
             $ent->recipe_id = $recipe->id;
             $ent->step = $row->step;
             $ent->text = $row->text;
@@ -77,7 +75,7 @@ class Copydelete extends Component
         }
 
         foreach ($source->comments as $row) {
-            $ent = new RecipeComment;
+            $ent = new RecipeComment();
             $ent->recipe_id = $recipe->id;
             $ent->step = $row->step;
             $ent->text = $row->text;

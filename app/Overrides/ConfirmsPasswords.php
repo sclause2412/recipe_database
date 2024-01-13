@@ -10,7 +10,6 @@ use WireUi\Traits\WireUiActions;
 
 trait ConfirmsPasswords
 {
-
     use WireUiActions;
 
     /**
@@ -75,8 +74,9 @@ trait ConfirmsPasswords
 
         $this->stopConfirmingPassword();
 
-        if ($this->success != null)
+        if ($this->success != null) {
             return $this->dispatch('password-confirmed', ['action' => $this->success]);
+        }
     }
 
     /**

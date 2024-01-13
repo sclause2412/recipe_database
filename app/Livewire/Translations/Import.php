@@ -3,14 +3,10 @@
 namespace App\Livewire\Translations;
 
 use App\Actions\Livewire\CleanupInput;
-use App\Models\Recipe;
 use App\Models\Translation;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
 
 class Import extends Component
@@ -51,7 +47,7 @@ class Import extends Component
 
         // Read file
 
-        $fs = new Filesystem;
+        $fs = new Filesystem();
         $file = $this->file->path();
         if (!($fs->exists($file) && $fs->isFile($file))) {
             $this->notification()->error('Error', 'File was not uploaded correctly.');
@@ -149,12 +145,15 @@ class Import extends Component
         foreach ($data as $group => $keys) {
             foreach ($keys as $key => $value) {
                 $done = $value['done'];
-                if ($this->status == 'O')
+                if ($this->status == 'O') {
                     $done = false;
-                if ($this->status == 'D')
+                }
+                if ($this->status == 'D') {
                     $done = true;
-                if (is_null($value['value']))
+                }
+                if (is_null($value['value'])) {
                     $done = false;
+                }
 
                 if (is_null($done)) {
                     $this->notification()->error('Error', 'File does not contain status information. Select other option for status.');
@@ -173,15 +172,17 @@ class Import extends Component
             foreach ($keys as $key => $value) {
                 $entry = Translation::where('locale', $this->locale)->where('group', $group)->where('key', $key)->first();
                 if (is_null($entry)) {
-                    if (!($this->mode == 'I' || $this->mode == 'O'))
+                    if (!($this->mode == 'I' || $this->mode == 'O')) {
                         continue;
-                    $entry = new Translation;
+                    }
+                    $entry = new Translation();
                     $entry->locale = $this->locale;
                     $entry->group = $group;
                     $entry->key = $key;
                 }
-                if (($this->mode == 'I' || $this->mode == 'E') && !is_null($entry->value))
+                if (($this->mode == 'I' || $this->mode == 'E') && !is_null($entry->value)) {
                     continue;
+                }
                 $entry->value = $value['value'];
                 $entry->done = $value['done'];
                 $entry->save();

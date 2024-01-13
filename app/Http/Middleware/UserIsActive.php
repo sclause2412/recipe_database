@@ -18,10 +18,12 @@ class UserIsActive
     {
         $user = auth()?->user();
         if (!is_null($user)) {
-            if (!$user->active)
+            if (!$user->active) {
                 return redirect()->route('locked');
-            if (!$user->policy_accepted && Jetstream::hasTermsAndPrivacyPolicyFeature())
+            }
+            if (!$user->policy_accepted && Jetstream::hasTermsAndPrivacyPolicyFeature()) {
                 return redirect()->route('policy');
+            }
         }
         return $next($request);
     }

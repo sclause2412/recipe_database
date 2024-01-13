@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipe;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
-
     public function __construct()
     {
         $this->authorizeResource(Recipe::class, 'recipe');
@@ -42,8 +39,9 @@ class RecipeController extends Controller
         $ingredient_list = $ingredients->pluck('ingredient.name', 'reference');
 
         $portions = request()->get('portions', $recipe->portions ?? 1);
-        if ($portions < 1)
+        if ($portions < 1) {
             $portions = 1;
+        }
         $temp = request()->get('temp', 'C');
 
         return view('recipes.show', [
@@ -74,8 +72,9 @@ class RecipeController extends Controller
         $ingredient_list = $ingredients->pluck('ingredient.name', 'reference');
 
         $portions = request()->get('portions', $recipe->portions ?? 1);
-        if ($portions < 1)
+        if ($portions < 1) {
             $portions = 1;
+        }
         $temp = request()->get('temp', 'C');
 
         return view('recipes.print', [

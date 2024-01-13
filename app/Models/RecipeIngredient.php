@@ -19,13 +19,15 @@ class RecipeIngredient extends Model
     protected static function booted(): void
     {
         static::creating(function (RecipeIngredient $ingredient) {
-            if (!is_null($ingredient->reference))
+            if (!is_null($ingredient->reference)) {
                 return;
+            }
 
             $reference = str_pad(substr(preg_replace('/[^a-z]/', '', replace_umlaut(strtolower($ingredient->ingredient?->name))), 0, 3), 3, 'x');
             $i = 1;
-            while ($ingredient->recipe?->ingredients()->where('reference', $reference . str_pad($i, 2, '0', STR_PAD_LEFT))->exists())
+            while ($ingredient->recipe?->ingredients()->where('reference', $reference . str_pad($i, 2, '0', STR_PAD_LEFT))->exists()) {
                 $i++;
+            }
             $ingredient->reference = $reference . str_pad($i, 2, '0', STR_PAD_LEFT);
         });
     }

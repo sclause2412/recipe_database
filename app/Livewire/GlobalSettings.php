@@ -4,13 +4,6 @@ namespace App\Livewire;
 
 use App\Actions\Livewire\CleanupInput;
 use App\Http\Controllers\GlobalSettingsController;
-use App\Models\Category;
-use App\Models\Recipe;
-use App\Models\Settings;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 use Closure;
@@ -41,8 +34,9 @@ class GlobalSettings extends Component
 
     public function saveSettings()
     {
-        if (!is_elevated())
+        if (!is_elevated()) {
             abort(403);
+        }
 
         $this->color = $this->cleanInput($this->color);
         $this->font = $this->cleanInput($this->font);
@@ -51,14 +45,16 @@ class GlobalSettings extends Component
         $this->validate([
             'color.*' => [
                 function (string $attribute, mixed $value, Closure $fail) {
-                    if (!($this->color['light'] || $this->color['dark']))
+                    if (!($this->color['light'] || $this->color['dark'])) {
                         $fail(__('At least one color must be selected.'));
+                    }
                 }
             ],
             'font.*' => [
                 function (string $attribute, mixed $value, Closure $fail) {
-                    if (!($this->font['sans'] || $this->font['serif'] || $this->font['mono']))
+                    if (!($this->font['sans'] || $this->font['serif'] || $this->font['mono'])) {
                         $fail(__('At least one font must be selected.'));
+                    }
                 }
             ],
         ]);

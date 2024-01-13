@@ -47,11 +47,13 @@ class AppServiceProvider extends ServiceProvider
             /** @var Builder $this */
             $qb = $this;
 
-            if ($string == '')
+            if ($string == '') {
                 return $qb;
+            }
 
-            if (!is_array($fields))
+            if (!is_array($fields)) {
                 $fields = [$fields];
+            }
 
             $qb->where(function (Builder $query) use ($fields, $string) {
                 foreach ($fields as $field) {
@@ -99,17 +101,18 @@ class AppServiceProvider extends ServiceProvider
             }
 
             if (!Translation::where('key', $key)->where('locale', $locale)->exists()) {
-                $entry = new Translation;
+                $entry = new Translation();
                 $entry->locale = $locale;
                 $entry->group = $group;
                 $entry->key = $key;
                 $entry->save();
             }
 
-            if (session('translate_mode', false))
+            if (session('translate_mode', false)) {
                 return '[[[' . $key . ']]]';
-            else
+            } else {
                 return $key;
+            }
         });
     }
 }

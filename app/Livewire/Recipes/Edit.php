@@ -4,11 +4,6 @@ namespace App\Livewire\Recipes;
 
 use App\Actions\Livewire\CleanupInput;
 use App\Models\Category;
-use App\Models\Recipe;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
@@ -73,7 +68,7 @@ class Edit extends Component
         $category = Category::where('id', $this->category)->first();
 
         if (is_null($category)) {
-            $category = new Category;
+            $category = new Category();
             $category->name = $this->category;
             $category->save();
         }

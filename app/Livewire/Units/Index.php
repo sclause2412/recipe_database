@@ -4,8 +4,6 @@ namespace App\Livewire\Units;
 
 use App\Actions\Livewire\CleanupInput;
 use App\Models\Unit;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
@@ -32,8 +30,9 @@ class Index extends Component
     public function editUnit(Unit $unit)
     {
 
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $this->rid = $unit->id;
         $this->unit = $unit->unit;
@@ -44,8 +43,9 @@ class Index extends Component
     public function saveUnit()
     {
 
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $this->rid = $this->cleanInput($this->rid);
         $this->unit = $this->cleanInput($this->unit);
@@ -65,7 +65,7 @@ class Index extends Component
 
 
         if (is_null($unit)) {
-            $unit = new Unit;
+            $unit = new Unit();
         }
 
         $unit->unit = $this->unit;
@@ -84,8 +84,9 @@ class Index extends Component
 
     public function deleteUnit(Unit $unit)
     {
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $unit->delete();
     }

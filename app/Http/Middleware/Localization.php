@@ -6,7 +6,6 @@ use App\Http\Controllers\TranslationController;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 
 class Localization
 {

@@ -2,12 +2,8 @@
 
 namespace App\Livewire\Users;
 
-use App\Actions\Livewire\ConfirmPassword;
-use App\Models\User;
 use App\Overrides\ConfirmsPasswords;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
@@ -38,10 +34,11 @@ class Delete extends Component
         if ($user->current) {
             $this->ensurePasswordIsConfirmed();
 
-            if (is_last_admin($user))
+            if (is_last_admin($user)) {
                 throw ValidationException::withMessages([
                     '-' => [__('You cannot delete your account as you are the last admin.')],
                 ]);
+            }
 
             if (request()->hasSession()) {
                 request()->session()->invalidate();

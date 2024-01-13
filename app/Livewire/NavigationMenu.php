@@ -2,19 +2,9 @@
 
 namespace App\Livewire;
 
-use App\Actions\Livewire\CleanupInput;
 use App\Http\Controllers\GlobalSettingsController;
 use App\Http\Controllers\TranslationController;
-use App\Models\Category;
-use App\Models\Recipe;
-use App\Models\Settings;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
-use WireUi\Traits\WireUiActions;
-use Closure;
 
 class NavigationMenu extends Component
 {

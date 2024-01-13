@@ -3,10 +3,7 @@
 namespace App\Livewire\Ingredients;
 
 use App\Actions\Livewire\CleanupInput;
-use App\Models\Category;
 use App\Models\Ingredient;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
@@ -30,8 +27,9 @@ class Index extends Component
     public function editIngredient(Ingredient $ingredient)
     {
 
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $this->rid = $ingredient->id;
         $this->name = $ingredient->name;
@@ -40,8 +38,9 @@ class Index extends Component
     public function saveIngredient()
     {
 
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $this->rid = $this->cleanInput($this->rid);
         $this->name = $this->cleanInput($this->name);
@@ -57,7 +56,7 @@ class Index extends Component
 
 
         if (is_null($ingredient)) {
-            $ingredient = new Ingredient;
+            $ingredient = new Ingredient();
         }
 
         $ingredient->name = $this->name;
@@ -73,8 +72,9 @@ class Index extends Component
     public function deleteIngredient(Ingredient $ingredient)
     {
 
-        if (!check_write('recipe'))
+        if (!check_write('recipe')) {
             abort(403);
+        }
 
         $ingredient->delete();
     }

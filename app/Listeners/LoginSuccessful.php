@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Http\Controllers\ThemeController;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

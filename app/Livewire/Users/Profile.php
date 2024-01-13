@@ -6,9 +6,7 @@ use App\Actions\Livewire\CleanupInput;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use WireUi\Traits\WireUiActions;
@@ -84,8 +82,9 @@ class Profile extends Component
 
         $this->notification()->success(__('Profile saved'), __('Your profile was successfully saved'));
 
-        if ($user->current)
+        if ($user->current) {
             $this->dispatch('refresh-navigation-menu');
+        }
 
         if ($sendmail) {
             $user->sendEmailVerificationNotification();
@@ -102,8 +101,9 @@ class Profile extends Component
 
         $this->photo = null;
 
-        if ($this->user->id == Auth::user()?->id)
+        if ($this->user->id == Auth::user()?->id) {
             $this->dispatch('refresh-navigation-menu');
+        }
     }
 
     public function sendEmailVerification()

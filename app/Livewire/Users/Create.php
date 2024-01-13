@@ -6,18 +6,14 @@ use App\Actions\Fortify\PasswordValidationRules;
 use App\Actions\Livewire\CleanupInput;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
 class Create extends Component
 {
-
     use PasswordValidationRules;
     use CleanupInput;
     use AuthorizesRequests;
@@ -54,7 +50,7 @@ class Create extends Component
             'password' => $this->passwordRulesNullable(),
         ]);
 
-        $user = new User;
+        $user = new User();
         $user->name = $this->name;
         $user->email = $this->email;
         $user->password = $this->password ? Hash::make($this->password) : null;

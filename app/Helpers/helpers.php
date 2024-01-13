@@ -19,8 +19,9 @@ if (!function_exists('backorgo')) {
             parse_str($back['query'] ?? null, $back['query']);
             parse_str($here['query'] ?? null, $here['query']);
 
-            if ($back == $here)
+            if ($back == $here) {
                 return new RedirectResponse($url);
+            }
         }
 
         return back();
@@ -37,19 +38,23 @@ if (!function_exists('backorhome')) {
 if (!function_exists('user_icon_color')) {
     function user_icon_color(\App\Models\User $user)
     {
-        if (is_null($user))
+        if (is_null($user)) {
             return 'text-gray-800 dark:text-gray-200';
+        }
 
-        if ($user->admin)
+        if ($user->admin) {
             $class = 'text-red-600 dark:text-red-500';
-        else
+        } else {
             $class = 'text-green-600 dark:text-green-500';
+        }
 
-        if ($user->id == Auth::user()->id)
+        if ($user->id == Auth::user()->id) {
             $class .= ' bg-yellow-300 dark:bg-yellow-900';
+        }
 
-        if (!$user->active || is_null($user->email_verified_at))
+        if (!$user->active || is_null($user->email_verified_at)) {
             $class .= ' opacity-25';
+        }
 
         return $class;
     }
@@ -59,13 +64,16 @@ if (!function_exists('from_array')) {
     function from_array($needle, $haystack, $default = null)
     {
         if (is_array($haystack)) {
-            if (isset($haystack[$needle]))
+            if (isset($haystack[$needle])) {
                 return $haystack[$needle];
-            if (in_array($needle, $haystack))
+            }
+            if (in_array($needle, $haystack)) {
                 return $needle;
+            }
         } else {
-            if ($needle == $haystack)
+            if ($needle == $haystack) {
                 return $needle;
+            }
         }
 
         return $default;
@@ -75,11 +83,13 @@ if (!function_exists('from_array')) {
 if (!function_exists('is_user')) {
     function is_user(User $user = null)
     {
-        if (is_null($user))
+        if (is_null($user)) {
             $user = Auth::user();
+        }
 
-        if (is_null($user))
+        if (is_null($user)) {
             return false;
+        }
 
         return true;
     }
@@ -88,14 +98,17 @@ if (!function_exists('is_user')) {
 if (!function_exists('is_admin')) {
     function is_admin(User $user = null)
     {
-        if (is_null($user))
+        if (is_null($user)) {
             $user = Auth::user();
+        }
 
-        if (is_null($user))
+        if (is_null($user)) {
             return false;
+        }
 
-        if (!$user->admin)
+        if (!$user->admin) {
             return false;
+        }
 
         return true;
     }
@@ -104,17 +117,21 @@ if (!function_exists('is_admin')) {
 if (!function_exists('is_last_admin')) {
     function is_last_admin(User $user = null)
     {
-        if (is_null($user))
+        if (is_null($user)) {
             $user = Auth::user();
+        }
 
-        if (is_null($user))
+        if (is_null($user)) {
             return false;
+        }
 
-        if (!$user->admin)
+        if (!$user->admin) {
             return false;
+        }
 
-        if (User::where('admin', true)->whereNot('id', $user->id)->count() == 0)
+        if (User::where('admin', true)->whereNot('id', $user->id)->count() == 0) {
             return true;
+        }
 
         return false;
     }
@@ -123,17 +140,21 @@ if (!function_exists('is_last_admin')) {
 if (!function_exists('is_elevated')) {
     function is_elevated(User $user = null)
     {
-        if (is_null($user))
+        if (is_null($user)) {
             $user = Auth::user();
+        }
 
-        if (is_null($user))
+        if (is_null($user)) {
             return false;
+        }
 
-        if (!$user->admin)
+        if (!$user->admin) {
             return false;
+        }
 
-        if ($user->elevated)
+        if ($user->elevated) {
             return true;
+        }
 
         return false;
     }
@@ -174,18 +195,24 @@ if (!function_exists('HSVtoRGB')) {
             $iH = $iH[0];
         }
 
-        if ($iH < 0)
-            $iH = 0; // Hue:
-        if ($iH > 360)
-            $iH = 360; //   0-360
-        if ($iS < 0)
-            $iS = 0; // Saturation:
-        if ($iS > 100)
-            $iS = 100; //   0-100
-        if ($iV < 0)
-            $iV = 0; // Lightness:
-        if ($iV > 100)
-            $iV = 100; //   0-100
+        if ($iH < 0) {
+            $iH = 0;
+        } // Hue:
+        if ($iH > 360) {
+            $iH = 360;
+        } //   0-360
+        if ($iS < 0) {
+            $iS = 0;
+        } // Saturation:
+        if ($iS > 100) {
+            $iS = 100;
+        } //   0-100
+        if ($iV < 0) {
+            $iV = 0;
+        } // Lightness:
+        if ($iV > 100) {
+            $iV = 100;
+        } //   0-100
 
         $dS = $iS / 100.0; // Saturation: 0.0-1.0
         $dV = $iV / 100.0; // Lightness:  0.0-1.0
@@ -266,18 +293,24 @@ if (!function_exists('RGBtoHEX')) {
             $iR = $iR[0];
         }
 
-        if ($iR < 0)
+        if ($iR < 0) {
             $iR = 0;
-        if ($iR > 255)
+        }
+        if ($iR > 255) {
             $iR = 255;
-        if ($iG < 0)
+        }
+        if ($iG < 0) {
             $iG = 0;
-        if ($iG > 255)
+        }
+        if ($iG > 255) {
             $iG = 255;
-        if ($iB < 0)
+        }
+        if ($iB < 0) {
             $iB = 0;
-        if ($iB > 255)
+        }
+        if ($iB > 255) {
             $iB = 255;
+        }
 
         $sR = str_pad(dechex($iR), 2, '0', STR_PAD_LEFT);
         $sG = str_pad(dechex($iG), 2, '0', STR_PAD_LEFT);
@@ -317,16 +350,19 @@ if (!function_exists('check_rights')) {
             /** @var $user \App\Models\User */
             $user = Auth::user();
         }
-        if (is_null($user))
+        if (is_null($user)) {
             return false;
+        }
 
-        if (!is_array($rights))
+        if (!is_array($rights)) {
             $rights = [$rights];
+        }
 
-        if ($write)
+        if ($write) {
             return $user->can_write($rights, $project);
-        else
+        } else {
             return $user->can_read($rights, $project);
+        }
     }
 }
 
@@ -351,8 +387,9 @@ if (!function_exists('has_project')) {
             /** @var $user \App\Models\User */
             $user = Auth::user();
         }
-        if (is_null($user))
+        if (is_null($user)) {
             return false;
+        }
 
         return $user->has_project($project);
     }
@@ -363,7 +400,7 @@ if (!function_exists('text_format')) {
     {
         $text = e($text);
         $text = Str::inlineMarkdown($text);
-        $text = preg_replace_callback('/\[([^\|\]]*)\|?(.*)\]/', fn($m) => '<a href="' . $m[1] . '">' . (empty($m[2]) ? $m[1] : $m[2]) . '</a>', $text);
+        $text = preg_replace_callback('/\[([^\|\]]*)\|?(.*)\]/', fn ($m) => '<a href="' . $m[1] . '">' . (empty($m[2]) ? $m[1] : $m[2]) . '</a>', $text);
         $text = str_replace('<a href=', '<a class="inline-flex items-center underline hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 text-gray-600 dark:text-gray-400" href=', $text);
         $text = trim($text);
         $text = nl2br($text);
@@ -477,8 +514,9 @@ if (!function_exists('text_code_format')) {
                 $t1 = $t2;
                 $t2 = $tt;
             }
-            if ($t1 == $t2)
+            if ($t1 == $t2) {
                 $t1 = 0;
+            }
 
             if ($t2 != 0) {
                 if ($t1 == 0) {
@@ -486,12 +524,15 @@ if (!function_exists('text_code_format')) {
                     $m = intval(($t2 / 60) % 60);
                     $s = intval($t2 % 60);
                     $t2 = [];
-                    if ($h)
+                    if ($h) {
                         array_push($t2, $h . ' ' . __('hour'));
-                    if ($m)
+                    }
+                    if ($m) {
                         array_push($t2, $m . ' ' . __('min'));
-                    if ($s)
+                    }
+                    if ($s) {
                         array_push($t2, $s . ' ' . __('sec'));
+                    }
                     array_push($text, implode(' ', $t2));
                 } else {
                     $h1 = intval($t1 / 3600);
@@ -502,45 +543,60 @@ if (!function_exists('text_code_format')) {
                     $s2 = intval($t2 % 60);
                     $p = 0;
                     $h = $h1 != 0 || $h2 != 0;
-                    if ($h)
+                    if ($h) {
                         $p++;
+                    }
                     $m = $m1 != 0 || $m2 != 0;
-                    if ($m)
+                    if ($m) {
                         $p++;
+                    }
                     $s = $s1 != 0 || $s2 != 0;
-                    if ($s)
+                    if ($s) {
                         $p++;
+                    }
 
                     if ($p > 1) {
                         $t1 = [];
-                        if ($h1)
+                        if ($h1) {
                             array_push($t1, $h1 . ' ' . __('hour'));
-                        if ($m1)
+                        }
+                        if ($m1) {
                             array_push($t1, $m1 . ' ' . __('min'));
-                        if ($s1)
+                        }
+                        if ($s1) {
                             array_push($t1, $s1 . ' ' . __('sec'));
+                        }
                         $t2 = [];
-                        if ($h2)
+                        if ($h2) {
                             array_push($t2, $h2 . ' ' . __('hour'));
-                        if ($m2)
+                        }
+                        if ($m2) {
                             array_push($t2, $m2 . ' ' . __('min'));
-                        if ($s2)
+                        }
+                        if ($s2) {
                             array_push($t2, $s2 . ' ' . __('sec'));
+                        }
                     } else {
                         $t1 = [];
-                        if ($h1)
+                        if ($h1) {
                             array_push($t1, $h1);
-                        if ($m1)
+                        }
+                        if ($m1) {
                             array_push($t1, $m1);
-                        if ($s1)
+                        }
+                        if ($s1) {
                             array_push($t1, $s1);
+                        }
                         $t2 = [];
-                        if ($h2)
+                        if ($h2) {
                             array_push($t2, $h2 . ' ' . __('hour'));
-                        if ($m2)
+                        }
+                        if ($m2) {
                             array_push($t2, $m2 . ' ' . __('min'));
-                        if ($s2)
+                        }
+                        if ($s2) {
                             array_push($t2, $s2 . ' ' . __('sec'));
+                        }
                     }
 
                     array_push($text, implode(' ', $t1) . ' - ' . implode(' ', $t2));
@@ -551,8 +607,9 @@ if (!function_exists('text_code_format')) {
                 array_push($text, __('Varoma'));
             } else {
                 $temp = intval($temp);
-                if ($temp != 0)
+                if ($temp != 0) {
                     array_push($text, '[T' . $temp . ']');
+                }
             }
 
             if ($speed != '') {
@@ -560,64 +617,72 @@ if (!function_exists('text_code_format')) {
                 $r = $mspeed[1];
                 $s = $mspeed[2];
 
-                if ($r == '-')
+                if ($r == '-') {
                     array_push($text, ':tm-rev:');
+                }
 
-                if ($s == 'D')
+                if ($s == 'D') {
                     array_push($text, ':tm-dough:');
-                elseif ($s == 'S')
+                } elseif ($s == 'S') {
                     array_push($text, __('speed') . ' :tm-stir:');
-                else {
+                } else {
                     $s = floatval($s);
                     $s = $s * 2;
                     $s = round($s);
                     $s = $s / 2;
-                    if ($s != 0)
+                    if ($s != 0) {
                         array_push($text, __('speed') . ' ' . $s);
+                    }
                 }
 
             }
 
             $text = implode('/', $text);
-            if ($text != '')
+            if ($text != '') {
                 $text = '<span class="thermomix font-bold">' . $text . '</span>';
+            }
             return $text;
         }, $text);
 
 
         $text = preg_replace_callback('/\[T(\d+?)\]/', function ($matches) use ($temp) {
             $t = intval($matches[1]);
-            if ($temp == 'F')
+            if ($temp == 'F') {
                 $t = calculate_round($t * 9 / 5 + 32) . '°F';
-            else
+            } else {
                 $t = calculate_round($t) . '°C';
+            }
 
             return '<span class="temp">' . $t . '</span>';
         }, $text);
 
         $text = preg_replace_callback('/\[(\d+(?:\.\d+)?(!?))\]/', function ($matches) use ($factor) {
             $n = floatval($matches[1]);
-            if ($matches[2] != '!')
+            if ($matches[2] != '!') {
                 $n *= $factor;
+            }
             return '<span class="number">' . calculate_round($n) . '</span>';
         }, $text);
 
         $text = preg_replace_callback('/\[(\d+)\/(\d+)(!?)\]/', function ($matches) use ($factor) {
             $n1 = intval($matches[1]);
             $n2 = intval($matches[2]);
-            if ($matches[3] != '!')
+            if ($matches[3] != '!') {
                 $n1 *= $factor;
-            if ($n2 == 0)
+            }
+            if ($n2 == 0) {
                 return '<span class="number">0</span>';
+            }
             return '<span class="number">' . calculate_fraction($n1 / $n2) . '</span>';
         }, $text);
 
         $text = preg_replace_callback('/\[([a-z]+\d+)\]/', function ($matches) use ($ingredients) {
             $i = $matches[1];
-            if (isset($ingredients[$i]))
+            if (isset($ingredients[$i])) {
                 return '<span class="ingredient transition-colors" x-orig="' . $i . '">' . $ingredients[$i] . '</span>';
-            else
+            } else {
                 return '<span class="ingredient transition-colors" x-orig="' . $i . '"><i>' . $i . '</i></span>';
+            }
         }, $text);
 
 
@@ -656,10 +721,11 @@ if (!function_exists('text_code_format')) {
 if (!function_exists('calculate_number')) {
     function calculate_number($v, $frac = false)
     {
-        if ($frac)
+        if ($frac) {
             return calculate_fraction($v);
-        else
+        } else {
             return calculate_round($v);
+        }
     }
 }
 
@@ -667,8 +733,9 @@ if (!function_exists('calculate_fraction')) {
     function calculate_fraction($v)
     {
 
-        if ($v == 0)
+        if ($v == 0) {
             return '0';
+        }
 
         $h1 = 1;
         $h2 = 0;
@@ -687,8 +754,9 @@ if (!function_exists('calculate_fraction')) {
             $b = $b - $a;
         } while (abs($v - $h1 / $k1) > $v * 0.001); //0.001  = tolerance
 
-        if ($k1 == 1)
+        if ($k1 == 1) {
             return $h1;
+        }
 
         if ($k1 > 100) {
             return calculate_round($v);
@@ -701,8 +769,9 @@ if (!function_exists('calculate_fraction')) {
         }
 
         $ret = '';
-        if ($f1 > 0)
+        if ($f1 > 0) {
             $ret .= $f1 . ' ';
+        }
         $ret .= '<span class="diagonal-fractions">' . $h1 . '/' . $k1 . '</span>';
         return $ret;
 
@@ -713,26 +782,31 @@ if (!function_exists('calculate_round')) {
     function calculate_round($v)
     {
 
-        if ($v == 0)
+        if ($v == 0) {
             $v = 0;
+        }
 
-        if ($v > 10)
+        if ($v > 10) {
             $v = round($v, 0);
+        }
 
-        if ($v > 1)
+        if ($v > 1) {
             $v = round($v, 1);
+        }
 
         $v = round($v, 2);
 
-        if ($v == 0)
+        if ($v == 0) {
             $v = 0.01;
+        }
 
-        if ($v * 100 % 100 > 0)
+        if ($v * 100 % 100 > 0) {
             $nf = number_format($v, 2, ',', '.');
-        elseif ($v * 10 % 10 > 0)
+        } elseif ($v * 10 % 10 > 0) {
             $nf = number_format($v, 1, ',', '.');
-        else
+        } else {
             $nf = number_format($v, 0, ',', '.');
+        }
         return $nf;
 
     }
@@ -744,10 +818,12 @@ if (!function_exists('calculate_time')) {
         $h = intval($t / 60);
         $m = intval($t % 60);
         $t2 = [];
-        if ($h)
+        if ($h) {
             array_push($t2, $h . ' ' . __('hours'));
-        if ($m)
+        }
+        if ($m) {
             array_push($t2, $m . ' ' . __('minutes'));
+        }
         return implode(' ', $t2);
     }
 }
@@ -755,16 +831,18 @@ if (!function_exists('calculate_time')) {
 if (!function_exists('IsSlotEmpty')) {
     function IsSlotEmpty(\Illuminate\View\ComponentSlot $slot): bool
     {
-        if ($slot->isEmpty())
+        if ($slot->isEmpty()) {
             return true;
+        }
         $content = $slot->toHtml();
         // Remove comments
         $content = preg_replace('/<!--.+?-->/', '', $content);
         // Trim data
         $content = trim($content);
 
-        if ($content === '')
+        if ($content === '') {
             return true;
+        }
 
         return false;
     }

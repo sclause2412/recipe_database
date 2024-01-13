@@ -3,17 +3,9 @@
 namespace App\Livewire\Recipes;
 
 use App\Actions\Livewire\CleanupInput;
-use App\Constants\LevelConstants;
-use App\Constants\RightConstants;
 use App\Models\Ingredient;
-use App\Models\RecipeComment;
 use App\Models\RecipeIngredient;
-use App\Models\RecipeStep;
-use App\Models\Right;
 use App\Models\Unit;
-use App\Models\User;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\WireUiActions;
@@ -74,14 +66,14 @@ class Ingredients extends Component
         ]);
 
         if (is_null($ingredient)) {
-            $ingredient = new RecipeIngredient;
+            $ingredient = new RecipeIngredient();
             $ingredient->recipe_id = $this->recipe->id;
         }
 
         $ingredient2 = Ingredient::where('id', $this->ingredient)?->first();
 
         if (is_null($ingredient2)) {
-            $ingredient2 = new Ingredient;
+            $ingredient2 = new Ingredient();
             $ingredient2->name = $this->ingredient;
             $ingredient2->save();
         }
@@ -119,8 +111,9 @@ class Ingredients extends Component
     {
         $this->authorize('update', $this->recipe);
 
-        if ($ingredient->sort <= 1)
+        if ($ingredient->sort <= 1) {
             return;
+        }
 
         $row = $this->recipe->ingredients()->where('sort', $ingredient->sort - 1)->first();
         if (!is_null($row)) {

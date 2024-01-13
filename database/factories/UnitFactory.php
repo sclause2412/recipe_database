@@ -2,11 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Team;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use Laravel\Jetstream\Features;
 
 class UnitFactory extends Factory
 {

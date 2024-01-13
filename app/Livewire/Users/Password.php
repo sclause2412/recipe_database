@@ -4,10 +4,7 @@ namespace App\Livewire\Users;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use WireUi\Traits\WireUiActions;
 
@@ -54,7 +51,8 @@ class Password extends Component
 
         $this->notification()->success(__('Password saved'), __('Your password was successfully updated'));
 
-        if ($this->user->current)
+        if ($this->user->current) {
             return redirect()->route('login');
+        }
     }
 }

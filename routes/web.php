@@ -1,12 +1,8 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\IngredientController;
-use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ThemeController;
@@ -16,7 +12,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GlobalSettingsController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Middleware\UserIsElevated;
-use App\Models\Settings;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
@@ -58,14 +53,14 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
 ])->withoutMiddleware('useractive')->group(
-        function () {
-            Route::get('/locked', [UserController::class, 'locked'])->name('locked');
-            Route::post('/locked', [UserController::class, 'unlock'])->name('locked.store');
+    function () {
+        Route::get('/locked', [UserController::class, 'locked'])->name('locked');
+        Route::post('/locked', [UserController::class, 'unlock'])->name('locked.store');
 
-            Route::get('/policy', [UserController::class, 'policy'])->name('policy');
-            Route::post('/policy', [UserController::class, 'policy_accept'])->name('policy.accept');
-        }
-    );
+        Route::get('/policy', [UserController::class, 'policy'])->name('policy');
+        Route::post('/policy', [UserController::class, 'policy_accept'])->name('policy.accept');
+    }
+);
 
 
 //Logged in

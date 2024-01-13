@@ -34,8 +34,9 @@ class Index extends Component
 
     public function render()
     {
-        if (!in_array($this->dir, [null, 'asc', 'desc']))
+        if (!in_array($this->dir, [null, 'asc', 'desc'])) {
             $this->dir = 'asc';
+        }
 
         $users = User::search(['name', 'email', 'firstname', 'lastname'], $this->search);
 

@@ -7,7 +7,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -55,39 +54,46 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function name(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => strtolower($value)
+            set: fn ($value) => strtolower($value)
         );
     }
 
     public function elevated(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->_iselevated(),
-            set: fn($value) => $value ? $this->_elevate() : $this->_unelevate()
+            get: fn () => $this->_iselevated(),
+            set: fn ($value) => $value ? $this->_elevate() : $this->_unelevate()
         );
     }
 
     private function _iselevated()
     {
-        if (Auth::user() != $this)
+        if (Auth::user() != $this) {
             return false;
-        if (!$this->admin)
+        }
+        if (!$this->admin) {
             return false;
-        if (is_null($this->two_factor_confirmed_at))
+        }
+        if (is_null($this->two_factor_confirmed_at)) {
             return false;
-        if (session('elevatedadmin_' . $this->id) > time())
+        }
+        if (session('elevatedadmin_' . $this->id) > time()) {
             return true;
+        }
         return false;
     }
 
     private function _elevate()
     {
-        if (Auth::user() != $this)
+        if (Auth::user() != $this) {
             return false;
-        if (!$this->admin)
+        }
+        if (!$this->admin) {
             return false;
-        if (is_null($this->two_factor_confirmed_at))
+        }
+        if (is_null($this->two_factor_confirmed_at)) {
             return false;
+        }
         session(['elevatedadmin_' . $this->id => time() + 3600 * 2]);
         return true;
     }
@@ -132,21 +138,25 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $key = $project instanceof Project ? $project->id : ($project ?? 'global');
 
-        if (!isset($userrights[$key]))
+        if (!isset($userrights[$key])) {
             return 0;
+        }
 
-        if (!isset($userrights[$key][$right]))
+        if (!isset($userrights[$key][$right])) {
             return 0;
+        }
 
-        if ($userrights[$key][$right])
+        if ($userrights[$key][$right]) {
             return 2;
+        }
         return 1;
     }
 
     public function set_right(string $right, int $level, Project|string $project = null): void
     {
-        if ($level < 0 || $level > 2)
+        if ($level < 0 || $level > 2) {
             return;
+        }
 
         $current = $this->get_right($right, $project);
 
@@ -158,7 +168,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         if ($current == 0 && $level > 0) {
             //Create
-            $mright = new Right;
+            $mright = new Right();
             $mright->project_id = $project instanceof Project ? $project->id : $project;
             $mright->right = $right;
             $mright->write = $level == 2;
@@ -179,22 +189,26 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function can_read($rights, Project|string $project = null)
     {
-        if (!is_array($rights))
+        if (!is_array($rights)) {
             $rights = [$rights];
+        }
 
-        if ($this->elevated)
+        if ($this->elevated) {
             return true;
+        }
 
         $userrights = $this->_getrights();
 
         $key = $project instanceof Project ? $project->id : ($project ?? 'global');
 
-        if (!isset($userrights[$key]))
+        if (!isset($userrights[$key])) {
             return false;
+        }
 
         foreach ($rights as $right) {
-            if (isset($userrights[$key][$right]))
+            if (isset($userrights[$key][$right])) {
                 return true;
+            }
         }
 
         return false;
@@ -202,46 +216,52 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function can_write($rights, Project|string $project = null)
     {
-        if (!is_array($rights))
+        if (!is_array($rights)) {
             $rights = [$rights];
+        }
 
-        if ($this->elevated)
+        if ($this->elevated) {
             return true;
+        }
 
         $userrights = $this->_getrights();
 
         $key = $project instanceof Project ? $project->id : ($project ?? 'global');
 
-        if (!isset($userrights[$key]))
+        if (!isset($userrights[$key])) {
             return false;
+        }
 
         foreach ($rights as $right) {
-            if (isset($userrights[$key][$right]) && $userrights[$key][$right])
+            if (isset($userrights[$key][$right]) && $userrights[$key][$right]) {
                 return true;
+            }
         }
         return false;
     }
 
     public function has_project(Project|string $project = null)
     {
-        if ($this->elevated)
+        if ($this->elevated) {
             return true;
+        }
 
         $userrights = $this->_getrights();
 
         $key = $project instanceof Project ? $project->id : $project;
         $count = count($userrights) - isset($userrights['global']) ? 1 : 0;
 
-        if (is_null($project))
+        if (is_null($project)) {
             return $count > 0;
-        else
+        } else {
             return isset($userrights[$key]);
+        }
     }
 
     public function current(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->is(Auth::user())
+            get: fn () => $this->is(Auth::user())
         );
     }
 
@@ -250,8 +270,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(
             get: function () {
                 $name = trim($this->firstname . ' ' . $this->lastname);
-                if ($name == '')
+                if ($name == '') {
                     $name = $this->name;
+                }
                 return $name;
             }
         );
@@ -262,10 +283,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(
             get: function () {
                 $name = trim($this->firstname . ' ' . $this->lastname);
-                if ($name == '')
+                if ($name == '') {
                     $name = $this->name;
-                else
+                } else {
                     $name .= ' (' . $this->name . ')';
+                }
                 return $name;
             }
         );

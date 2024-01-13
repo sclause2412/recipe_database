@@ -12,8 +12,9 @@ trait CleanupInput
 
     public function cleanInput($data)
     {
-        if (!is_array($data))
+        if (!is_array($data)) {
             return $this->null($this->trim($data));
+        }
 
         foreach ($data as $key => $value) {
             if (is_array($value)) {
