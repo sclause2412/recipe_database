@@ -1,0 +1,28 @@
+@import 'tailwind.css';
+@import 'file-input';
+
+@import 'https://fonts.bunny.net/css?family=alegreya:400,500,600|chivo-mono:400,500,600|figtree:400,500,600&display=fallback';
+
+[x-cloak] {
+    display: none !important;
+}
+
+@media (max-width: 360px) {
+    .hidden-if-small {
+        display: none !important;
+    }
+}
+
+@layer utilities {
+    button {
+        @apply font-semibold uppercase tracking-wide;
+    }
+
+    .button {
+        @apply font-semibold uppercase tracking-wide;
+    }
+
+    .buttonrow {
+        @apply flex flex-row justify-end gap-4 text-sm;
+    }
+}
