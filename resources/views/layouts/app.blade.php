@@ -7,6 +7,12 @@
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <meta content="{{ csrf_token() }}" name="csrf-token">
 
+    <link href="/favicon.png" rel="icon" type="image/png">
+    <link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/favicon-128.png" rel="icon" sizes="128x128" type="image/png">
+    <link href="/favicon-180.png" rel="icon" sizes="180x180" type="image/png">
+    <link href="/favicon-192.png" rel="icon" sizes="192x192" type="image/png">
+
     <title>{{ config('app.name', 'Laravel') }}{{ $pagetitle ? ' - ' . $pagetitle : '' }}</title>
 
     <!-- Scripts -->
