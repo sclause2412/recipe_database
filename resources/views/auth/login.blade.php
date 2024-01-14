@@ -27,7 +27,7 @@
                         {{ __('Forgot your password?') }}</x-link>
                 @endif
 
-                <x-button class="button" primary type="submit">{{ __('Log in') }}</x-button>
+                <x-button primary type="submit">{{ __('Log in') }}</x-button>
             </div>
 
         </x-form>

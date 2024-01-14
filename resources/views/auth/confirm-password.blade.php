@@ -9,14 +9,16 @@
 
         <x-form action="{{ route('password.confirm') }}">
 
-            <x-form.input class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password"
-                autofocus>{{ __('Password') }}</x-form.input>
+            <div class="">
+                <x-password autocomplete="current-password" autofocus label="{{ __('Password') }}" name="password"
+                    required />
+            </div>
 
-            <x-form.button-row>
-                <x-form.button type="submit">
+            <div class="buttonrow mt-4">
+                <x-button primary type="submit">
                     {{ __('Confirm') }}
-                </x-form.button>
-            </x-form.button-row>
+                </x-button>
+            </div>
         </x-form>
     </x-authentication-card>
 </x-guest-layout>

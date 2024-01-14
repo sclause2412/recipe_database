@@ -31,10 +31,10 @@
             @endif
 
             <div class="buttonrow mt-4">
-                <x-link href="{{ route('logout') }}">
+                <x-link href="{{ route('logout.fast') }}">
                     {{ __('Logout') }}</x-link>
 
-                <x-button class="button" primary type="submit">
+                <x-button primary type="submit">
                     {{ __('Save') }}
                 </x-button>
             </div>

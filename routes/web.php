@@ -44,7 +44,7 @@ Route::post('/forgot-email', [UserController::class, 'emailsend'])
     ->middleware(['guest:' . config('fortify.guard')])
     ->name('username.sendemail');
 
-Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->withoutMiddleware('useractive')->name('logout');
+Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->withoutMiddleware('useractive')->name('logout.fast');
 
 Route::get('/recipes/{recipe}/print', [RecipeController::class, 'print'])->name('recipes.print');
 Route::resource('recipes', RecipeController::class);
@@ -53,14 +53,14 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
 ])->withoutMiddleware('useractive')->group(
-    function () {
-        Route::get('/locked', [UserController::class, 'locked'])->name('locked');
-        Route::post('/locked', [UserController::class, 'unlock'])->name('locked.store');
+        function () {
+            Route::get('/locked', [UserController::class, 'locked'])->name('locked');
+            Route::post('/locked', [UserController::class, 'unlock'])->name('locked.store');
 
-        Route::get('/policy', [UserController::class, 'policy'])->name('policy');
-        Route::post('/policy', [UserController::class, 'policy_accept'])->name('policy.accept');
-    }
-);
+            Route::get('/policy', [UserController::class, 'policy'])->name('policy');
+            Route::post('/policy', [UserController::class, 'policy_accept'])->name('policy.accept');
+        }
+    );
 
 
 //Logged in
@@ -71,7 +71,7 @@ Route::middleware([
 ])->group(function () {
 
     Route::get('/user/elevate', [UserController::class, 'elevate'])->name('user.elevate');
-    Route::post('/user/elevate', [UserController::class, 'elevate_confirm'])->name('user.elevate');
+    Route::post('/user/elevate', [UserController::class, 'elevate_confirm'])->name('user.elevate.confirm');
     Route::get('/user/unelevate', [UserController::class, 'elevate_drop'])->name('user.unelevate');
 
     Route::get('/search/{area}/{model}', [SearchController::class, 'search'])->name('search');

@@ -17,7 +17,7 @@
         @else
             <x-status />
 
-            <x-form action="{{ route('user.elevate') }}">
+            <x-form action="{{ route('user.elevate.confirm') }}">
 
                 <input name="forward" type="hidden" value="{{ $forward }}" />
 

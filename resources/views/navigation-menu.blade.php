@@ -86,7 +86,7 @@
                 </x-nav.dd-link>
 
                 <!-- Authentication -->
-                <x-nav.dd-link route="logout">
+                <x-nav.dd-link route="logout.fast">
                     {{ __('Log Out') }}
                 </x-nav.dd-link>
 

@@ -22,7 +22,7 @@
 
             <div class="buttonrow mt-4">
 
-                <x-link class="text-sm" href="{{ route('logout') }}">
+                <x-link class="text-sm" href="{{ route('logout.fast') }}">
                     {{ __('Logout') }}
                 </x-link>
 

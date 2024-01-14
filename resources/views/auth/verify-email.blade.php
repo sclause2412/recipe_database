@@ -18,10 +18,10 @@
                 <x-link href="{{ route('profile.show') }}">
                     {{ __('Edit Profile') }}</x-link>
 
-                <x-link href="{{ route('logout') }}">
+                <x-link href="{{ route('logout.fast') }}">
                     {{ __('Logout') }}</x-link>
 
-                <x-button class="button" primary type="submit">
+                <x-button primary type="submit">
                     {{ __('Resend Verification Email') }}
                 </x-button>
 

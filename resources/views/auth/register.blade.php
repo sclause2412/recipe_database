@@ -46,7 +46,7 @@
                     {{ __('Already registered?') }}
                 </x-link>
 
-                <x-button class="button" primary type="submit">
+                <x-button primary type="submit">
                     {{ __('Register') }}
                 </x-button>
             </div>

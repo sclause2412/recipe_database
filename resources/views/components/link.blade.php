@@ -38,9 +38,9 @@
 @endphp
 @isset($button)
     @if ($show)
-        <x-button :attributes="$attr" :href="$link" class="button">{!! $slot !!}</x-button>
+        <x-button :attributes="$attr" :href="$link">{!! $slot !!}</x-button>
     @else
-        <x-button :attributes="$attr" class="button">{!! $slot !!}</x-button>
+        <x-button :attributes="$attr">{!! $slot !!}</x-button>
     @endif
 @else
     @if ($show)

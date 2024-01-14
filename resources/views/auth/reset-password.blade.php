@@ -5,23 +5,27 @@
 
         <x-form action="{{ route('password.update') }}">
 
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+            <input name="token" type="hidden" value="{{ $request->route('token') }}">
 
-            <x-form.input class="block mt-1 w-full" type="text" name="name" :value="$request->name" required autofocus
-                autocomplete="username">{{ __('Username') }}</x-form.input>
+            <div class="">
+                <x-input :value="$request->name" autocomplete="username" autofocus label="{{ __('Username') }}" name="name"
+                    required />
+            </div>
 
-            <x-form.input devclass="mt-4" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete="new-password">{{ __('Password') }}</x-form.input>
+            <div class="mt-4">
+                <x-password autocomplete="new-password" label="{{ __('Password') }}" name="password" required />
+            </div>
 
-            <x-form.input class="block mt-1 w-full" type="password" name="password_confirmation" required
-                autocomplete="new-password">{{ __('Confirm Password') }}</x-form.input>
+            <div class="mt-4">
+                <x-password autocomplete="new-password" label="{{ __('Confirm Password') }}"
+                    name="password_confirmation" required />
+            </div>
 
-            <x-form.button-row>
-                <x-form.button type="submit">
+            <div class="buttonrow mt-4">
+                <x-button primary type="submit">
                     {{ __('Reset Password') }}
-                </x-form.button>
-
-            </x-form.button-row>
+                </x-button>
+            </div>
         </x-form>
     </x-authentication-card>
 </x-guest-layout>
