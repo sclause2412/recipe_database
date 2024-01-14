@@ -68,9 +68,11 @@ class TranslationController extends Controller
 
     private function _readfiles(): array
     {
-        $langPath = realpath(App::langPath());
-
         $alldata = [];
+        $langPath = realpath(App::langPath());
+        if ($langPath === false) {
+            return $alldata;
+        }
 
         foreach (Finder::create()->files()->in($langPath) as $file) {
             $filename = $file->getRealPath();
@@ -120,6 +122,8 @@ class TranslationController extends Controller
     {
         $this->authorize('update', Translation::class);
 
+
+        // Step 1: Read from existing translation files
         $data = $this->_readfiles();
 
         $allkeys = [];
@@ -135,9 +139,10 @@ class TranslationController extends Controller
         $allkeys = array_values(array_unique($allkeys));
 
 
+        // Step 2: Read from all project files containing __ translations
         $locale = App::getLocale();
 
-        foreach (Finder::create()->files()->name('*.php')->in(App::basePath() . '/resources') as $file) {
+        foreach (Finder::create()->files()->name('*.php')->contains('/[^\\w]__\\(.+?\\)/')->exclude(['vendor', 'node_modules', 'tests'])->in(App::basePath()) as $file) {
             $content = $file->getContents();
 
             if (preg_match_all('/[^\\w]__\\((.+?)\\)/', $content, $matches)) {
@@ -172,6 +177,26 @@ class TranslationController extends Controller
             }
         }
 
+        // Step 3: Scan vendor files for existing translation files to take over
+
+        $fs = new Filesystem();
+
+        $locales = array_unique(array_merge(array_keys($data), Translation::groupBy('locale')->select('locale')->pluck('locale')->toArray()));
+        foreach ($locales as $loc) {
+            foreach (Finder::create()->files()->name('*.php')->path('lang/' . $loc)->in(App::basePath() . '/vendor') as $file) {
+                $content = Arr::dot($fs->getRequire($file->getRealPath()));
+                $group = $file->getFilenameWithoutExtension();
+                foreach ($content as $key => $value) {
+                    if (is_string($value)) {
+                        if (!isset($data[$loc][$group][$key]) || is_null($data[$loc][$group][$key])) {
+                            $data[$loc][$group][$key] = $value;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Step 4: Write results to database
         foreach ($data as $locale => $groups) {
             foreach ($groups as $group => $keys) {
                 foreach ($keys as $key => $value) {
@@ -205,9 +230,32 @@ class TranslationController extends Controller
         }
 
         $langPath = realpath(App::langPath());
+
         $fs = new Filesystem();
         $ds = DIRECTORY_SEPARATOR;
         $lf = PHP_EOL;
+
+        if ($langPath === false) {
+            $p1 = App::basePath();
+            $p2 = App::langPath();
+
+            if (strlen($p2) > strlen($p1)) {
+                if (substr($p2, 0, strlen($p1)) == $p1) {
+                    $langPath = realpath(App::basePath());
+                    if ($langPath !== false) {
+                        $langPath .= substr($p2, strlen($p1));
+                        $fs->ensureDirectoryExists($langPath);
+                    }
+                }
+            }
+
+            $langPath = realpath(App::langPath());
+
+            if ($langPath === false) {
+                return redirect()->route('translations.index')->with('message', ['title' => __('Error'), 'text' => __('The path for language files was not found'), 'icon' => 'error']);
+            }
+        }
+
 
         foreach ($data as $locale => $groups) {
             foreach ($groups as $group => $keys) {
@@ -249,8 +297,10 @@ class TranslationController extends Controller
 
             $langPath = realpath(App::langPath());
 
-            foreach (Finder::create()->files()->depth(0)->name('*.json')->in($langPath) as $file) {
-                array_push($available_locales, $file->getFilenameWithoutExtension());
+            if ($langPath !== false) {
+                foreach (Finder::create()->files()->depth(0)->name('*.json')->in($langPath) as $file) {
+                    array_push($available_locales, $file->getFilenameWithoutExtension());
+                }
             }
 
             natsort($available_locales);
@@ -259,5 +309,29 @@ class TranslationController extends Controller
 
         return $available_locales;
 
+    }
+
+    public static function add_missing($key, $locale)
+    {
+        if (preg_match('/^([a-z0-9]+)\\.([a-z0-9\.]+)$/', $key, $m2)) {
+            $group = $m2[1];
+            $key = $m2[2];
+        } else {
+            $group = '_json';
+        }
+
+        if (!Translation::where('key', $key)->where('locale', $locale)->exists()) {
+            $entry = new Translation();
+            $entry->locale = $locale;
+            $entry->group = $group;
+            $entry->key = $key;
+            $entry->save();
+        }
+
+        if (session('translate_mode', false)) {
+            return '[[[' . $key . ']]]';
+        } else {
+            return $key;
+        }
     }
 }

@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\Translation;
+use App\Http\Controllers\TranslationController;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\ServiceProvider;
 
@@ -89,30 +88,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Lang::handleMissingKeysUsing(function (string $key, array $replacements, string $locale) {
-            info("Missing translation key [$key] detected.");
-
-            $locale = App::currentLocale();
-
-            if (preg_match('/^([a-z0-9]+)\\.([a-z0-9\.]+)$/', $key, $m2)) {
-                $group = $m2[1];
-                $key = $m2[2];
-            } else {
-                $group = '_json';
-            }
-
-            if (!Translation::where('key', $key)->where('locale', $locale)->exists()) {
-                $entry = new Translation();
-                $entry->locale = $locale;
-                $entry->group = $group;
-                $entry->key = $key;
-                $entry->save();
-            }
-
-            if (session('translate_mode', false)) {
-                return '[[[' . $key . ']]]';
-            } else {
-                return $key;
-            }
+            return TranslationController::add_missing($key, $locale);
         });
     }
 }
