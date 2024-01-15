@@ -24,7 +24,7 @@
                 <x-table.cell>
                     <div class="flex justify-end space-x-2 text-lg">
                         @if (check_write('translate'))
-                            @if (!$entry->done)
+                            @if (!$entry->done && is_null($entry->value))
                                 <x-button icon="fast-forward" positive title="{{ __('Take over') }}"
                                     wire:click="fastEntry('{{ $entry->id }}')" />
                             @endif
