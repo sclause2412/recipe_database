@@ -72,7 +72,7 @@
                             {{ __('Service Unavailable') }}</h1>
 
                         <p class="text-indigo-800 dark:text-indigo-200">
-                            {{ __('Out page is currently in maintenance mode.') }}</p>
+                            {{ __('Our page is currently in maintenance mode.') }}</p>
 
                         <p>
                             {{ __('While you are waiting for the page to return online, you can watch our magnificent programmers doing their work.') }}
