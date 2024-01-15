@@ -7,7 +7,7 @@
 
         <div class="mt-4">
             <x-select :options="[
-                ['name' => __('status.Read from file'), 'id' => 'F'],
+                ['name' => __('status.ReadFromFile'), 'id' => 'F'],
                 ['name' => __('status.Open'), 'id' => 'O'],
                 ['name' => __('status.Done'), 'id' => 'D'],
             ]" label="{{ __('Import status as') }}" option-label="name" option-value="id"
