@@ -256,14 +256,10 @@ class TranslationController extends Controller
             }
         }
 
-        $fs->deleteDirectory($langPath);
-        $fs->ensureDirectoryExists($langPath);
-
-        $langPath = realpath($langPath);
-        if ($langPath === false) {
-            return redirect()->route('translations.index')->with('message', ['title' => __('Error'), 'text' => __('There was an error during writing language files'), 'icon' => 'error']);
+        foreach (Finder::create()->files()->in($langPath) as $file) {
+            dump($file->getRealPath());
+            $fs->delete($file->getRealPath());
         }
-
 
         foreach ($data as $locale => $groups) {
             foreach ($groups as $group => $keys) {
