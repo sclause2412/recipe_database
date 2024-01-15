@@ -223,12 +223,6 @@ class TranslationController extends Controller
     {
         $this->authorize('update', Translation::class);
 
-        $data = $this->_readfiles();
-        $translations = Translation::where('done', true)->whereNot('group', '-')->get();
-        foreach ($translations as $entry) {
-            $data[$entry->locale][$entry->group][$entry->key] = $entry->value ?? '';
-        }
-
         $langPath = realpath(App::langPath());
 
         $fs = new Filesystem();
@@ -258,6 +252,12 @@ class TranslationController extends Controller
 
         foreach (Finder::create()->files()->in($langPath) as $file) {
             $fs->delete($file->getRealPath());
+        }
+
+        $data = [];
+        $translations = Translation::where('done', true)->whereNot('group', '-')->get();
+        foreach ($translations as $entry) {
+            $data[$entry->locale][$entry->group][$entry->key] = $entry->value ?? '';
         }
 
         foreach ($data as $locale => $groups) {
