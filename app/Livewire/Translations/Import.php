@@ -77,7 +77,7 @@ class Import extends Component
                     if ($this->is_assoc($first)) {
                         if (isset($first['value'])) {
                             foreach ($source as $key => $line) {
-                                if (preg_match('/^([a-z0-9]+)\\.([a-z0-9\.]+)$/', $key, $m2)) {
+                                if (preg_match('/^([a-z0-9]+)\\.([A-Za-z0-9\.]+)$/', $key, $m2)) {
                                     $group = $m2[1];
                                     $key = $m2[2];
                                 } else {
@@ -112,7 +112,7 @@ class Import extends Component
                 }
             } else {
                 foreach ($source as $key => $value) {
-                    if (preg_match('/^([a-z0-9]+)\\.([a-z0-9\.]+)$/', $key, $m2)) {
+                    if (preg_match('/^([a-z0-9]+)\\.([A-Za-z0-9\.]+)$/', $key, $m2)) {
                         $group = $m2[1];
                         $key = $m2[2];
                     } else {
@@ -129,7 +129,7 @@ class Import extends Component
             } else {
                 foreach ($source as $line) {
                     $key = $line['key'];
-                    if (preg_match('/^([a-z0-9]+)\\.([a-z0-9\.]+)$/', $key, $m2)) {
+                    if (preg_match('/^([a-z0-9]+)\\.([A-Za-z0-9\.]+)$/', $key, $m2)) {
                         $group = $m2[1];
                         $key = $m2[2];
                     } else {
