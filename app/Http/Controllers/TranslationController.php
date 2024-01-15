@@ -142,7 +142,7 @@ class TranslationController extends Controller
         // Step 2: Read from all project files containing __ translations
         $locale = App::getLocale();
 
-        foreach (Finder::create()->files()->name('*.php')->contains('/[^\\w]__\\(.+?\\)/')->exclude(['vendor', 'node_modules', 'tests'])->in(App::basePath()) as $file) {
+        foreach (Finder::create()->files()->name('*.php')->contains('/[^\\w]__\\(.+?\\)/')->exclude(['vendor', 'node_modules', 'tests', 'storage'])->in(App::basePath()) as $file) {
             $content = $file->getContents();
 
             if (preg_match_all('/[^\\w]__\\((.+?)\\)/', $content, $matches)) {
@@ -254,6 +254,14 @@ class TranslationController extends Controller
             if ($langPath === false) {
                 return redirect()->route('translations.index')->with('message', ['title' => __('Error'), 'text' => __('The path for language files was not found'), 'icon' => 'error']);
             }
+        }
+
+        $fs->deleteDirectory($langPath);
+        $fs->ensureDirectoryExists($langPath);
+
+        $langPath = realpath($langPath);
+        if ($langPath === false) {
+            return redirect()->route('translations.index')->with('message', ['title' => __('Error'), 'text' => __('There was an error during writing language files'), 'icon' => 'error']);
         }
 
 
