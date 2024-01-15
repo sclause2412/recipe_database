@@ -33,7 +33,7 @@
             break;
     }
 
-    $attr = $attributes->merge(['style' => $style]);
+    $attr = $attributes->class(['button'])->merge(['style' => $style]);
 
 @endphp
 @isset($button)

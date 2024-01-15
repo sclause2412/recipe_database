@@ -31,7 +31,7 @@ trait HasProfilePhoto
         $destFile = $path . '/' . md5(uniqid()) . '.png';
 
         $fp = Storage::path('public/' . $destFile);
-        Storage::createDirectory('public/' . $path);
+        Storage::createDirectory('public/' . $path, ['visibility' => 'public']);
         $imgSource->save($fp, 100, 'png');
 
 
@@ -116,7 +116,7 @@ trait HasProfilePhoto
 
 
         $fp = Storage::path('public/' . $destFile);
-        Storage::createDirectory('public/' . $path);
+        Storage::createDirectory('public/' . $path, ['visibility' => 'public']);
         $img->save($fp, 100, 'png');
 
 
