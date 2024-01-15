@@ -156,7 +156,7 @@ class TranslationController extends Controller
                             $key = str_replace('\\' . $quote, $quote, $key);
 
                             if (!in_array($key, $allkeys)) {
-                                if (preg_match('/^([a-z0-9]+)\\.([a-z0-9\.]+)$/', $key, $m2)) {
+                                if (preg_match('/^([a-z0-9]+)\\.([A-Za-z0-9\.]+)$/', $key, $m2)) {
                                     $group = $m2[1];
                                     $key = $m2[2];
                                     if (!in_array($key, $allkeys)) {
@@ -313,7 +313,7 @@ class TranslationController extends Controller
 
     public static function add_missing($key, $locale)
     {
-        if (preg_match('/^([a-z0-9]+)\\.([a-z0-9\.]+)$/', $key, $m2)) {
+        if (preg_match('/^([a-z0-9]+)\\.([A-Za-z0-9\.]+)$/', $key, $m2)) {
             $group = $m2[1];
             $key = $m2[2];
         } else {
