@@ -208,8 +208,10 @@ class TranslationController extends Controller
                         $translation->key = $key;
                     }
                     $translation->group = $group;
-                    $translation->value = $value;
-                    $translation->done = !is_null($value);
+                    if (!is_null($value)) {
+                        $translation->value = $value;
+                        $translation->done = true;
+                    }
                     $translation->save();
 
                 }
