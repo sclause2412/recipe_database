@@ -257,7 +257,6 @@ class TranslationController extends Controller
         }
 
         foreach (Finder::create()->files()->in($langPath) as $file) {
-            dump($file->getRealPath());
             $fs->delete($file->getRealPath());
         }
 
