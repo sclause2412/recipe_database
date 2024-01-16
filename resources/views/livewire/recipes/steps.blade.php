@@ -10,12 +10,12 @@
                 <x-table.cell>
                     <div class="flex justify-end space-x-2 text-lg">
                         <x-button :disabled="$loop->first" icon="arrow-up" secondary title="{{ __('Up') }}"
-                            wire:click="stepUp({{ $step->id }})" />
+                            wire:click="stepUp('{{ $step->id }}')" />
                         <x-button :disabled="$loop->last" icon="arrow-down" secondary title="{{ __('Up') }}"
-                            wire:click="stepDown({{ $step->id }})" />
+                            wire:click="stepDown('{{ $step->id }}')" />
                         <x-button icon="pencil" primary title="{{ __('Edit') }}"
-                            wire:click="editStep({{ $step->id }})" />
-                        <x-deletebutton icon wire:click="deleteStep({{ $step->id }})" />
+                            wire:click="editStep('{{ $step->id }}')" />
+                        <x-deletebutton icon wire:click="deleteStep('{{ $step->id }}')" />
                     </div>
                 </x-table.cell>
             </x-table.row>

@@ -18,12 +18,12 @@
                 <x-table.cell>
                     <div class="flex justify-end space-x-2 text-lg">
                         <x-button :disabled="$loop->first" icon="arrow-up" secondary title="{{ __('Up') }}"
-                            wire:click="stepUp({{ $ingredient->id }})" />
+                            wire:click="stepUp('{{ $ingredient->id }}')" />
                         <x-button :disabled="$loop->last" icon="arrow-down" secondary title="{{ __('Up') }}"
-                            wire:click="stepDown({{ $ingredient->id }})" />
+                            wire:click="stepDown('{{ $ingredient->id }}')" />
                         <x-button icon="pencil" primary title="{{ __('Edit') }}"
-                            wire:click="editIngredient({{ $ingredient->id }})" />
-                        <x-deletebutton icon wire:click="deleteIngredient({{ $ingredient->id }})" />
+                            wire:click="editIngredient('{{ $ingredient->id }}')" />
+                        <x-deletebutton icon wire:click="deleteIngredient('{{ $ingredient->id }}')" />
                     </div>
                 </x-table.cell>
             </x-table.row>
