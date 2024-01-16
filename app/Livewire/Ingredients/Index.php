@@ -17,10 +17,57 @@ class Index extends Component
     public $rid = null;
     public $name = null;
 
+    public $search = '';
+    public $sort;
+    public $dir;
+
+    protected $queryString = ['sort', 'dir'];
+
+    public function sortBy($field)
+    {
+        $field = strtolower($field);
+        if ($field === $this->sort) {
+            $this->dir = $this->dir == 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->dir = 'asc';
+        }
+        $this->sort = in_array($field, ['name', 'recipes']) ? $field : 'name';
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
+        if (!in_array($this->dir, [null, 'asc', 'desc'])) {
+            $this->dir = 'asc';
+        }
 
-        $ingredients = Ingredient::orderBy('name');
+        $ingredients = Ingredient::query();
+
+        $ingredients = $ingredients->search(['name'], $this->search);
+
+        switch ($this->sort) {
+            case null:
+                break;
+            case 'recipes':
+                break;
+            default:
+                $ingredients = $ingredients->orderBy($this->sort, $this->dir);
+                break;
+        }
+
+        $ingredients = $ingredients->orderBy('name', 'asc');
+
+        if ($this->sort == 'recipes') {
+            if ($this->dir == 'asc')
+                $ingredients = $ingredients->get()->sortBy('recipes');
+            else
+                $ingredients = $ingredients->get()->sortByDesc('recipes');
+        }
+
         return view('livewire.ingredients.index', ['ingredients' => $ingredients->paginate(10, ['*'], 'page')]);
     }
 

@@ -19,11 +19,60 @@ class Index extends Component
     public $name = null;
     public $fraction = false;
 
+    public $search = '';
+    public $sort;
+    public $dir;
+
+    protected $queryString = ['sort', 'dir'];
+
+    public function sortBy($field)
+    {
+        $field = strtolower($field);
+        if ($field === $this->sort) {
+            $this->dir = $this->dir == 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->dir = 'asc';
+        }
+        $this->sort = in_array($field, ['name', 'unit', 'fraction', 'recipes']) ? $field : 'name';
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
+        if (!in_array($this->dir, [null, 'asc', 'desc'])) {
+            $this->dir = 'asc';
+        }
 
+        $units = Unit::query();
 
-        $units = Unit::orderBy('name');
+        $units = $units->search(['name', 'unit'], $this->search);
+
+        switch ($this->sort) {
+            case null:
+                break;
+            case 'fraction':
+                $units = $units->orderBy($this->sort, $this->dir == 'asc' ? 'desc' : 'asc');
+                break;
+            case 'recipes':
+                break;
+            default:
+                $units = $units->orderBy($this->sort, $this->dir);
+                break;
+        }
+
+        $units = $units->orderBy('name', 'asc');
+
+        if ($this->sort == 'recipes') {
+            if ($this->dir == 'asc')
+                $units = $units->get()->sortBy('recipes');
+            else
+                $units = $units->get()->sortByDesc('recipes');
+        }
+
         return view('livewire.units.index', ['units' => $units->paginate(10, ['*'], 'page')]);
     }
 

@@ -17,9 +17,57 @@ class Index extends Component
     public $rid = null;
     public $name = null;
 
+    public $search = '';
+    public $sort;
+    public $dir;
+
+    protected $queryString = ['sort', 'dir'];
+
+    public function sortBy($field)
+    {
+        $field = strtolower($field);
+        if ($field === $this->sort) {
+            $this->dir = $this->dir == 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->dir = 'asc';
+        }
+        $this->sort = in_array($field, ['name', 'recipes']) ? $field : 'name';
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
-        $categories = Category::orderBy('name');
+        if (!in_array($this->dir, [null, 'asc', 'desc'])) {
+            $this->dir = 'asc';
+        }
+
+        $categories = Category::query();
+
+        $categories = $categories->search(['name'], $this->search);
+
+        switch ($this->sort) {
+            case null:
+                break;
+            case 'recipes':
+                break;
+            default:
+                $categories = $categories->orderBy($this->sort, $this->dir);
+                break;
+        }
+
+        $categories = $categories->orderBy('name', 'asc');
+
+        if ($this->sort == 'recipes') {
+            if ($this->dir == 'asc')
+                $categories = $categories->get()->sortBy('recipes');
+            else
+                $categories = $categories->get()->sortByDesc('recipes');
+        }
+
         return view('livewire.categories.index', ['categories' => $categories->paginate(10, ['*'], 'page')]);
     }
 

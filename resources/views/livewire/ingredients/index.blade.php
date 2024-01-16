@@ -1,8 +1,11 @@
 <div class="space-y-2">
+
+    <x-input placeholder="{{ __('Search...') }}" wire:model.live="search" />
+
     <x-table>
         <x-slot name="header">
-            <x-table.head>{{ __('Name') }}</x-table.head>
-            <x-table.head>{{ __('Recipes') }}</x-table.head>
+            <x-table.head :direction="$sort === 'name' ? $dir : null" sortable wire:click="sortBy('name')">{{ __('Name') }}</x-table.head>
+            <x-table.head :direction="$sort === 'recipes' ? $dir : null" sortable wire:click="sortBy('recipes')">{{ __('Recipes') }}</x-table.head>
             <x-table.head />
         </x-slot>
         @forelse ($ingredients as $ingredient)
