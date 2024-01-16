@@ -18,7 +18,7 @@ class Import extends Component
     public $locale = null;
     public $file;
     public $status = 'D';
-    public $mode = 'I';
+    public $mode = 'E';
 
 
     public function mount($locale)

@@ -18,7 +18,7 @@
                 {{ __('Ingredients') }}
             </x-nav.dd-link>
             <x-nav.dd-link :show="check_read('translate')" route="translations.index">
-                Translations
+                {{ __('Translations') }}
             </x-nav.dd-link>
         </x-nav.dropdown>
 

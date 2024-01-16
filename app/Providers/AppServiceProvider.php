@@ -50,19 +50,34 @@ class AppServiceProvider extends ServiceProvider
                 return $qb;
             }
 
+            $string = strtolower($string);
+
             if (!is_array($fields)) {
                 $fields = [$fields];
             }
 
-            $qb->where(function (Builder $query) use ($fields, $string) {
+            $columns = $this->getConnection()->getSchemaBuilder()->getcolumns($this->getModel()->getTable());
+            $columns = array_reduce($columns, function ($result, $item) {
+                $coll = strtolower($item['collation']);
+                $result[$item['name']] = substr($coll, -3) == '_cs' || substr($coll, -4) == '_bin';
+                return $result;
+            }, []);
+
+            $qb->where(function (Builder $query) use ($fields, $string, $columns) {
                 foreach ($fields as $field) {
                     $fa = explode('.', $field);
                     if (count($fa) == 1) {
-                        $query->orWhere($fa[0], 'like', '%' . $string . '%');
+                        if ($columns[$fa[0]] ?? false)
+                            $query->orWhereRaw('LOWER(`' . $fa[0] . '`) like ?', ['%' . $string . '%']);
+                        else
+                            $query->orWhere($fa[0], 'like', '%' . $string . '%');
                     }
                     if (count($fa) == 2) {
-                        $query->orWhereHas($fa[0], function (Builder $query) use ($fa, $string) {
-                            $query->where($fa[1], 'like', '%' . $string . '%');
+                        $query->orWhereHas($fa[0], function (Builder $query) use ($fa, $string, $columns) {
+                            if ($columns[$fa[0]] ?? false)
+                                $query->orWhereRaw('LOWER(`' . $fa[1] . '`) like ?', ['%' . $string . '%']);
+                            else
+                                $query->where($fa[1], 'like', '%' . $string . '%');
                         });
                     }
                 }

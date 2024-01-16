@@ -13,7 +13,7 @@
     <link href="/favicon-180.png" rel="icon" sizes="180x180" type="image/png">
     <link href="/favicon-192.png" rel="icon" sizes="192x192" type="image/png">
 
-    <title>{{ config('app.name', 'Laravel') }}{{ $pagetitle ? ' - ' . $pagetitle : '' }}</title>
+    <title>{{ __(config('app.name', 'Laravel')) }}{{ $pagetitle ? ' - ' . $pagetitle : '' }}</title>
 
     <!-- Scripts -->
     @wireUiScripts
