@@ -20,7 +20,8 @@ class UserSeeder extends Seeder
                 'email' => 'admin@dev.lo',
                 'firstname' => 'Admin',
                 'lastname' => 'Admin',
-                'admin' => true
+                'admin' => true,
+                'two_factor_confirmed_at' => now(),
             ]);
         }
         User::factory(10)->create();
