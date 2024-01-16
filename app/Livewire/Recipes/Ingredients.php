@@ -74,7 +74,12 @@ class Ingredients extends Component
 
         if (is_null($ingredient2)) {
             $ingredient2 = new Ingredient();
-            $ingredient2->name = $this->ingredient;
+            if (preg_match('/^(.+) \((.+)\)$/', $this->ingredient, $matches)) {
+                $ingredient2->name = $matches[1];
+                $ingredient2->info = $matches[2];
+            } else {
+                $ingredient2->name = $this->ingredient;
+            }
             $ingredient2->save();
         }
 

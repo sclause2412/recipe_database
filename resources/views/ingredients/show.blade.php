@@ -17,6 +17,10 @@
                 <x-slot name="term">{{ __('Name') }}</x-slot>
                 {{ $ingredient->name }}
             </x-list.item>
+            <x-list.item>
+                <x-slot name="term">{{ __('Information') }}</x-slot>
+                {{ $ingredient->info }}
+            </x-list.item>
         </x-list>
     </x-page-card>
 

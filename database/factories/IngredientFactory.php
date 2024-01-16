@@ -23,6 +23,7 @@ class IngredientFactory extends Factory
     {
         return [
             'name' => ucfirst($this->faker->word()),
+            'info' => rand(0, 10) == 0 ? ucfirst($this->faker->word()) : null,
         ];
     }
 }

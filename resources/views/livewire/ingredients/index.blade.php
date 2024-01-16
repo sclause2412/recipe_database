@@ -5,12 +5,14 @@
     <x-table>
         <x-slot name="header">
             <x-table.head :direction="$sort === 'name' ? $dir : null" sortable wire:click="sortBy('name')">{{ __('Name') }}</x-table.head>
+            <x-table.head :direction="$sort === 'info' ? $dir : null" sortable wire:click="sortBy('info')">{{ __('Information') }}</x-table.head>
             <x-table.head :direction="$sort === 'recipes' ? $dir : null" sortable wire:click="sortBy('recipes')">{{ __('Recipes') }}</x-table.head>
             <x-table.head />
         </x-slot>
         @forelse ($ingredients as $ingredient)
             <x-table.row wire:loading.class.delay="opacity-50">
                 <x-table.cell>{{ $ingredient->name }}</x-table.cell>
+                <x-table.cell>{{ $ingredient->info }}</x-table.cell>
                 <x-table.cell>{{ $ingredient->recipes->count() }}</x-table.cell>
                 <x-table.cell>
                     <div class="flex justify-end space-x-2 text-lg">
@@ -27,7 +29,7 @@
             </x-table.row>
         @empty
             <x-table.row wire:loading.class.delay="opacity-50">
-                <x-table.cell colspan="3">
+                <x-table.cell colspan="4">
                     <div class="py-10 text-center text-gray-500">{{ __('This table is empty...') }}</div>
                 </x-table.cell>
             </x-table.row>
@@ -45,6 +47,10 @@
 
             <div class="">
                 <x-input label="{{ __('Name') }}" required wire:model="name" />
+            </div>
+
+            <div class="mt-4">
+                <x-input label="{{ __('Information') }}" required wire:model="info" />
             </div>
 
             <div class="buttonrow mt-4">

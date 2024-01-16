@@ -37,7 +37,7 @@ class SearchController extends Controller
                         break;
                     case 'ingredient':
                         $idcol = 'id';
-                        $display = fn ($r) => $r->name;
+                        $display = fn ($r) => $r->name . (is_null($r->info) ? '' : ' (' . $r->info . ')');
                         $fields = ['name'];
                         $new = true;
                         break;

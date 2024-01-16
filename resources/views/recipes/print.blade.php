@@ -33,7 +33,7 @@
                                     : calculate_number($ingredient->amount * $factor, $ingredient->unit?->fraction ?? false) !!} </td>
                                 <td class="pb-1 pr-4 align-top">{{ $ingredient->unit?->unit }}</td>
                                 <td class="pb-1 align-top"><span class="ingredient transition-colors"
-                                        x-orig="{{ $ingredient->reference }}">{{ $ingredient->ingredient?->name }}</span>
+                                        x-orig="{{ $ingredient->reference }}">{{ $ingredient->ingredient?->name }}{{ is_null($ingredient->ingredient?->info) ? '' : ' (' . $ingredient->ingredient?->info . ')' }}</span>
                                 </td>
                             </tr>
                         @endforeach
