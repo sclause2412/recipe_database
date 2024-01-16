@@ -11,6 +11,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GlobalSettingsController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Middleware\RegistrationIsAllowed;
 use App\Http\Middleware\UserIsElevated;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -124,11 +125,10 @@ Route::get('/image/f/{sizex}/{sizey}/{path}', [ImageController::class, 'fit'])->
 Route::get('/image/c/{sizex}/{sizey}/{path}', [ImageController::class, 'fill'])->where(['sizex' => '[1-9][0-9]{0,3}', 'sizey' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
 Route::get('/image/s/{sizex}/{sizey}/{path}', [ImageController::class, 'stretch'])->where(['sizex' => '[1-9][0-9]{0,3}', 'sizey' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
 
-if (GlobalSettingsController::get('register', true)) {
-    Route::get(RoutePath::for('register', '/register'), [RegisteredUserController::class, 'create'])
-        ->middleware(['guest:' . config('fortify.guard')])
-        ->name('register');
-
-    Route::post(RoutePath::for('register', '/register'), [RegisteredUserController::class, 'store'])
-        ->middleware(['guest:' . config('fortify.guard')]);
-}
+Route::middleware([
+    'guest:' . config('fortify.guard'),
+    RegistrationIsAllowed::class,
+])->group(function () {
+    Route::get(RoutePath::for('register', '/register'), [RegisteredUserController::class, 'create'])->name('register');
+    Route::post(RoutePath::for('register', '/register'), [RegisteredUserController::class, 'store']);
+});
