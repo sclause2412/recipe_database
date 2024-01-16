@@ -36,7 +36,7 @@
         </div>
 
         <div class="buttonrow mt-4">
-            <x-button primary spinner type="submit">
+            <x-button primary type="submit">
                 {{ __('Export') }}
             </x-button>
         </div>

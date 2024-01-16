@@ -33,7 +33,7 @@
                     {{ __('Cancel') }}
                 </x-button>
 
-                <x-button negative spinner wire:click="confirmPassword">
+                <x-button negative wire:click="confirmPassword">
                     {{ __('Confirm') }}
                 </x-button>
             </div>
