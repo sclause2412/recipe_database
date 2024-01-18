@@ -60,10 +60,13 @@
                                 </tr>
                             @endif
                             <tr>
-                                <td class="pb-1 pr-1 text-right align-top"> {!! is_null($ingredient->amount)
-                                    ? ''
-                                    : calculate_number($ingredient->amount * $factor, $ingredient->unit?->fraction ?? false) !!} </td>
-                                <td class="pb-1 pr-4 align-top">{{ $ingredient->unit?->unit }}</td>
+                                @if (is_null($ingredient->amount))
+                                    <td class="pb-1 pr-4 align-top" colspan="2">
+                                        {{ $ingredient->unit?->unit }}</td>
+                                @else
+                                    <td class="pb-1 pr-1 text-right align-top"> {!! calculate_number($ingredient->amount * $factor, $ingredient->unit?->fraction ?? false) !!} </td>
+                                    <td class="pb-1 pr-4 align-top">{{ $ingredient->unit?->unit }}</td>
+                                @endif
                                 <td class="pb-1 align-top"><span class="ingredient transition-colors"
                                         x-orig="{{ $ingredient->reference }}">{{ $ingredient->ingredient?->name }}{{ is_null($ingredient->ingredient?->info) ? '' : ' (' . $ingredient->ingredient?->info . ')' }}</span>
                                 </td>
