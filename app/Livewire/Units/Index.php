@@ -67,10 +67,11 @@ class Index extends Component
         $units = $units->orderBy('name', 'asc');
 
         if ($this->sort == 'recipes') {
-            if ($this->dir == 'asc')
+            if ($this->dir == 'asc') {
                 $units = $units->get()->sortBy('recipes');
-            else
+            } else {
                 $units = $units->get()->sortByDesc('recipes');
+            }
         }
 
         return view('livewire.units.index', ['units' => $units->paginate(10, ['*'], 'page')]);

@@ -62,10 +62,11 @@ class Index extends Component
         $ingredients = $ingredients->orderBy('name', 'asc');
 
         if ($this->sort == 'recipes') {
-            if ($this->dir == 'asc')
+            if ($this->dir == 'asc') {
                 $ingredients = $ingredients->get()->sortBy('recipes');
-            else
+            } else {
                 $ingredients = $ingredients->get()->sortByDesc('recipes');
+            }
         }
 
         return view('livewire.ingredients.index', ['ingredients' => $ingredients->paginate(10, ['*'], 'page')]);

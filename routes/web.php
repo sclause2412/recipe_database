@@ -54,14 +54,14 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
 ])->withoutMiddleware('useractive')->group(
-        function () {
-            Route::get('/locked', [UserController::class, 'locked'])->name('locked');
-            Route::post('/locked', [UserController::class, 'unlock'])->name('locked.store');
+    function () {
+        Route::get('/locked', [UserController::class, 'locked'])->name('locked');
+        Route::post('/locked', [UserController::class, 'unlock'])->name('locked.store');
 
-            Route::get('/policy', [UserController::class, 'policy'])->name('policy');
-            Route::post('/policy', [UserController::class, 'policy_accept'])->name('policy.accept');
-        }
-    );
+        Route::get('/policy', [UserController::class, 'policy'])->name('policy');
+        Route::post('/policy', [UserController::class, 'policy_accept'])->name('policy.accept');
+    }
+);
 
 
 //Logged in

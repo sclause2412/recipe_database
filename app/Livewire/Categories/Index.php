@@ -62,10 +62,11 @@ class Index extends Component
         $categories = $categories->orderBy('name', 'asc');
 
         if ($this->sort == 'recipes') {
-            if ($this->dir == 'asc')
+            if ($this->dir == 'asc') {
                 $categories = $categories->get()->sortBy('recipes');
-            else
+            } else {
                 $categories = $categories->get()->sortByDesc('recipes');
+            }
         }
 
         return view('livewire.categories.index', ['categories' => $categories->paginate(10, ['*'], 'page')]);

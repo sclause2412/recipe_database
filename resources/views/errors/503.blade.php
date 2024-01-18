@@ -1,5 +1,6 @@
 @php
-    app()->setLocale(session('locale', request()->getPreferredLanguage(\App\Http\Controllers\TranslationController::available_locales())));
+    use App\Http\Controllers\TranslationController;
+    app()->setLocale(session('locale', request()->getPreferredLanguage(TranslationController::available_locales())));
 @endphp
 <!DOCTYPE html>
 <html class="bg-gray-100 dark:bg-gray-900" lang="{{ str_replace('_', '-', app()->getLocale()) }}">

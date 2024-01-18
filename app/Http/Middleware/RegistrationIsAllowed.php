@@ -16,8 +16,9 @@ class RegistrationIsAllowed
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!GlobalSettingsController::get('register', true))
+        if (!GlobalSettingsController::get('register', true)) {
             abort(403);
+        }
 
         return $next($request);
     }

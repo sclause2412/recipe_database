@@ -400,7 +400,7 @@ if (!function_exists('text_format')) {
     {
         $text = e($text);
         $text = Str::inlineMarkdown($text);
-        $text = preg_replace_callback('/\[([^\|\]]*)\|?(.*)\]/', fn($m) => '<a href="' . $m[1] . '">' . (empty($m[2]) ? $m[1] : $m[2]) . '</a>', $text);
+        $text = preg_replace_callback('/\[([^\|\]]*)\|?(.*)\]/', fn ($m) => '<a href="' . $m[1] . '">' . (empty($m[2]) ? $m[1] : $m[2]) . '</a>', $text);
         $text = str_replace('<a href=', '<a class="inline-flex items-center underline hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 text-gray-600 dark:text-gray-400" href=', $text);
         $text = trim($text);
         $text = nl2br($text);

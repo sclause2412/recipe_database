@@ -67,17 +67,19 @@ class AppServiceProvider extends ServiceProvider
                 foreach ($fields as $field) {
                     $fa = explode('.', $field);
                     if (count($fa) == 1) {
-                        if ($columns[$fa[0]] ?? false)
+                        if ($columns[$fa[0]] ?? false) {
                             $query->orWhereRaw('LOWER(`' . $fa[0] . '`) like ?', ['%' . $string . '%']);
-                        else
+                        } else {
                             $query->orWhere($fa[0], 'like', '%' . $string . '%');
+                        }
                     }
                     if (count($fa) == 2) {
                         $query->orWhereHas($fa[0], function (Builder $query) use ($fa, $string, $columns) {
-                            if ($columns[$fa[0]] ?? false)
+                            if ($columns[$fa[0]] ?? false) {
                                 $query->orWhereRaw('LOWER(`' . $fa[1] . '`) like ?', ['%' . $string . '%']);
-                            else
+                            } else {
                                 $query->where($fa[1], 'like', '%' . $string . '%');
+                            }
                         });
                     }
                 }
