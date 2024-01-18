@@ -27,9 +27,11 @@ class Ingredients extends Component
     {
         $this->authorize('view', $this->recipe);
 
-        $ingredients = $this->recipe->ingredients()->orderBy('group')->orderBy('sort');
+        $ingredients = $this->recipe->ingredients()->orderBy('sort');
 
-        return view('livewire.recipes.ingredients', ['ingredients' => $ingredients->get()]);
+        $ingredients = $ingredients->get()->all();
+
+        return view('livewire.recipes.ingredients', ['ingredients' => $ingredients]);
     }
 
     public function editIngredient(RecipeIngredient $ingredient)
@@ -121,13 +123,28 @@ class Ingredients extends Component
         }
 
         $row = $this->recipe->ingredients()->where('sort', $ingredient->sort - 1)->first();
-        if (!is_null($row)) {
+        if (is_null($row)) {
+            $ingredient->sort--;
+            $ingredient->save();
+        } elseif ($row->group == $ingredient->group) {
             $row->sort++;
             $row->save();
-        }
+            $ingredient->sort--;
+            $ingredient->save();
+        } else {
+            $rows = $this->recipe->ingredients()->where('group', $row->group)->orderBy('sort')->get();
+            $first = true;
+            foreach ($rows as $row) {
+                if ($first) {
+                    $ingredient->sort = $row->sort;
+                    $ingredient->save();
+                    $first = false;
+                }
+                $row->sort++;
+                $row->save();
+            }
 
-        $ingredient->sort--;
-        $ingredient->save();
+        }
 
         $this->_reorder();
     }
@@ -136,19 +153,56 @@ class Ingredients extends Component
     {
         $this->authorize('update', $this->recipe);
 
-        $ingredient->sort = 999;
-        $ingredient->save();
+        if ($ingredient->sort >= $this->recipe->ingredients->count()) {
+            return;
+        }
+
+        $row = $this->recipe->ingredients()->where('sort', $ingredient->sort + 1)->first();
+        if (is_null($row)) {
+            $ingredient->sort++;
+            $ingredient->save();
+        } elseif ($row->group == $ingredient->group) {
+            $row->sort--;
+            $row->save();
+            $ingredient->sort++;
+            $ingredient->save();
+        } else {
+            $rows = $this->recipe->ingredients()->where('group', $ingredient->group)->orderBy('sort')->get();
+            $first = true;
+            foreach ($rows as $row2) {
+                if ($first) {
+                    $row->sort = $row2->sort;
+                    $row->save();
+                    $first = false;
+                }
+                $row2->sort++;
+                $row2->save();
+            }
+        }
 
         $this->_reorder();
     }
 
     private function _reorder()
     {
+        $ingredients = $this->recipe->ingredients()->orderBy('sort')->get();
+
+        $groups = $ingredients->pluck('group')->toArray();
+
+        if (in_array(null, $groups)) {
+            $groups = array_merge([null], $groups);
+        }
+        $groups = array_values(array_unique($groups));
+
         $sort = 1;
-        $ingredients = $this->recipe->ingredients()->orderBy('group')->orderBy('sort')->get();
-        foreach ($ingredients as $ingredient) {
-            $ingredient->sort = $sort++;
-            $ingredient->save();
+
+        foreach ($groups as $group) {
+            $ingredients = $this->recipe->ingredients()->where('group', $group)->orderBy('sort')->get();
+
+            foreach ($ingredients as $ingredient) {
+                $ingredient->sort = $sort++;
+                $ingredient->save();
+            }
         }
     }
 
