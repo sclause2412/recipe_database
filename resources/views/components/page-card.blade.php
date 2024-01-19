@@ -1,4 +1,4 @@
-<div class="print:border-b-solid mb-8 print:border-b-2 print:border-black print:last:border-none">
+<div class="print:border-b-solid mb-8 print:border-t-2 print:border-black print:first:border-none">
     @isset($title)
         <div class="print:!block md:grid md:grid-cols-3 md:gap-6">
             <div class="mb-5 flex justify-between md:col-span-1 md:mb-0">

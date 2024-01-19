@@ -92,6 +92,11 @@
                     </div>
                 @endforeach
             </div>
+            @if ($recipe->source)
+                <div class="mt-4 text-sm text-gray-500">
+                    {{ __('Source:') }} {{ $recipe->source }}
+                </div>
+            @endif
         </div>
 
     </x-page-card>
