@@ -62,29 +62,4 @@ class RecipeController extends Controller
     {
         return view('recipes.edit', ['recipe' => $recipe]);
     }
-
-    public function print(Recipe $recipe)
-    {
-        $ingredients = $recipe->ingredients->sortBy('sort');
-        $steps = $recipe->steps->sortBy('step');
-        $comments = $recipe->comments->sortBy('step');
-
-        $ingredient_list = $ingredients->pluck('ingredient.name', 'reference');
-
-        $portions = request()->get('portions', $recipe->portions ?? 1);
-        if ($portions < 1) {
-            $portions = 1;
-        }
-        $temp = request()->get('temp', 'C');
-
-        return view('recipes.print', [
-            'recipe' => $recipe,
-            'ingredients' => $ingredients,
-            'steps' => $steps,
-            'comments' => $comments,
-            'ingredient_list' => $ingredient_list,
-            'portions' => $portions,
-            'temp' => $temp
-        ]);
-    }
 }

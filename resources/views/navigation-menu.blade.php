@@ -1,4 +1,4 @@
-<div>
+<div class="print:hidden">
     <x-nav>
         <x-nav.link route="recipes.index">
             {{ __('Recipes') }}

@@ -1,4 +1,11 @@
-@props(['pagetitle' => '', 'title' => new \Illuminate\View\ComponentSlot(), 'subtitle' => new \Illuminate\View\ComponentSlot(), 'nav' => new \Illuminate\View\ComponentSlot()])
+@use(Illuminate\View\ComponentSlot)
+@props([
+    'pagetitle' => '',
+    'title' => new ComponentSlot(),
+    'subtitle' => new ComponentSlot(),
+    'nav' => new ComponentSlot(),
+    'hidetitle' => false,
+])
 <!DOCTYPE html>
 <html class="bg-gray-100 dark:bg-gray-900" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -78,12 +85,12 @@
     <x-notifications />
     <x-dialog />
 
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-900 print:!bg-white">
         @livewire('navigation_menu')
 
         <!-- Page Heading -->
         @if (!IsSlotEmpty($title))
-            <header class="bg-white shadow dark:bg-gray-800">
+            <header class="{{ $hidetitle ? 'print:hidden' : '' }} bg-white shadow dark:bg-gray-800">
                 <div class="mx-auto min-h-full max-w-7xl px-4 py-4">
                     <h1 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                         {{ $title }}
@@ -102,7 +109,7 @@
             </header>
         @else
             @if (!IsSlotEmpty($nav))
-                <header class="bg-white shadow dark:bg-gray-800">
+                <header class="{{ $hidetitle ? 'print:hidden' : '' }} bg-white shadow dark:bg-gray-800">
                     <div class="mx-auto min-h-full max-w-7xl px-4 py-4">
                         <nav class="text-sm font-medium leading-tight text-gray-500 dark:text-gray-400">
                             {{ $nav }}
@@ -114,7 +121,7 @@
 
         <!-- Page Content -->
         <main>
-            <div class="mx-auto max-w-7xl px-4 py-10">
+            <div class="mx-auto max-w-7xl px-4 py-10 print:!py-0">
                 {{ $slot }}
             </div>
         </main>
