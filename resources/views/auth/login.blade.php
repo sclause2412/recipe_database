@@ -1,3 +1,4 @@
+@use(App\Http\Middleware\RegistrationIsAllowed)
 <x-guest-layout>
     <x-authentication-card>
 
@@ -17,7 +18,7 @@
 
             <div class="buttonrow mt-4">
 
-                @if (Route::has('register'))
+                @if (RegistrationIsAllowed::isAllowed())
                     <x-link class="text-sm" href="{{ route('register') }}">
                         {{ __('Need an account?') }}</x-link>
                 @endif
