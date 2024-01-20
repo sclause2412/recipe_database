@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
-use Laravel\Jetstream\Jetstream;
 
 class UserController extends Controller
 {
@@ -98,7 +97,7 @@ class UserController extends Controller
     public function policy_accept(Request $request)
     {
         $request->validate([
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+            'terms' => ['accepted', 'required'],
         ]);
 
         $user = Auth::user();

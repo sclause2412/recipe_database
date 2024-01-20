@@ -22,21 +22,19 @@
                     name="password_confirmation" required />
             </div>
 
-            @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                <div class="mt-4">
-                    <x-checkbox label="{!! __('I agree to the :terms_of_service and :privacy_policy', [
-                        'terms_of_service' => __('Terms of Service'),
-                        'privacy_policy' => __('Privacy Policy'),
-                    ]) !!}" name="terms" required />
-                </div>
-            @endif
+            <div class="mt-4">
+                <x-checkbox label="{!! __('I agree to the :terms_of_use and :privacy_policy', [
+                    'terms_of_use' => __('Terms of Use'),
+                    'privacy_policy' => __('Privacy Policy'),
+                ]) !!}" name="terms" required />
+            </div>
 
             <div class="buttonrow mt-4">
-                <x-link href="{{ route('terms.show') }}">
-                    {{ __('Terms of Service') }}
+                <x-link route="legal.terms">
+                    {{ __('Terms of Use') }}
                 </x-link>
 
-                <x-link href="{{ route('policy.show') }}">
+                <x-link route="legal.privacy">
                     {{ __('Privacy Policy') }}
                 </x-link>
             </div>

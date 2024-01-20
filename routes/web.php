@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ThemeController;
@@ -112,6 +113,7 @@ Route::middleware([
     Route::get('/settings', [GlobalSettingsController::class, 'index'])->name('globalsettings');
 });
 
+// Global
 Route::get('/', [WelcomeController::class, 'welcome'])->name('welcome');
 
 Route::get('/theme/style/{style}', [ThemeController::class, 'style'])->name('theme.style');
@@ -125,6 +127,11 @@ Route::get('/image/f/{sizex}/{sizey}/{path}', [ImageController::class, 'fit'])->
 Route::get('/image/c/{sizex}/{sizey}/{path}', [ImageController::class, 'fill'])->where(['sizex' => '[1-9][0-9]{0,3}', 'sizey' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
 Route::get('/image/s/{sizex}/{sizey}/{path}', [ImageController::class, 'stretch'])->where(['sizex' => '[1-9][0-9]{0,3}', 'sizey' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
 
+Route::get('/privacy', [LegalController::class, 'privacy'])->name('legal.privacy');
+Route::get('/imprint', [LegalController::class, 'imprint'])->name('legal.imprint');
+Route::get('/terms', [LegalController::class, 'terms'])->name('legal.terms');
+
+// Config dependent
 Route::middleware([
     'guest:' . config('fortify.guard'),
     RegistrationIsAllowed::class,

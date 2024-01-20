@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Laravel\Jetstream\Jetstream;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserIsActive
@@ -21,7 +20,7 @@ class UserIsActive
             if (!$user->active) {
                 return redirect()->route('locked');
             }
-            if (!$user->policy_accepted && Jetstream::hasTermsAndPrivacyPolicyFeature()) {
+            if (!$user->policy_accepted) {
                 return redirect()->route('policy');
             }
         }

@@ -125,6 +125,28 @@
                 {{ $slot }}
             </div>
         </main>
+
+        <!-- Footer for printout -->
+        <footer>
+            <div class="mx-auto min-h-full w-full px-4 py-4">
+                <div class="flex items-center justify-center gap-4">
+                    <div class=""><x-logo.mark class="block h-16 w-full" /></div>
+                    <div class="">
+                        <div class="text-xl font-bold">{{ __(config('app.name', 'Laravel')) }}</div>
+                        <div class="text-sm">
+                            {{ __('© :year :name', ['year' => now()->year, 'name' => config('app.name', 'Laravel')]) }}
+                        </div>
+                        <div class="text-xs print:hidden">
+                            <x-link route="legal.imprint">{{ __('Imprint') }}</x-link>
+                            <x-link route="legal.privacy">{{ __('Privacy Policy') }}</x-link>
+                        </div>
+                        <div class="hidden text-xs print:block">
+                            {{ url('/') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     @stack('modals')

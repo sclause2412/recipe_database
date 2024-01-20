@@ -25,7 +25,11 @@
         </div>
 
         <div class="mt-4">
-            <x-checkbox label="{{ __('Terms of Service and Privacy Policy confirmation required') }}"
+            <x-checkbox
+                label="{{ __(':terms_of_use and :privacy_policy confirmation required', [
+                    'terms_of_use' => __('Terms of Use'),
+                    'privacy_policy' => __('Privacy Policy'),
+                ]) }}"
                 wire:model="policy_confirm" />
         </div>
 
