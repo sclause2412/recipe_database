@@ -454,17 +454,146 @@ if (!function_exists('text_code_icons')) {
     function text_code_icons()
     {
         $icons = [
-            'airplane',
-            'alarm',
-            'anchor',
+            // Thermomix
             'tm5',
             'tm6',
             'tm-dough',
             'tm-stir',
-            'tm-rev'
+            'tm-rev',
+            // Icons
+            'arrow-circle-down',
+            'arrow-circle-left',
+            'arrow-circle-right',
+            'arrow-circle-up',
+            'arrow-down',
+            'arrow-left',
+            'arrow-right',
+            'arrow-up',
+            'asterisk',
+            'at',
+            'chat-dots',
+            'check',
+            'check-circle',
+            'eye',
+            'info',
+            'pause',
+            'play',
+            'smiley',
+            'smiley-meh',
+            'smiley-sad',
+            'smiley-wink',
+            'star',
+            'thumbs-up',
+            'thumbs-down',
+            'warning',
+            // Food
+            'beer-bottle',
+            'bone',
+            'bowl-food',
+            'brandy',
+            'cactus',
+            'cake',
+            'carrot',
+            'champagne',
+            'coffee',
+            'cookie',
+            'drop',
+            'egg',
+            'fish',
+            'flask',
+            'flower',
+            'grains',
+            'grains-slash',
+            'hamburger',
+            'ice-cream',
+            'leaf',
+            'martini',
+            'orange-slice',
+            'pepper',
+            'pill',
+            'pizza',
+            'plant',
+            'popcorn',
+            'shrimp',
+            'tree',
+            'tree-evergreen',
+            'wine',
+            // Tools
+            'alarm',
+            'app-window',
+            'bell',
+            'bell-ringing',
+            'bell-slash',
+            'bluetooth',
+            'calculator',
+            'camera',
+            'circles-four',
+            'clock',
+            'cooking-pot',
+            'eyedropper',
+            'fan',
+            'fork-knife',
+            'funnel',
+            'gear',
+            'hand',
+            'hourglass',
+            'knife',
+            'needle',
+            'paperclip',
+            'pencil',
+            'scales',
+            'snowflake',
+            'speaker-high',
+            'speaker-x',
+            'spiral',
+            'syringe',
+            'thermometer',
+            'timer',
+            'toilet-paper',
+            'trash',
+            'watch',
+            'waves',
+            // Environment
+            'airplane',
+            'anchor',
+            'armchair',
+            'baby',
+            'bird',
+            'bug',
+            'butterfly',
+            'campfire',
+            'car',
+            'cat',
+            'dog',
+            'eyeglasses',
+            'face-mask',
+            'fingerprint',
+            'fire',
+            'first-aid',
+            'hand-soap',
+            'house',
+            'key',
+            'lightbulb',
+            'lightning',
+            'person',
+            'power',
+            'recycle',
+            // Shopping
+            'address-book',
+            'archive',
+            'article',
+            'bag',
+            'barcode',
+            'basket',
+            'book',
+            'book-open',
+            'book-open-text',
+            'calendar',
+            'gift',
+            'shopping-cart',
+            'storefront',
+            'wallet',
         ];
-
-        sort($icons);
 
         return $icons;
     }
@@ -474,12 +603,24 @@ if (!function_exists('text_code_colors')) {
     function text_code_colors()
     {
         $colors = [
+            'gray' => 'text-gray-500',
             'red' => 'text-red-500',
+            'orange' => 'text-orange-500',
+            'amber' => 'text-amber-500',
+            'yellow' => 'text-yellow-500',
+            'lime' => 'text-lime-500',
             'green' => 'text-green-500',
+            'emerald' => 'text-emerald-500',
+            'teal' => 'text-teal-500',
+            'cyan' => 'text-cyan-500',
+            'sky' => 'text-sky-500',
             'blue' => 'text-blue-500',
+            'indigo' => 'text-indigo-500',
+            'violet' => 'text-violet-500',
+            'purple' => 'text-fuchsia-500',
+            'pink' => 'text-pink-500',
+            'rose' => 'text-rose-500',
         ];
-
-        ksort($colors);
 
         return $colors;
     }
@@ -518,6 +659,22 @@ if (!function_exists('text_code_format')) {
                 $t1 = 0;
             }
 
+            $text_hour = cache('tc_hour');
+            if (is_null($text_hour)) {
+                $text_hour = __('hour');
+                cache(['tc_hour' => $text_hour]);
+            }
+            $text_min = cache('tc_min');
+            if (is_null($text_min)) {
+                $text_min = __('min');
+                cache(['tc_min' => $text_min]);
+            }
+            $text_sec = cache('tc_sec');
+            if (is_null($text_sec)) {
+                $text_sec = __('sec');
+                cache(['tc_sec' => $text_sec]);
+            }
+
             if ($t2 != 0) {
                 if ($t1 == 0) {
                     $h = intval($t2 / 3600);
@@ -525,13 +682,13 @@ if (!function_exists('text_code_format')) {
                     $s = intval($t2 % 60);
                     $t2 = [];
                     if ($h) {
-                        array_push($t2, $h . ' ' . __('hour'));
+                        array_push($t2, $h . ' ' . $text_hour);
                     }
                     if ($m) {
-                        array_push($t2, $m . ' ' . __('min'));
+                        array_push($t2, $m . ' ' . $text_min);
                     }
                     if ($s) {
-                        array_push($t2, $s . ' ' . __('sec'));
+                        array_push($t2, $s . ' ' . $text_sec);
                     }
                     array_push($text, implode(' ', $t2));
                 } else {
@@ -558,23 +715,23 @@ if (!function_exists('text_code_format')) {
                     if ($p > 1) {
                         $t1 = [];
                         if ($h1) {
-                            array_push($t1, $h1 . ' ' . __('hour'));
+                            array_push($t1, $h1 . ' ' . $text_hour);
                         }
                         if ($m1) {
-                            array_push($t1, $m1 . ' ' . __('min'));
+                            array_push($t1, $m1 . ' ' . $text_min);
                         }
                         if ($s1) {
-                            array_push($t1, $s1 . ' ' . __('sec'));
+                            array_push($t1, $s1 . ' ' . $text_sec);
                         }
                         $t2 = [];
                         if ($h2) {
-                            array_push($t2, $h2 . ' ' . __('hour'));
+                            array_push($t2, $h2 . ' ' . $text_hour);
                         }
                         if ($m2) {
-                            array_push($t2, $m2 . ' ' . __('min'));
+                            array_push($t2, $m2 . ' ' . $text_min);
                         }
                         if ($s2) {
-                            array_push($t2, $s2 . ' ' . __('sec'));
+                            array_push($t2, $s2 . ' ' . $text_sec);
                         }
                     } else {
                         $t1 = [];
@@ -589,13 +746,13 @@ if (!function_exists('text_code_format')) {
                         }
                         $t2 = [];
                         if ($h2) {
-                            array_push($t2, $h2 . ' ' . __('hour'));
+                            array_push($t2, $h2 . ' ' . $text_hour);
                         }
                         if ($m2) {
-                            array_push($t2, $m2 . ' ' . __('min'));
+                            array_push($t2, $m2 . ' ' . $text_min);
                         }
                         if ($s2) {
-                            array_push($t2, $s2 . ' ' . __('sec'));
+                            array_push($t2, $s2 . ' ' . $text_sec);
                         }
                     }
 
@@ -604,7 +761,12 @@ if (!function_exists('text_code_format')) {
             }
 
             if ($temp == 'V') {
-                array_push($text, __('Varoma'));
+                $text_varoma = cache('tc_varoma');
+                if (is_null($text_varoma)) {
+                    $text_varoma = __('Varoma');
+                    cache(['tc_varoma' => $text_varoma]);
+                }
+                array_push($text, $text_varoma);
             } else {
                 $temp = intval($temp);
                 if ($temp != 0) {
@@ -617,6 +779,12 @@ if (!function_exists('text_code_format')) {
                 $r = $mspeed[1];
                 $s = $mspeed[2];
 
+                $text_speed = cache('tc_speed');
+                if (is_null($text_speed)) {
+                    $text_speed = __('speed');
+                    cache(['tc_speed' => $text_speed]);
+                }
+
                 if ($r == '-') {
                     array_push($text, ':tm-rev:');
                 }
@@ -624,14 +792,14 @@ if (!function_exists('text_code_format')) {
                 if ($s == 'D') {
                     array_push($text, ':tm-dough:');
                 } elseif ($s == 'S') {
-                    array_push($text, __('speed') . ' :tm-stir:');
+                    array_push($text, $text_speed . ' :tm-stir:');
                 } else {
                     $s = floatval($s);
                     $s = $s * 2;
                     $s = round($s);
                     $s = $s / 2;
                     if ($s != 0) {
-                        array_push($text, __('speed') . ' ' . $s);
+                        array_push($text, $text_speed . ' ' . $s);
                     }
                 }
 
@@ -709,11 +877,21 @@ if (!function_exists('text_code_format')) {
 
         }, $text);
 
+        $icons = text_code_icons();
+        $text = preg_replace_callback('/:([a-z-]+):/', function ($matches) use ($icons) {
 
-        foreach (text_code_icons() as $icon) {
-            $text = str_replace(':' . $icon . ':', Blade::render('<x-recipe-icon  name="' . $icon . '" />'), $text);
-        }
+            if (in_array($matches[1], $icons)) {
+                $key = 'recipe-icon-cache-' . $matches[1];
+                $icon = cache($key);
+                if (is_null($icon)) {
+                    $icon = Blade::render('<x-recipe-icon  name="' . $matches[1] . '" />');
+                    cache([$key => $icon], 3600);
+                }
+                return $icon;
+            }
 
+            return $matches[0];
+        }, $text);
         return $text;
     }
 }

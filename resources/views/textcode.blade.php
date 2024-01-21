@@ -53,7 +53,9 @@
         <x-slot name="title">{{ __('Icons') }}</x-slot>
         <div class="grid grid-cols-4 gap-4">
             @foreach (text_code_icons() as $icon)
-                <div>{!! text_code_format(':' . $icon . ':') !!} {{ $icon }}</div>
+                <div>
+                    <x-recipe-icon name="{{ $icon }}" /> {{ $icon }}
+                </div>
             @endforeach
         </div>
 
