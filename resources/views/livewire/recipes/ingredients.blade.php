@@ -57,7 +57,7 @@
                 @endphp
                 <x-table.row wire:loading.class.delay="opacity-50">
                     <x-table.cell><x-badge teal>{{ $ingredient->reference }}</x-badge></x-table.cell>
-                    <x-table.cell>{{ $ingredient->sort }} / {{ $ingredient->group }}</x-table.cell>
+                    <x-table.cell>{{ $ingredient->group }}</x-table.cell>
                     <x-table.cell>{{ $ingredient->ingredient?->name }}{{ is_null($ingredient->ingredient?->info) ? '' : ' (' . $ingredient->ingredient?->info . ')' }}</x-table.cell>
                     <x-table.cell>{{ $ingredient->approximately ? '~ ' : '' }}<span
                             class="{{ $ingredient->fix ? 'bg-green-200 dark:bg-green-800' : '' }}">{{ $ingredient->amount }}</span></x-table.cell>
