@@ -59,7 +59,8 @@
                     <x-table.cell><x-badge teal>{{ $ingredient->reference }}</x-badge></x-table.cell>
                     <x-table.cell>{{ $ingredient->sort }} / {{ $ingredient->group }}</x-table.cell>
                     <x-table.cell>{{ $ingredient->ingredient?->name }}{{ is_null($ingredient->ingredient?->info) ? '' : ' (' . $ingredient->ingredient?->info . ')' }}</x-table.cell>
-                    <x-table.cell>{{ $ingredient->amount }}</x-table.cell>
+                    <x-table.cell>{{ $ingredient->approximately ? '~ ' : '' }}<span
+                            class="{{ $ingredient->fix ? 'bg-green-200 dark:bg-green-800' : '' }}">{{ $ingredient->amount }}</span></x-table.cell>
                     <x-table.cell>{{ $ingredient->unit?->unit }}</x-table.cell>
                     <x-table.cell>
                         <div class="flex justify-end space-x-2 text-lg">
@@ -103,7 +104,14 @@
                 </x-select>
             </div>
             <div class="mt-4">
-                <x-number label="{{ __('Amount') }}" min="0" step="0.05" wire:model="amount" />
+                <x-checkbox label="{{ __('Approximately') }}" wire:model="approximately" />
+            </div>
+            <div class="mt-4">
+                <x-number label="{{ __('Amount') }}" min="0" step="0.01" wire:model="amount" />
+            </div>
+            <div class="mt-4">
+                <x-checkbox description="{{ __('If activated, the amount stays fixed independent from portions.') }}"
+                    label="{{ __('Fix') }}" wire:model="fix" />
             </div>
             <div class="mt-4">
                 <x-select :async-data="route('search', [

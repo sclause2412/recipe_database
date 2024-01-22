@@ -20,7 +20,9 @@ class Ingredients extends Component
     public $rid = null;
     public $ingredient = null;
     public $group = null;
+    public $approximately = false;
     public $amount = null;
+    public $fix = false;
     public $unit = null;
 
     public function render()
@@ -41,7 +43,9 @@ class Ingredients extends Component
         $this->rid = $ingredient->id;
         $this->ingredient = $ingredient->ingredient?->id;
         $this->group = $ingredient->group;
+        $this->approximately = $ingredient->approximately;
         $this->amount = $ingredient->amount;
+        $this->fix = $ingredient->fix;
         $this->unit = $ingredient->unit?->id;
     }
 
@@ -52,7 +56,9 @@ class Ingredients extends Component
         $this->rid = $this->cleanInput($this->rid);
         $this->ingredient = $this->cleanInput($this->ingredient);
         $this->group = $this->cleanInput($this->group);
+        $this->approximately = $this->cleanInput($this->approximately);
         $this->amount = $this->cleanInput($this->amount);
+        $this->fix = $this->cleanInput($this->fix);
         $this->unit = $this->cleanInput($this->unit);
 
         $ingredient = null;
@@ -89,7 +95,9 @@ class Ingredients extends Component
 
         $ingredient->ingredient_id = $ingredient2->id;
         $ingredient->group = $this->group;
+        $ingredient->approximately = $this->approximately;
         $ingredient->amount = $this->amount;
+        $ingredient->fix = $this->fix;
         $ingredient->unit_id = $unit?->id;
 
         $ingredient->save();
@@ -99,7 +107,9 @@ class Ingredients extends Component
         $this->rid = null;
         $this->ingredient = null;
         $this->group = null;
+        $this->approximately = false;
         $this->amount = null;
+        $this->fix = false;
         $this->unit = null;
 
         $this->notification()->success(__('Ingredient saved'), __('The ingredient was successfully saved'));

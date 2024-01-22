@@ -61,7 +61,12 @@
                                     <td class="pb-1 pr-4 align-top" colspan="2">
                                         {{ $ingredient->unit?->unit }}</td>
                                 @else
-                                    <td class="pb-1 pr-1 text-right align-top"> {!! calculate_number($ingredient->amount * $factor, $ingredient->unit?->fraction ?? false) !!} </td>
+                                    <td class="pb-1 pr-1 text-right align-top">
+                                        {{ $ingredient->approximately ? __('appr.') : '' }} {!! calculate_number(
+                                            $ingredient->amount * ($ingredient->fix ? 1 : $factor),
+                                            $ingredient->unit?->fraction ?? false,
+                                        ) !!}
+                                    </td>
                                     <td class="pb-1 pr-4 align-top">{{ $ingredient->unit?->unit }}</td>
                                 @endif
                                 <td class="pb-1 align-top"><span class="ingredient transition-colors"

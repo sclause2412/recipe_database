@@ -16,6 +16,11 @@ class RecipeIngredient extends Model
     use UserStamps;
     use HasUlids;
 
+    protected $casts = [
+        'approximately' => 'boolean',
+        'fix' => 'boolean',
+    ];
+
     protected static function booted(): void
     {
         static::creating(function (RecipeIngredient $ingredient) {
@@ -46,10 +51,5 @@ class RecipeIngredient extends Model
     {
         return $this->belongsTo(Ingredient::class);
     }
-
-
-
-
-
 
 }
