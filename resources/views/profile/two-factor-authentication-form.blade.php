@@ -78,11 +78,9 @@
                     </x-button>
                 </x-confirms-password>
             @elseif ($showingConfirmation)
-                <x-confirms-password success="confirmTwoFactorAuthentication">
-                    <x-button primary>
-                        {{ __('Confirm') }}
-                    </x-button>
-                </x-confirms-password>
+                <x-button primary wire:click="confirmTwoFactorAuthentication">
+                    {{ __('Confirm') }}
+                </x-button>
             @else
                 <x-confirms-password success="showRecoveryCodes">
                     <x-button secondary>
@@ -92,11 +90,9 @@
             @endif
 
             @if ($showingConfirmation)
-                <x-confirms-password success="disableTwoFactorAuthentication">
-                    <x-button secondary>
-                        {{ __('Cancel') }}
-                    </x-button>
-                </x-confirms-password>
+                <x-button secondary wire:click="disableTwoFactorAuthentication">
+                    {{ __('Cancel') }}
+                </x-button>
             @else
                 <x-confirms-password success="disableTwoFactorAuthentication">
                     <x-button negative>
