@@ -142,7 +142,7 @@ class TranslationController extends Controller
         // Step 2: Read from all project files containing __ translations
         $locale = App::getLocale();
 
-        foreach (Finder::create()->files()->name('*.php')->contains('/[^\\w]__\\(.+?\\)/')->exclude(['vendor', 'node_modules', 'tests', 'storage'])->in(App::basePath()) as $file) {
+        foreach (Finder::create()->files()->name('*.php')->contains('/[^\\w](?:__|Lang::get)\\(.+?\\)/')->exclude(['vendor', 'node_modules', 'tests', 'storage'])->in(App::basePath()) as $file) {
             $content = $file->getContents();
 
             if (preg_match_all('/[^\\w]__\\((.+?)\\)/', $content, $matches)) {

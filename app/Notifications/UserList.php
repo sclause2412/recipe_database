@@ -37,10 +37,11 @@ class UserList extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage())
-            ->line('You have requested a list of usernames. Here it is:')
+            ->subject(__('User List'))
+            ->line(__('You have requested a list of usernames. Here it is:'))
             ->line(str('<ul>' . implode('', array_map(fn ($v) => '<li>' . htmlspecialchars($v) . '</li>', $this->usernames)) . '</ul>')->toHtmlString())
-            ->line('You can try to login now.')
-            ->action('Login', route('login'));
+            ->line(__('You can try to login now.'))
+            ->action(__('Login'), route('login'));
     }
 
     /**
