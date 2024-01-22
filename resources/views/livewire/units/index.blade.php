@@ -51,7 +51,22 @@
             </div>
 
             <div class="mt-4">
-                <x-input label="{{ __('Unit') }}" required wire:model="unit" />
+                <x-input label="{{ __('Unit') }}" required wire:model="unit">
+                    <x-slot name="hint">
+                        {!! __(
+                            'To use pluralization you can divide the units by [n] where n is the filter (e.g. <1 means smaller than one, 0 means exactly zero, ...).',
+                        ) !!}<br />
+                        {!! __('Common pattern for fraction is [0]plural[<=1]singular[>1]plural') !!}<br />
+                        {!! __('Common pattern for decimal is [<1]plural[1]singular[>1]plural') !!}<br />
+                        {!! __('Exact matches overwrite ranges, not found numbers are replaced by last entry.') !!}<br />
+                        {{ __('Example:') }} {{ '[>0]a[10]b' }}<br />
+                        0 b<br />
+                        1 a<br />
+                        9 a<br />
+                        10 b<br />
+                        11 a
+                    </x-slot>
+                </x-input>
             </div>
 
             <div class="mt-4">

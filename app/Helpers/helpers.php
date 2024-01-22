@@ -961,7 +961,7 @@ if (!function_exists('calculate_round')) {
     {
 
         if ($v == 0) {
-            $v = 0;
+            return 0;
         }
 
         if ($v > 10) {
@@ -1003,6 +1003,66 @@ if (!function_exists('calculate_time')) {
             array_push($t2, $m . ' ' . __('minutes'));
         }
         return implode(' ', $t2);
+    }
+}
+
+if (!function_exists('calculate_unit')) {
+    function calculate_unit($rule, $amount)
+    {
+        if (substr($rule, 0, 1) != '[') {
+            return $rule;
+        }
+
+        $amount = abs($amount);
+
+        $foundunit = null;
+        if (preg_match_all('/\[([<=>]*)([\.\d]+)\]([^\[]+)/', $rule, $matches)) {
+            foreach ($matches[3] as $k => $unit) {
+                $cond = $matches[1][$k];
+                $value = $matches[2][$k];
+
+                $cs = false; //smaller
+                $ce = false; //equal
+                $cg = false; //greater
+                if ($cond == '') {
+                    $ce = true;
+                } else {
+                    if (strpos($cond, '<') !== false) {
+                        $cs = true;
+                    }
+                    if (strpos($cond, '=') !== false) {
+                        $ce = true;
+                    }
+                    if (strpos($cond, '>') !== false) {
+                        $cg = true;
+                    }
+                }
+
+                if ($ce && $amount == $value) {
+                    return $unit;
+                }
+                if ($cs && $amount < $value) {
+                    $foundunit = $unit;
+                }
+                if ($cg && $amount > $value) {
+                    $foundunit = $unit;
+                }
+            }
+
+
+        }
+
+        if (!is_null($foundunit)) {
+            return $foundunit;
+        }
+
+
+        $p = strrpos($rule, ']');
+        if ($p === false) {
+            return __('Invalid unit:') . ' ' . $rule;
+        }
+
+        return substr($rule, $p + 1);
     }
 }
 
