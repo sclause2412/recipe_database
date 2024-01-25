@@ -812,13 +812,17 @@ if (!function_exists('text_code_format')) {
             return $text;
         }, $text);
 
-        $text = preg_replace_callback('/\[([a-z]+\d+)\]/', function ($matches) use ($ingredients) {
+        $text = preg_replace_callback('/\[([a-z]+\d+)\]/', function ($matches) use ($ingredients, $preview) {
             $i = $matches[1];
+            $text = $i;
             if (isset($ingredients[$i])) {
-                return '<span class="ingredient transition-colors" x-orig="' . $i . '">' . $ingredients[$i] . '</span>';
-            } else {
-                return '<span class="ingredient transition-colors" x-orig="' . $i . '"><i>' . $i . '</i></span>';
+                $text = $ingredients[$i];
             }
+
+            if ($preview) {
+                return '<span class="bg-green-200 dark:bg-green-800">' . $text . ' (' . $i . ')</span>';
+            }
+            return '<span class="ingredient transition-colors" x-orig="' . $i . '">' . $text . '</span>';
         }, $text);
 
         $text = trim($text);
