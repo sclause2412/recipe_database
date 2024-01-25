@@ -13,6 +13,7 @@
     <x-page-card>
         <div x-data="{
             portions: {{ $recipe->portions }},
+            portions_frac: {{ $recipe->portions }},
             temp_type: 'C',
             factor: 1,
             init() {
@@ -21,17 +22,24 @@
                 $nextTick(() => { this.recalculate() });
             },
             recalculate() {
+                this.portions = Math.floor(this.portions * 8) / 8;
+                if (this.portions == 0)
+                    this.portions = 0.125;
                 this.factor = this.portions / {{ $recipe->portions }};
+                this.portions_frac = calculate_fraction(this.portions);
                 $dispatch('update_ingredients');
                 $dispatch('update_numbers');
             }
         }">
             <h1 class="text-4xl font-bold">{{ $recipe->name }}</h1>
             <h2 class="text-xl font-bold">{{ $recipe->category?->name }}</h2>
-            <div class="mt-2">{{ __('Portions:') }} <span x-text="portions"></span>
+            <div class="mt-2">{{ __('Portions:') }} <span x-html="portions_frac"></span>
                 <div class="ml-8 inline-block print:hidden">
-                    <x-button icon="minus" secondary sm x-bind:disabled="portions <= 1" x-on:click="portions--" />
-                    <x-button icon="plus" secondary sm x-on:click="portions++" />
+                    <x-button secondary sm x-bind:disabled="portions <= 0.125"
+                        x-on:click="portions = portions / 2"><span class="diagonal-fractions">1/2</span></x-button>
+                    <x-button secondary sm x-bind:disabled="portions <= 1" x-on:click="portions--">-1</x-button>
+                    <x-button secondary sm x-on:click="portions++">+1</x-button>
+                    <x-button secondary sm x-on:click="portions = portions * 2">&times;2</x-button>
                 </div>
             </div>
             <div class="">{{ __('Time:') }} {{ calculate_time($recipe->time) }}</div>
