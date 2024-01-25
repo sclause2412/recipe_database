@@ -54,6 +54,12 @@
                     }
 
                     $prev = $ingredient;
+
+                    $unit = $ingredient->unit?->unit;
+                    if (($p = strrpos($unit, ']')) !== false) {
+                        $unit = substr($unit, $p + 1);
+                    }
+
                 @endphp
                 <x-table.row wire:loading.class.delay="opacity-50">
                     <x-table.cell><x-badge teal>{{ $ingredient->reference }}</x-badge></x-table.cell>
@@ -61,7 +67,7 @@
                     <x-table.cell>{{ $ingredient->ingredient?->name }}{{ is_null($ingredient->ingredient?->info) ? '' : ' (' . $ingredient->ingredient?->info . ')' }}</x-table.cell>
                     <x-table.cell>{{ $ingredient->approximately ? '~ ' : '' }}<span
                             class="{{ $ingredient->fix ? 'bg-green-200 dark:bg-green-800' : '' }}">{{ $ingredient->amount }}</span></x-table.cell>
-                    <x-table.cell>{{ calculate_unit($ingredient->unit?->unit, $ingredient->amount) }}</x-table.cell>
+                    <x-table.cell>{{ $unit }}</x-table.cell>
                     <x-table.cell>
                         <div class="flex justify-end space-x-2 text-lg">
                             <x-button :disabled="$disable_up" :style="$style_up" icon="arrow-up" title="{{ $text_up }}"

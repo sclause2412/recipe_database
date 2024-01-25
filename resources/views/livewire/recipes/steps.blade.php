@@ -6,7 +6,7 @@
         </x-slot>
         @forelse ($steps as $step)
             <x-table.row wire:loading.class.delay="opacity-50">
-                <x-table.cell>{!! text_code_format($step->text, $ingredients) !!}</x-table.cell>
+                <x-table.cell>{!! text_code_format($step->text, $ingredients, true) !!}</x-table.cell>
                 <x-table.cell>
                     <div class="flex justify-end space-x-2 text-lg">
                         <x-button :disabled="$loop->first" icon="arrow-up" secondary title="{{ __('Up') }}"

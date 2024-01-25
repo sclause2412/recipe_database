@@ -627,7 +627,7 @@ if (!function_exists('text_code_colors')) {
 }
 
 if (!function_exists('text_code_format')) {
-    function text_code_format($text, $ingredients = [], $factor = 1, $temp = 'C')
+    function text_code_format($text, $ingredients = [], $preview = false)
     {
         $text = e($text);
 
@@ -812,38 +812,6 @@ if (!function_exists('text_code_format')) {
             return $text;
         }, $text);
 
-
-        $text = preg_replace_callback('/\[T(\d+?)\]/', function ($matches) use ($temp) {
-            $t = intval($matches[1]);
-            if ($temp == 'F') {
-                $t = calculate_round($t * 9 / 5 + 32) . '°F';
-            } else {
-                $t = calculate_round($t) . '°C';
-            }
-
-            return '<span class="temp">' . $t . '</span>';
-        }, $text);
-
-        $text = preg_replace_callback('/\[(\d+(?:\.\d+)?(!?))\]/', function ($matches) use ($factor) {
-            $n = floatval($matches[1]);
-            if ($matches[2] != '!') {
-                $n *= $factor;
-            }
-            return '<span class="number">' . calculate_round($n) . '</span>';
-        }, $text);
-
-        $text = preg_replace_callback('/\[(\d+)\/(\d+)(!?)\]/', function ($matches) use ($factor) {
-            $n1 = intval($matches[1]);
-            $n2 = intval($matches[2]);
-            if ($matches[3] != '!') {
-                $n1 *= $factor;
-            }
-            if ($n2 == 0) {
-                return '<span class="number">0</span>';
-            }
-            return '<span class="number">' . calculate_fraction($n1 / $n2) . '</span>';
-        }, $text);
-
         $text = preg_replace_callback('/\[([a-z]+\d+)\]/', function ($matches) use ($ingredients) {
             $i = $matches[1];
             if (isset($ingredients[$i])) {
@@ -852,7 +820,6 @@ if (!function_exists('text_code_format')) {
                 return '<span class="ingredient transition-colors" x-orig="' . $i . '"><i>' . $i . '</i></span>';
             }
         }, $text);
-
 
         $text = trim($text);
         $text = nl2br($text);
@@ -877,6 +844,68 @@ if (!function_exists('text_code_format')) {
 
         }, $text);
 
+        $text = preg_replace_callback('/\[T(-?\d+?)\]/', function ($matches) use ($preview) {
+            $t = intval($matches[1]);
+
+            if ($preview) {
+                return $t . '°C';
+            }
+
+            return '<span x-data="{
+                    temp: ' . $t . ',
+                    temp_out: ' . $t . ',
+                    update() {
+                        if(this.temp_type == \'F\')
+                            this.temp_out = calculate_round(this.temp * 9 / 5 + 32, -1) + \'°F\';
+                        else
+                            this.temp_out = calculate_round(this.temp, 0) + \'°C\';
+                    }
+                }" x-on:update_numbers.window="update()" x-html="temp_out"></span>';
+        }, $text);
+
+        $text = preg_replace_callback('/\[(\d+(?:\.\d+)?(!?))\]/', function ($matches) use ($preview) {
+            $n = floatval($matches[1]);
+            if ($preview) {
+                return $n;
+            }
+
+            return '<span x-data="{
+                    num: ' . $n . ',
+                    num_out: ' . $n . ',
+                    fix: ' . ($matches[2] == '!' ? 'true' : 'false') . ',
+                    update() {
+                        if(this.fix)
+                            this.num_out = calculate_round(this.num,\'A\');
+                        else
+                            this.num_out = calculate_round(this.num * this.factor, \'A\');
+                    }
+                }" x-on:update_numbers.window="update()" x-html="num_out"></span>';
+        }, $text);
+
+        $text = preg_replace_callback('/\[(\d+)\/(\d+)(!?)\]/', function ($matches) use ($preview) {
+            $n1 = intval($matches[1]);
+            $n2 = intval($matches[2]);
+            if ($n2 == 0) {
+                return '0';
+            }
+
+            if ($preview) {
+                return '<span class="diagonal-fractions">' . $n1 . '/' . $n2 . '</span>';
+            }
+
+            return '<span x-data="{
+                    num: ' . ($n1 / $n2) . ',
+                    num_out: ' . ($n1 / $n2) . ',
+                    fix: ' . ($matches[3] == '!' ? 'true' : 'false') . ',
+                    update() {
+                        if(this.fix)
+                            this.num_out = calculate_fraction(this.num);
+                        else
+                            this.num_out = calculate_fraction(this.num * this.factor);
+                    }
+                }" x-on:update_numbers.window="update()" x-html="num_out"></span>';
+        }, $text);
+
         $icons = text_code_icons();
         $text = preg_replace_callback('/:([a-z-]+):/', function ($matches) use ($icons) {
 
@@ -896,100 +925,6 @@ if (!function_exists('text_code_format')) {
     }
 }
 
-if (!function_exists('calculate_number')) {
-    function calculate_number($v, $frac = false)
-    {
-        if ($frac) {
-            return calculate_fraction($v);
-        } else {
-            return calculate_round($v);
-        }
-    }
-}
-
-if (!function_exists('calculate_fraction')) {
-    function calculate_fraction($v)
-    {
-
-        if ($v == 0) {
-            return '0';
-        }
-
-        $h1 = 1;
-        $h2 = 0;
-        $k1 = 0;
-        $k2 = 1;
-        $b = 1 / $v;
-        do {
-            $b = 1 / $b;
-            $a = floor($b);
-            $aux = $h1;
-            $h1 = $a * $h1 + $h2;
-            $h2 = $aux;
-            $aux = $k1;
-            $k1 = $a * $k1 + $k2;
-            $k2 = $aux;
-            $b = $b - $a;
-        } while (abs($v - $h1 / $k1) > $v * 0.001); //0.001  = tolerance
-
-        if ($k1 == 1) {
-            return $h1;
-        }
-
-        if ($k1 > 100) {
-            return calculate_round($v);
-        }
-
-        $f1 = 0;
-        while ($h1 > $k1) {
-            $f1++;
-            $h1 -= $k1;
-        }
-
-        $ret = '';
-        if ($f1 > 0) {
-            $ret .= $f1 . ' ';
-        }
-        $ret .= '<span class="diagonal-fractions">' . $h1 . '/' . $k1 . '</span>';
-        return $ret;
-
-    }
-}
-
-if (!function_exists('calculate_round')) {
-    function calculate_round($v)
-    {
-
-        if ($v == 0) {
-            return 0;
-        }
-
-        if ($v > 10) {
-            $v = round($v, 0);
-        }
-
-        if ($v > 1) {
-            $v = round($v, 1);
-        }
-
-        $v = round($v, 2);
-
-        if ($v == 0) {
-            $v = 0.01;
-        }
-
-        if ($v * 100 % 100 > 0) {
-            $nf = number_format($v, 2, ',', '.');
-        } elseif ($v * 10 % 10 > 0) {
-            $nf = number_format($v, 1, ',', '.');
-        } else {
-            $nf = number_format($v, 0, ',', '.');
-        }
-        return $nf;
-
-    }
-}
-
 if (!function_exists('calculate_time')) {
     function calculate_time($t)
     {
@@ -1003,66 +938,6 @@ if (!function_exists('calculate_time')) {
             array_push($t2, $m . ' ' . __('minutes'));
         }
         return implode(' ', $t2);
-    }
-}
-
-if (!function_exists('calculate_unit')) {
-    function calculate_unit($rule, $amount)
-    {
-        if (substr($rule, 0, 1) != '[') {
-            return $rule;
-        }
-
-        $amount = abs($amount);
-
-        $foundunit = null;
-        if (preg_match_all('/\[([<=>]*)([\.\d]+)\]([^\[]+)/', $rule, $matches)) {
-            foreach ($matches[3] as $k => $unit) {
-                $cond = $matches[1][$k];
-                $value = $matches[2][$k];
-
-                $cs = false; //smaller
-                $ce = false; //equal
-                $cg = false; //greater
-                if ($cond == '') {
-                    $ce = true;
-                } else {
-                    if (strpos($cond, '<') !== false) {
-                        $cs = true;
-                    }
-                    if (strpos($cond, '=') !== false) {
-                        $ce = true;
-                    }
-                    if (strpos($cond, '>') !== false) {
-                        $cg = true;
-                    }
-                }
-
-                if ($ce && $amount == $value) {
-                    return $unit;
-                }
-                if ($cs && $amount < $value) {
-                    $foundunit = $unit;
-                }
-                if ($cg && $amount > $value) {
-                    $foundunit = $unit;
-                }
-            }
-
-
-        }
-
-        if (!is_null($foundunit)) {
-            return $foundunit;
-        }
-
-
-        $p = strrpos($rule, ']');
-        if ($p === false) {
-            return __('Invalid unit:') . ' ' . $rule;
-        }
-
-        return substr($rule, $p + 1);
     }
 }
 

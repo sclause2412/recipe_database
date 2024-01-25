@@ -38,20 +38,12 @@ class RecipeController extends Controller
 
         $ingredient_list = $ingredients->pluck('ingredient.name', 'reference');
 
-        $portions = request()->get('portions', $recipe->portions ?? 1);
-        if ($portions < 1) {
-            $portions = 1;
-        }
-        $temp = request()->get('temp', 'C');
-
         return view('recipes.show', [
             'recipe' => $recipe,
             'ingredients' => $ingredients,
             'steps' => $steps,
             'comments' => $comments,
             'ingredient_list' => $ingredient_list,
-            'portions' => $portions,
-            'temp' => $temp
         ]);
     }
 

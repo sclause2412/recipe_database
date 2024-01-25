@@ -1,4 +1,5 @@
 import './bootstrap';
+import './textcode';
 
 import { DateTime, Settings, Info } from 'luxon';
 window.DateTime = DateTime;

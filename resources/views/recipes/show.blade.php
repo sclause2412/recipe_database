@@ -1,6 +1,3 @@
-@php
-    $factor = $portions / ($recipe->portions ?? 1);
-@endphp
 <x-app-layout hidetitle>
     <x-slot name="title">{{ __('Recipe') }}</x-slot>
     <x-slot name="subtitle">{{ $recipe->name }}</x-slot>
@@ -14,29 +11,35 @@
     </x-slot>
 
     <x-page-card>
-        <div>
+        <div x-data="{
+            portions: {{ $recipe->portions }},
+            temp_type: 'C',
+            factor: 1,
+            init() {
+                $watch('portions', value => { this.recalculate() });
+                $watch('temp_type', value => { this.recalculate() });
+                $nextTick(() => { this.recalculate() });
+            },
+            recalculate() {
+                this.factor = this.portions / {{ $recipe->portions }};
+                $dispatch('update_ingredients');
+                $dispatch('update_numbers');
+            }
+        }">
             <h1 class="text-4xl font-bold">{{ $recipe->name }}</h1>
             <h2 class="text-xl font-bold">{{ $recipe->category?->name }}</h2>
-            <div class="mt-2">{{ __('Portions:') }} {{ $portions }}
+            <div class="mt-2">{{ __('Portions:') }} <span x-text="portions"></span>
                 <div class="ml-8 inline-block print:hidden">
-                    @if ($portions > 1)
-                        <x-link button icon="minus"
-                            route="recipes.show,{{ $recipe->slug }},portions={{ $portions - 1 }},temp={{ $temp }}"
-                            secondary sm />
-                    @endif
-                    <x-link button icon="plus"
-                        route="recipes.show,{{ $recipe->slug }},portions={{ $portions + 1 }},temp={{ $temp }}"
-                        secondary sm />
+                    <x-button icon="minus" secondary sm x-bind:disabled="portions <= 1" x-on:click="portions--" />
+                    <x-button icon="plus" secondary sm x-on:click="portions++" />
                 </div>
             </div>
             <div class="">{{ __('Time:') }} {{ calculate_time($recipe->time) }}</div>
             <div class="mt-2 print:hidden">
-                <x-link button icon="thermometer"
-                    route="recipes.show,{{ $recipe->slug }},portions={{ $portions }},temp=C" secondary
-                    sm>°C</x-link>
-                <x-link button icon="thermometer"
-                    route="recipes.show,{{ $recipe->slug }},portions={{ $portions }},temp=F" secondary
-                    sm>°F</x-link>
+                <x-button icon="thermometer" sm x-bind:disabled="temp_type == 'C'"
+                    x-on:click="temp_type = 'C'">°C</x-button>
+                <x-button icon="thermometer" sm x-bind:disabled="temp_type == 'F'"
+                    x-on:click="temp_type = 'F'">°F</x-button>
             </div>
             <div class="mt-8 flex flex-nowrap">
                 <div
@@ -56,19 +59,31 @@
                                     </td>
                                 </tr>
                             @endif
-                            <tr>
+                            <tr x-data="{
+                                amount: {{ $ingredient->amount }},
+                                unit: '{{ $ingredient->unit?->unit }}',
+                                fix: {{ $ingredient->fix ? 'true' : 'false' }},
+                                fraction: {{ $ingredient->unit?->fraction ? 'true' : 'false' }},
+                                amount_out: {{ $ingredient->amount }},
+                                unit_out: '',
+                                update() {
+                                    var amount = this.amount * this.factor;
+                                    this.amount_out = calculate_number(amount, this.fraction);
+                                    this.unit_out = calculate_unit(this.unit, amount);
+                                }
+                            }" x-on:update_ingredients.window="update()">
                                 @if (is_null($ingredient->amount))
                                     <td class="pb-1 pr-4 align-top" colspan="2">
-                                        {{ $ingredient->unit?->unit }}</td>
+                                        <span x-html="unit_out"></span>
+                                    </td>
                                 @else
-                                    @php
-                                        $amount = $ingredient->amount * ($ingredient->fix ? 1 : $factor);
-                                    @endphp
                                     <td class="pb-1 pr-1 text-right align-top">
-                                        {{ $ingredient->approximately ? __('appr.') : '' }} {!! calculate_number($amount, $ingredient->unit?->fraction ?? false) !!}
+                                        {{ $ingredient->approximately ? __('appr.') : '' }} <span
+                                            x-html="amount_out"></span>
                                     </td>
                                     <td class="pb-1 pr-4 align-top">
-                                        {{ calculate_unit($ingredient->unit?->unit, $amount) }}</td>
+                                        <span x-html="unit_out"></span>
+                                    </td>
                                 @endif
                                 <td class="pb-1 align-top"><span class="ingredient transition-colors"
                                         x-orig="{{ $ingredient->reference }}">{{ $ingredient->ingredient?->name }}{{ is_null($ingredient->ingredient?->info) ? '' : ' (' . $ingredient->ingredient?->info . ')' }}</span>
@@ -82,7 +97,7 @@
                         <div class="flex break-inside-avoid gap-4 py-2">
                             <div class="text-4xl text-gray-400 dark:text-gray-600">{{ $step->step }}</div>
                             <div>
-                                {!! text_code_format($step->text, $ingredient_list, $factor, $temp) !!}
+                                {!! text_code_format($step->text, $ingredient_list) !!}
                             </div>
                         </div>
                     @endforeach
@@ -93,7 +108,7 @@
                 @foreach ($comments as $comment)
                     <div class="py-2">
                         <div>
-                            {!! text_code_format($comment->text, $ingredient_list, $factor, $temp) !!}
+                            {!! text_code_format($comment->text, $ingredient_list) !!}
                         </div>
                     </div>
                 @endforeach
