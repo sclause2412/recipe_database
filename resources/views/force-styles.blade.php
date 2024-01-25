@@ -47,8 +47,17 @@ TEXT COLOR
 
 BACKGROUND COLOR
 
-<div class="bg-yellow-300"></div>
-<div class="dark:bg-yellow-900"></div>
+<div class="bg-red-200"></div>
+<div class="dark:bg-red-800"></div>
+
+<div class="bg-yellow-200 bg-yellow-300"></div>
+<div class="dark:bg-yellow-800 dark:bg-yellow-900"></div>
+
+<div class="bg-green-200"></div>
+<div class="dark:bg-green-800"></div>
+
+<div class="bg-blue-200"></div>
+<div class="dark:bg-blue-800"></div>
 
 ALIGNMENT
 

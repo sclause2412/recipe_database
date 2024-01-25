@@ -23,8 +23,10 @@
             },
             recalculate() {
                 this.portions = Math.floor(this.portions * 8) / 8;
-                if (this.portions == 0)
+                if (this.portions < 0.125)
                     this.portions = 0.125;
+                if (this.portions > 10000)
+                    this.portions = 10000;
                 this.factor = this.portions / {{ $recipe->portions }};
                 this.portions_frac = calculate_fraction(this.portions);
                 $dispatch('update_ingredients');
@@ -75,7 +77,10 @@
                                 amount_out: {{ $ingredient->amount }},
                                 unit_out: '',
                                 update() {
-                                    var amount = this.amount * this.factor;
+                                    if (this.fix)
+                                        var amount = this.amount;
+                                    else
+                                        var amount = this.amount * this.factor;
                                     this.amount_out = calculate_number(amount, this.fraction);
                                     this.unit_out = calculate_unit(this.unit, amount);
                                 }

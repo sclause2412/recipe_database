@@ -852,7 +852,7 @@ if (!function_exists('text_code_format')) {
             $t = intval($matches[1]);
 
             if ($preview) {
-                return $t . '°C';
+                return '<span class="bg-blue-200 dark:bg-blue-800">' . $t . '°C</span>';
             }
 
             return '<span x-data="{
@@ -870,7 +870,7 @@ if (!function_exists('text_code_format')) {
         $text = preg_replace_callback('/\[(\d+(?:\.\d+)?(!?))\]/', function ($matches) use ($preview) {
             $n = floatval($matches[1]);
             if ($preview) {
-                return $n;
+                return '<span class="' . ($matches[2] == '!' ? 'bg-red-200 dark:bg-red-800' : 'bg-yellow-200 dark:bg-yellow-800') . '">' . $n . '</span>';
             }
 
             return '<span x-data="{
@@ -894,7 +894,7 @@ if (!function_exists('text_code_format')) {
             }
 
             if ($preview) {
-                return '<span class="diagonal-fractions">' . $n1 . '/' . $n2 . '</span>';
+                return '<span class="diagonal-fractions ' . ($matches[3] == '!' ? 'bg-red-200 dark:bg-red-800' : 'bg-yellow-200 dark:bg-yellow-800') . '">' . $n1 . '/' . $n2 . '</span>';
             }
 
             return '<span x-data="{
