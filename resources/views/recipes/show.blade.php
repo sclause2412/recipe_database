@@ -12,8 +12,8 @@
 
     <x-page-card>
         <div x-data="{
-            portions: {{ $recipe->portions }},
-            portions_frac: {{ $recipe->portions }},
+            portions: {{ $recipe->portions ?? 1 }},
+            portions_frac: {{ $recipe->portions ?? 1 }},
             temp_type: 'C',
             factor: 1,
             init() {
@@ -27,7 +27,7 @@
                     this.portions = 0.125;
                 if (this.portions > 10000)
                     this.portions = 10000;
-                this.factor = this.portions / {{ $recipe->portions }};
+                this.factor = this.portions / {{ $recipe->portions ?? 1 }};
                 this.portions_frac = calculate_fraction(this.portions);
                 $dispatch('update_ingredients');
                 $dispatch('update_numbers');
@@ -75,11 +75,11 @@
                                 </tr>
                             @endif
                             <tr x-data="{
-                                amount: {{ $ingredient->amount }},
+                                amount: {{ $ingredient->amount ?? 0 }},
                                 unit: '{{ $ingredient->unit?->unit }}',
                                 fix: {{ $ingredient->fix ? 'true' : 'false' }},
                                 fraction: {{ $ingredient->unit?->fraction ? 'true' : 'false' }},
-                                amount_out: {{ $ingredient->amount }},
+                                amount_out: {{ $ingredient->amount ?? 0 }},
                                 unit_out: '',
                                 update() {
                                     if (this.fix)
