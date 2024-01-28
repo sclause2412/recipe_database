@@ -35,6 +35,11 @@
         }">
             <h1 class="text-4xl font-bold">{{ $recipe->name }}</h1>
             <h2 class="text-xl font-bold">{{ $recipe->category?->name }}</h2>
+            @if ($picture)
+                <div class="mt-2 print:flex print:justify-center"><img
+                        class="h-80 w-auto rounded-md object-cover print:h-auto print:w-full"
+                        src="{{ $picture }}"></div>
+            @endif
             <div class="mt-2">{{ __('Portions:') }} <span x-html="portions_frac"></span>
                 <div class="ml-8 inline-block print:hidden">
                     <x-button secondary sm x-bind:disabled="portions <= 0.125"

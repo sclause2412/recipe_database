@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Files\HasImage;
 use App\Models\Recipe;
 
 class RecipeController extends Controller
 {
+    use HasImage;
+
     public function __construct()
     {
         $this->authorizeResource(Recipe::class, 'recipe');
@@ -38,12 +41,15 @@ class RecipeController extends Controller
 
         $ingredient_list = $ingredients->pluck('ingredient.name', 'reference');
 
+        $picture = $this->getImage('recipes/' . $recipe->picture);
+
         return view('recipes.show', [
             'recipe' => $recipe,
             'ingredients' => $ingredients,
             'steps' => $steps,
             'comments' => $comments,
             'ingredient_list' => $ingredient_list,
+            'picture' => $picture
         ]);
     }
 

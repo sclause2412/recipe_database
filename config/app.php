@@ -191,6 +191,7 @@ return [
         'Illuminate\Auth\Notifications\ResetPassword' => App\Overrides\ResetPassword::class,
         'Laravel\Fortify\Http\Controllers\NewPasswordController' => App\Overrides\NewPasswordController::class,
         'Laravel\Jetstream\ConfirmsPasswords' => App\Overrides\ConfirmsPasswords::class,
+        'Intervention\Image\Drivers\Gd\Modifiers\DrawLineModifier' => App\Overrides\DrawLineModifier::class,
         'WireUi\Traits\WireUiActions' => WireUi\Traits\Actions::class,
         'RightConstants' => App\Constants\RightConstants::class,
         'LevelConstants' => App\Constants\LevelConstants::class,

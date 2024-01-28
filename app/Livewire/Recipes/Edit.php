@@ -2,17 +2,22 @@
 
 namespace App\Livewire\Recipes;
 
+use App\Actions\Files\HasImage;
 use App\Actions\Livewire\CleanupInput;
 use App\Models\Category;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use WireUi\Traits\WireUiActions;
 
 class Edit extends Component
 {
     use CleanupInput;
     use WireUiActions;
+    use WithFileUploads;
+    use HasImage;
 
     public $recipe = null;
+    public $picture = false;
     public $name = null;
     public $category = null;
     public $cooked = false;
@@ -21,6 +26,7 @@ class Edit extends Component
     public $time = null;
     public $description = null;
     public $active = false;
+    public $actpicture = false;
 
 
     public function mount($recipe)
@@ -34,6 +40,8 @@ class Edit extends Component
         $this->time = $this->recipe->time;
         $this->description = $this->recipe->description;
         $this->active = $this->recipe->active;
+
+        $this->actpicture = $this->getImage('recipes/' . $recipe->picture);
     }
 
     public function render()
@@ -57,6 +65,7 @@ class Edit extends Component
         $this->active = $this->cleanInput($this->active);
 
         $this->validate([
+            'picture' => ['nullable', 'mimes:jpg,jpeg,png'],
             'name' => ['required', 'string', 'max:255'],
             'category' => ['required'],
             'cooked' => ['boolean'],
@@ -81,8 +90,38 @@ class Edit extends Component
         $recipe->time = $this->time;
         $recipe->description = $this->description;
         $recipe->active = $this->active;
+        if ($this->picture) {
+            if (!is_null($this->recipe->picture)) {
+                $this->deleteImage('recipes/' . $this->recipe->picture);
+            }
+            $id = md5(uniqid());
+            $path = $this->uploadImage($this->picture, 'recipes/' . $id, ['width' => 1500, 'height' => 500]);
+            if ($path !== null) {
+                $recipe->picture = $id;
+            }
+            $this->picture = false;
+            $this->actpicture = $this->getImage('recipes/' . $recipe->picture);
+        }
         $recipe->save();
 
         $this->notification()->success(__('Recipe saved'), __('The recipe was successfully saved'));
+    }
+
+    public function updatePicture()
+    {
+        $this->validate(['picture' => ['integer', 'mimes:jpg,jpeg,png']]);
+    }
+
+    public function deletePicture()
+    {
+        $this->authorize('update', $this->recipe);
+
+        if (!is_null($this->recipe->picture)) {
+            $this->deleteImage('recipes/' . $this->recipe->picture);
+            $this->recipe->picture = null;
+            $this->recipe->save();
+        }
+
+        $this->picture = false;
     }
 }

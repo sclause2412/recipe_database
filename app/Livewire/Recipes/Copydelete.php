@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Recipes;
 
+use App\Actions\Files\HasImage;
 use App\Models\Recipe;
 use App\Models\RecipeComment;
 use App\Models\RecipeIngredient;
@@ -12,6 +13,7 @@ use Livewire\Component;
 class Copydelete extends Component
 {
     use ConfirmsPasswords;
+    use HasImage;
 
     public $recipe;
 
@@ -35,6 +37,11 @@ class Copydelete extends Component
         $recipe->steps()->delete();
         $recipe->comments()->delete();
 
+        if (!is_null($recipe->picture)) {
+            $this->deleteImage('recipes/' . $recipe->picture);
+        }
+
+
         $recipe->delete();
         return redirect()->route('recipes.index');
     }
@@ -53,7 +60,14 @@ class Copydelete extends Component
         $recipe->portions = $source->portions;
         $recipe->time = $source->time;
         $recipe->description = $source->description;
-        $recipe->active = $source->active;
+        $recipe->active = false;
+        if (!is_null($source->picture)) {
+            $id = md5(uniqid());
+            if ($this->copyImage('recipes/' . $source->picture, 'recipes/' . $id)) {
+                $recipe->picture = $id;
+            }
+        }
+
         $recipe->save();
 
         foreach ($source->ingredients as $row) {

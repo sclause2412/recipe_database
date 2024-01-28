@@ -2,18 +2,23 @@
 
 namespace App\Livewire\Recipes;
 
+use App\Actions\Files\HasImage;
 use App\Actions\Livewire\CleanupInput;
 use App\Models\Category;
 use App\Models\Recipe;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use WireUi\Traits\WireUiActions;
 
 class Create extends Component
 {
     use CleanupInput;
     use WireUiActions;
+    use WithFileUploads;
+    use HasImage;
 
     public $name = null;
+    public $picture;
     public $category = null;
     public $cooked = false;
     public $source = null;
@@ -41,6 +46,7 @@ class Create extends Component
         $this->active = $this->cleanInput($this->active);
 
         $this->validate([
+            'picture' => ['nullable', 'mimes:jpg,jpeg,png'],
             'name' => ['required', 'string', 'max:255'],
             'category' => ['required'],
             'cooked' => ['boolean'],
@@ -66,6 +72,14 @@ class Create extends Component
         $recipe->time = $this->time;
         $recipe->description = $this->description;
         $recipe->active = $this->active;
+        if (!is_null($this->picture)) {
+            $id = md5(uniqid());
+            $path = $this->uploadImage($this->picture, 'recipes/' . $id, ['width' => 1500, 'height' => 500]);
+            if ($path !== null) {
+                $recipe->picture = $id;
+            }
+            $this->picture = null;
+        }
         $recipe->save();
 
         return redirect()->route('recipes.edit', $recipe);

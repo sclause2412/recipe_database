@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ImageController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\RecipeController;
@@ -119,13 +118,6 @@ Route::get('/', [WelcomeController::class, 'welcome'])->name('welcome');
 Route::get('/theme/style/{style}', [ThemeController::class, 'style'])->name('theme.style');
 Route::get('/theme/font/{font}', [ThemeController::class, 'font'])->name('theme.font');
 Route::get('/language/{locale}', [ThemeController::class, 'language'])->name('language');
-
-Route::get('/image/o/{path}', [ImageController::class, 'orig'])->where(['path' => '[A-za-z0-9\-_/]+']);
-Route::get('/image/w/{sizex}/{path}', [ImageController::class, 'width'])->where(['sizex' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
-Route::get('/image/h/{sizey}/{path}', [ImageController::class, 'height'])->where(['sizey' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
-Route::get('/image/f/{sizex}/{sizey}/{path}', [ImageController::class, 'fit'])->where(['sizex' => '[1-9][0-9]{0,3}', 'sizey' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
-Route::get('/image/c/{sizex}/{sizey}/{path}', [ImageController::class, 'fill'])->where(['sizex' => '[1-9][0-9]{0,3}', 'sizey' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
-Route::get('/image/s/{sizex}/{sizey}/{path}', [ImageController::class, 'stretch'])->where(['sizex' => '[1-9][0-9]{0,3}', 'sizey' => '[1-9][0-9]{0,3}', 'path' => '[A-Za-z0-9\-_/]+']);
 
 Route::get('/privacy', [LegalController::class, 'privacy'])->name('legal.privacy');
 Route::get('/imprint', [LegalController::class, 'imprint'])->name('legal.imprint');

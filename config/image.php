@@ -1,13 +1,20 @@
 <?php
 
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+
 return [
 
-    'thumbnail' => [
-        'validsize' => [50, 100, 150, 200, 300, 400, 500, 600, 1000]
-    ],
+    'driver' => (extension_loaded('imagick') && class_exists('Imagick')) ? ImagickDriver::class : GdDriver::class,
+
 
     'profile' => [
         'size' => 200,
         'path' => 'profile-photos',
-    ]
+    ],
+
+    'image' => [
+        'width' => 1000,
+        'height' => 1000,
+    ],
 ];

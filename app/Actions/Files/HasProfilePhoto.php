@@ -5,7 +5,7 @@ namespace App\Actions\Files;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager;
 
 trait HasProfilePhoto
 {
@@ -21,19 +21,15 @@ trait HasProfilePhoto
         $size = config('image.profile.size', 200);
         $path = config('image.profile.path', 'profile-photos');
 
-        $imgSource = Image::make($photo->path());
-        $f = max($size / $imgSource->width(), $size / $imgSource->height());
-        $imgSource->resize($imgSource->width() * $f, $imgSource->height() * $f, function ($constraint) {
-            $constraint->aspectRatio();
-        });
-        $imgSource->crop($size, $size);
+
+        $imgSource = (new ImageManager(config('image.driver')))->read($photo->path());
+        $imgSource->cover($size, $size);
+
+        $imgData = $imgSource->toPng();
 
         $destFile = $path . '/' . md5(uniqid()) . '.png';
 
-        $fp = Storage::path('public/' . $destFile);
-        Storage::createDirectory('public/' . $path, ['visibility' => 'public']);
-        $imgSource->save($fp, 100, 'png');
-
+        Storage::put('public/' . $destFile, $imgData, ['visibility' => 'public', 'directory_visibility' => 'public']);
 
         if (!is_null($this->profile_photo_path)) {
             Storage::delete('public/' . $this->profile_photo_path);
@@ -104,21 +100,19 @@ trait HasProfilePhoto
         $background = RGBtoHEX(HSVtoRGB($h, random_float(10, 20), 100));
         $color = RGBtoHEX(HSVtoRGB($h, 100, random_float(50, 100)));
 
-        $img = Image::canvas($size, $size, $background);
+        $img = (new ImageManager(config('image.driver')))->create($size, $size)->fill($background);
 
         $img->text(strtoupper($initials), intval($size / 2), intval($size / 2), function ($font) use ($size, $color) {
-            $font->file(resource_path('fonts/Gontserrat-Regular.ttf'));
+            $font->filename(resource_path('fonts/Gontserrat-Regular.ttf'));
             $font->size(intval($size / 2));
             $font->align('center');
             $font->valign('middle');
             $font->color($color);
         });
 
+        $imgData = $img->toPng();
 
-        $fp = Storage::path('public/' . $destFile);
-        Storage::createDirectory('public/' . $path, ['visibility' => 'public']);
-        $img->save($fp, 100, 'png');
-
+        Storage::put('public/' . $destFile, $imgData, ['visibility' => 'public', 'directory_visibility' => 'public']);
 
         $this->forceFill([
             'profile_photo_path' => $destFile,
