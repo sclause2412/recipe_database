@@ -14,17 +14,14 @@
                 <x-table.cell>{{ $ingredient->name }}</x-table.cell>
                 <x-table.cell>{{ $ingredient->info }}</x-table.cell>
                 <x-table.cell>{{ $ingredient->recipes->count() }}</x-table.cell>
-                <x-table.cell>
-                    <div class="flex justify-end space-x-2 text-lg">
-                        @if (check_write('recipe'))
-                            <x-button icon="pencil" secondary title="{{ __('Edit') }}"
-                                wire:click="editIngredient('{{ $ingredient->id }}')" />
-                            <x-deletebutton icon wire:click="deleteIngredient('{{ $ingredient->id }}')" />
-                        @endif
-                        <x-link button icon="eye" route="ingredients.show,{{ $ingredient->id }}"
-                            title="{{ __('Show') }}" />
-
-                    </div>
+                <x-table.cell buttons>
+                    @if (check_write('recipe'))
+                        <x-button icon="pencil" secondary title="{{ __('Edit') }}"
+                            wire:click="editIngredient('{{ $ingredient->id }}')" />
+                        <x-deletebutton icon wire:click="deleteIngredient('{{ $ingredient->id }}')" />
+                    @endif
+                    <x-link button icon="eye" route="ingredients.show,{{ $ingredient->id }}"
+                        title="{{ __('Show') }}" />
                 </x-table.cell>
             </x-table.row>
         @empty

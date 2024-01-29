@@ -26,15 +26,13 @@
                     @if (check_read('recipe'))
                         <x-table.cell class="align-top">{{ $recipe->active ? __('Yes') : __('No') }}</x-table.cell>
                     @endif
-                    <x-table.cell>
-                        <div class="flex justify-end space-x-2 text-lg">
-                            <x-link button icon="eye" route="recipes.show,{{ $recipe->slug }}"
-                                title="{{ __('Show') }}" />
-                            @if (check_write('recipe'))
-                                <x-link button icon="pencil" route="recipes.edit,{{ $recipe->slug }}"
-                                    title="{{ __('Edit') }}" />
-                            @endif
-                        </div>
+                    <x-table.cell buttons>
+                        <x-link button icon="eye" route="recipes.show,{{ $recipe->slug }}"
+                            title="{{ __('Show') }}" />
+                        @if (check_write('recipe'))
+                            <x-link button icon="pencil" route="recipes.edit,{{ $recipe->slug }}"
+                                title="{{ __('Edit') }}" />
+                        @endif
                     </x-table.cell>
                 </x-table.row>
             @empty

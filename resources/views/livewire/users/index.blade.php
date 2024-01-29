@@ -41,13 +41,11 @@
                     <x-table.cell>{{ is_null($user->two_factor_confirmed_at) ? __('No') : __('Yes') }}
                     </x-table.cell>
                     <x-table.cell>{{ $user->admin ? __('Yes') : __('No') }}</x-table.cell>
-                    <x-table.cell>
-                        <div class="flex space-x-2 text-lg">
-                            <x-link button icon="eye" route="users.show,{{ $user->id }}"
-                                title="{{ __('Show') }}" />
-                            <x-link button icon="pencil" route="users.edit,{{ $user->id }}"
-                                title="{{ __('Edit') }}" />
-                        </div>
+                    <x-table.cell buttons>
+                        <x-link button icon="eye" route="users.show,{{ $user->id }}"
+                            title="{{ __('Show') }}" />
+                        <x-link button icon="pencil" route="users.edit,{{ $user->id }}"
+                            title="{{ __('Edit') }}" />
                     </x-table.cell>
                 </x-table.row>
             @empty

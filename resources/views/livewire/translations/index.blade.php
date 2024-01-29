@@ -12,16 +12,14 @@
                 <x-table.cell class="align-top">{{ $locale->locale }}</x-table.cell>
                 <x-table.cell class="align-top">{{ $locale->_count }}</x-table.cell>
                 <x-table.cell class="align-top">{{ $locale->_done }}</x-table.cell>
-                <x-table.cell>
-                    <div class="flex justify-end space-x-2 text-lg">
-                        @if (check_write('translate'))
-                            <x-link button icon="pencil" route="translations.edit,{{ $locale->locale }}"
-                                title="{{ __('Edit') }}" />
-                        @elseif(check_read('translate'))
-                            <x-link button icon="eye" route="translations.edit,{{ $locale->locale }}"
-                                title="{{ __('Show') }}" />
-                        @endif
-                    </div>
+                <x-table.cell buttons>
+                    @if (check_write('translate'))
+                        <x-link button icon="pencil" route="translations.edit,{{ $locale->locale }}"
+                            title="{{ __('Edit') }}" />
+                    @elseif(check_read('translate'))
+                        <x-link button icon="eye" route="translations.edit,{{ $locale->locale }}"
+                            title="{{ __('Show') }}" />
+                    @endif
                 </x-table.cell>
             </x-table.row>
         @empty

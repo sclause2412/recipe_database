@@ -16,16 +16,14 @@
                 <x-table.cell>{{ $unit->unit }}</x-table.cell>
                 <x-table.cell>{{ $unit->fraction ? __('Yes') : __('No') }}</x-table.cell>
                 <x-table.cell>{{ $unit->recipes->count() }}</x-table.cell>
-                <x-table.cell>
-                    <div class="flex justify-end space-x-2 text-lg">
-                        @if (check_write('recipe'))
-                            <x-button icon="pencil" secondary title="{{ __('Edit') }}"
-                                wire:click="editUnit('{{ $unit->id }}')" />
-                            <x-deletebutton icon wire:click="deleteUnit('{{ $unit->id }}')" />
-                        @endif
-                        <x-link button icon="eye" route="units.show,{{ $unit->id }}"
-                            title="{{ __('Show') }}" />
-                    </div>
+                <x-table.cell buttons>
+                    @if (check_write('recipe'))
+                        <x-button icon="pencil" secondary title="{{ __('Edit') }}"
+                            wire:click="editUnit('{{ $unit->id }}')" />
+                        <x-deletebutton icon wire:click="deleteUnit('{{ $unit->id }}')" />
+                    @endif
+                    <x-link button icon="eye" route="units.show,{{ $unit->id }}"
+                        title="{{ __('Show') }}" />
                 </x-table.cell>
             </x-table.row>
         @empty

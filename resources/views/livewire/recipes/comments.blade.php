@@ -7,16 +7,14 @@
         @forelse ($comments as $comment)
             <x-table.row wire:loading.class.delay="opacity-50">
                 <x-table.cell>{!! text_code_format($comment->text, $ingredients, true) !!}</x-table.cell>
-                <x-table.cell>
-                    <div class="flex justify-end space-x-2 text-lg">
-                        <x-button :disabled="$loop->first" icon="arrow-up" secondary title="{{ __('Up') }}"
-                            wire:click="stepUp('{{ $comment->id }}')" />
-                        <x-button :disabled="$loop->last" icon="arrow-down" secondary title="{{ __('Up') }}"
-                            wire:click="stepDown('{{ $comment->id }}')" />
-                        <x-button icon="pencil" primary title="{{ __('Edit') }}"
-                            wire:click="editComment('{{ $comment->id }}')" />
-                        <x-deletebutton icon wire:click="deleteComment('{{ $comment->id }}')" />
-                    </div>
+                <x-table.cell buttons>
+                    <x-button :disabled="$loop->first" icon="arrow-up" secondary title="{{ __('Up') }}"
+                        wire:click="stepUp('{{ $comment->id }}')" />
+                    <x-button :disabled="$loop->last" icon="arrow-down" secondary title="{{ __('Up') }}"
+                        wire:click="stepDown('{{ $comment->id }}')" />
+                    <x-button icon="pencil" primary title="{{ __('Edit') }}"
+                        wire:click="editComment('{{ $comment->id }}')" />
+                    <x-deletebutton icon wire:click="deleteComment('{{ $comment->id }}')" />
                 </x-table.cell>
             </x-table.row>
         @empty

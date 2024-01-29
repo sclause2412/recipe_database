@@ -21,18 +21,16 @@
                 <x-table.cell class="align-top">{{ $entry->key }}</x-table.cell>
                 <x-table.cell class="align-top">{{ $entry->value }}</x-table.cell>
                 <x-table.cell class="align-top">{{ $entry->done ? __('Yes') : __('No') }}</x-table.cell>
-                <x-table.cell>
-                    <div class="flex justify-end space-x-2 text-lg">
-                        @if (check_write('translate'))
-                            @if (!$entry->done && is_null($entry->value))
-                                <x-button icon="fast-forward" positive title="{{ __('Take over') }}"
-                                    wire:click="fastEntry('{{ $entry->id }}')" />
-                            @endif
-                            <x-button icon="pencil" primary title="{{ __('Edit') }}"
-                                wire:click="editEntry('{{ $entry->id }}')" />
-                            <x-deletebutton icon wire:click="deleteEntry('{{ $entry->id }}')" />
+                <x-table.cell buttons>
+                    @if (check_write('translate'))
+                        @if (!$entry->done && is_null($entry->value))
+                            <x-button icon="fast-forward" positive title="{{ __('Take over') }}"
+                                wire:click="fastEntry('{{ $entry->id }}')" />
                         @endif
-                    </div>
+                        <x-button icon="pencil" primary title="{{ __('Edit') }}"
+                            wire:click="editEntry('{{ $entry->id }}')" />
+                        <x-deletebutton icon wire:click="deleteEntry('{{ $entry->id }}')" />
+                    @endif
                 </x-table.cell>
             </x-table.row>
         @empty

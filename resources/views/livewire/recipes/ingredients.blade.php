@@ -68,16 +68,14 @@
                     <x-table.cell>{{ $ingredient->approximately ? '~ ' : '' }}<span
                             class="{{ $ingredient->fix ? 'bg-red-200 dark:bg-red-800' : '' }}">{{ $ingredient->amount }}</span></x-table.cell>
                     <x-table.cell>{{ $unit }}</x-table.cell>
-                    <x-table.cell>
-                        <div class="flex justify-end space-x-2 text-lg">
-                            <x-button :disabled="$disable_up" :style="$style_up" icon="arrow-up" title="{{ $text_up }}"
-                                wire:click="stepUp('{{ $ingredient->id }}')" />
-                            <x-button :disabled="$disable_down" :style="$style_down" icon="arrow-down" title="{{ $text_down }}"
-                                wire:click="stepDown('{{ $ingredient->id }}')" />
-                            <x-button icon="pencil" primary title="{{ __('Edit') }}"
-                                wire:click="editIngredient('{{ $ingredient->id }}')" />
-                            <x-deletebutton icon wire:click="deleteIngredient('{{ $ingredient->id }}')" />
-                        </div>
+                    <x-table.cell buttons>
+                        <x-button :disabled="$disable_up" :style="$style_up" icon="arrow-up" title="{{ $text_up }}"
+                            wire:click="stepUp('{{ $ingredient->id }}')" />
+                        <x-button :disabled="$disable_down" :style="$style_down" icon="arrow-down" title="{{ $text_down }}"
+                            wire:click="stepDown('{{ $ingredient->id }}')" />
+                        <x-button icon="pencil" primary title="{{ __('Edit') }}"
+                            wire:click="editIngredient('{{ $ingredient->id }}')" />
+                        <x-deletebutton icon wire:click="deleteIngredient('{{ $ingredient->id }}')" />
                     </x-table.cell>
                 </x-table.row>
             @endwhile

@@ -9,11 +9,8 @@
             <x-table.row wire:loading.class.delay="opacity-50">
                 <x-table.cell>{{ $recipe->name }}</x-table.cell>
                 <x-table.cell>{{ $recipe->cooked ? __('Yes') : __('No') }}</x-table.cell>
-                <x-table.cell>
-                    <div class="flex justify-end space-x-2 text-lg">
-                        <x-link button icon="eye" route="recipes.show,{{ $recipe->slug }}"
-                            title="{{ __('Show') }}" />
-                    </div>
+                <x-table.cell buttons>
+                    <x-link button icon="eye" route="recipes.show,{{ $recipe->slug }}" title="{{ __('Show') }}" />
                 </x-table.cell>
             </x-table.row>
         @empty

@@ -5,7 +5,7 @@
 
             <x-input class="hidden" label="{{ __('Picture') }}" type="file" wire:model="picture" x-ref="picture" />
 
-            <div class="mt-2 flex items-center gap-4">
+            <div class="mt-2 flex flex-wrap items-center gap-4">
                 @if ($actpicture)
                     <img class="h-20 w-60 cursor-pointer rounded-md object-cover" src="{{ $actpicture }}"
                         x-on:click.prevent="$refs.picture.click()">

@@ -12,17 +12,14 @@
             <x-table.row wire:loading.class.delay="opacity-50">
                 <x-table.cell>{{ $category->name }}</x-table.cell>
                 <x-table.cell>{{ $category->recipes->count() }}</x-table.cell>
-                <x-table.cell>
-                    <div class="flex justify-end space-x-2 text-lg">
-                        @if (check_write('recipe'))
-                            <x-button icon="pencil" secondary title="{{ __('Edit') }}"
-                                wire:click="editCategory('{{ $category->id }}')" />
-                            <x-deletebutton icon wire:click="deleteCategory('{{ $category->id }}')" />
-                        @endif
-                        <x-link button icon="eye" route="categories.show,{{ $category->id }}"
-                            title="{{ __('Show') }}" />
-
-                    </div>
+                <x-table.cell buttons>
+                    @if (check_write('recipe'))
+                        <x-button icon="pencil" secondary title="{{ __('Edit') }}"
+                            wire:click="editCategory('{{ $category->id }}')" />
+                        <x-deletebutton icon wire:click="deleteCategory('{{ $category->id }}')" />
+                    @endif
+                    <x-link button icon="eye" route="categories.show,{{ $category->id }}"
+                        title="{{ __('Show') }}" />
                 </x-table.cell>
             </x-table.row>
         @empty
