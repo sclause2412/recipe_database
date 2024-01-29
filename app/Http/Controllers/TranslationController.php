@@ -155,6 +155,8 @@ class TranslationController extends Controller
 
                             $key = str_replace('\\' . $quote, $quote, $key);
 
+                            $key = str_replace(["\\n", "\\r", "\\t"], ["\n", "\r", "\t"], $key);
+
                             if (!in_array($key, $allkeys)) {
                                 if (preg_match('/^([a-z0-9]+)\\.([A-Za-z0-9\.]+)$/', $key, $m2)) {
                                     $group = $m2[1];
