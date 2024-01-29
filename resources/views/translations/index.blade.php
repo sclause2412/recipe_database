@@ -8,25 +8,29 @@
         @livewire('translations.index')
 
         @if (check_write('translate'))
-            <div class="flex gap-4" x-data="{ locale: '' }">
-                <div class="w-1/2"> <x-input x-model="locale" /></div>
-                <div class="w-1/2">
-                    <x-button icon="plus"
-                        x-on:click="if(locale=='')
-                        {
-                            $wireui.notify({
-                                icon: 'error',
-                                title: '{{ __('Missing language!') }}',
-                                description: '{{ __('Please enter a valid language (use locale string, e.g. en or en_US) before pressing the button.') }}',
-                            });
-                        }
-                        else
-                        {
-                            location.href='{{ route('translations.edit', 'LOC') }}'.replace('LOC',locale);
-                        }">{{ __('Add new language') }}</x-button>
-                </div>
+            <div class="flex flex-wrap gap-4" x-data="{ locale: '' }">
+                <x-input x-model="locale">
+                    <x-slot name="append">
+                        <div class="absolute inset-y-0 right-0 flex items-center p-0.5">
+                            <x-button class="h-full rounded-r-md" flat icon="plus" squared
+                                x-on:click="if(locale=='')
+                                {
+                                    $wireui.notify({
+                                        icon: 'error',
+                                        title: '{{ __('Missing language!') }}',
+                                        description: '{{ __('Please enter a valid language (use locale string, e.g. en or en_US) before pressing the button.') }}',
+                                    });
+                                }
+                                else
+                                {
+                                    location.href='{{ route('translations.edit', 'LOC') }}'.replace('LOC',locale);
+                                }">{{ __('Add new language') }}
+                            </x-button>
+                        </div>
+                    </x-slot>
+                </x-input>
             </div>
-            <div class="mt-4 flex gap-4">
+            <div class="mt-4 flex flex-wrap gap-4">
                 <x-link button route="translations.read">{{ __('Scan files for translations') }}</x-link>
                 <x-button secondary
                     x-on:confirm="{

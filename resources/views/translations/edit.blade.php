@@ -11,7 +11,7 @@
 
         @livewire('translations.edit', ['locale' => $locale])
 
-        <div class="flex gap-4">
+        <div class="flex flex-wrap gap-4">
             @if (check_write('translate'))
                 <x-link button
                     route="translations.sync,{{ $locale }}">{{ __('Sync from other languages') }}</x-link>
