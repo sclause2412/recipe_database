@@ -56,9 +56,9 @@
                 <x-button icon="thermometer" sm x-bind:disabled="temp_type == 'F'"
                     x-on:click="temp_type = 'F'">°F</x-button>
             </div>
-            <div class="mt-8 flex flex-nowrap">
-                <div
-                    class="min-w-min flex-none border-r-2 border-dotted border-gray-400 pb-4 pr-4 dark:border-gray-600">
+            <div
+                class="flex flex-row flex-wrap items-stretch divide-y-2 divide-dotted divide-gray-400 dark:divide-gray-600 sm:flex-nowrap sm:divide-x-2 sm:divide-y-0">
+                <div class="flex-none basis-full pb-4 print:!basis-0 sm:basis-80 sm:pr-4">
                     <table>
                         @php
                             $group = null;
@@ -95,7 +95,7 @@
                                         <span x-html="unit_out"></span>
                                     </td>
                                 @else
-                                    <td class="pb-1 pr-1 text-right align-top">
+                                    <td class="whitespace-nowrap pb-1 pr-1 text-right align-top">
                                         {{ $ingredient->approximately ? __('appr.') : '' }} <span
                                             x-html="amount_out"></span>
                                     </td>
@@ -110,7 +110,7 @@
                         @endforeach
                     </table>
                 </div>
-                <div class="divide-y divide-gray-400 pb-4 pl-4 dark:divide-gray-600">
+                <div class="divide-y divide-gray-400 pb-4 pt-8 dark:divide-gray-600 sm:pl-4 sm:pt-0">
                     @foreach ($steps as $step)
                         <div class="flex break-inside-avoid gap-4 py-2">
                             <div class="text-4xl text-gray-400 dark:text-gray-600">{{ $step->step }}</div>
@@ -122,7 +122,7 @@
                 </div>
             </div>
             <div
-                class="w-full divide-y divide-gray-400 border-t-2 border-dotted border-gray-400 pt-8 dark:divide-gray-600 dark:border-gray-600">
+                class="w-full break-inside-avoid divide-y divide-gray-400 border-t-2 border-dotted border-gray-400 pt-8 dark:divide-gray-600 dark:border-gray-600">
                 @foreach ($comments as $comment)
                     <div class="py-2">
                         <div>
