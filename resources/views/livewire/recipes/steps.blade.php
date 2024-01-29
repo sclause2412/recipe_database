@@ -17,8 +17,6 @@
                     <x-deletebutton icon wire:click="deleteStep('{{ $step->id }}')" />
                 </x-table.cell>
             </x-table.row>
-        @break
-
         @empty
             <x-table.row wire:loading.class.delay="opacity-50">
                 <x-table.cell colspan="2">
