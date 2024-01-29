@@ -18,7 +18,7 @@
             <h1>{{ __('Some random recipes') }}</h1>
             @foreach ($data as $category)
                 <h2 claxss="mb-2 mt-8 text-xl font-bold">{{ $category['name'] }}</h2>
-                <div class="grid grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ($category['recipes'] as $recipe)
                         <x-link class="no-underline" route="recipes.show,{{ $recipe->slug }}">
                             <div class="w-full rounded-xl bg-gray-100 p-4 shadow-lg dark:bg-gray-900">
