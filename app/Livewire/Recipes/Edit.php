@@ -17,7 +17,7 @@ class Edit extends Component
     use HasImage;
 
     public $recipe = null;
-    public $picture = false;
+    public $picture = null;
     public $name = null;
     public $category = null;
     public $cooked = false;
@@ -26,7 +26,7 @@ class Edit extends Component
     public $time = null;
     public $description = null;
     public $active = false;
-    public $actpicture = false;
+    public $actpicture = null;
 
 
     public function mount($recipe)
@@ -41,7 +41,7 @@ class Edit extends Component
         $this->description = $this->recipe->description;
         $this->active = $this->recipe->active;
 
-        $this->actpicture = $this->getImage('recipes/' . $recipe->picture);
+        $this->actpicture = $this->getImage('recipes/' . $recipe->picture) ?: null;
     }
 
     public function render()
@@ -90,17 +90,17 @@ class Edit extends Component
         $recipe->time = $this->time;
         $recipe->description = $this->description;
         $recipe->active = $this->active;
-        if ($this->picture) {
+        if (!is_null($this->picture)) {
             if (!is_null($this->recipe->picture)) {
                 $this->deleteImage('recipes/' . $this->recipe->picture);
             }
             $id = md5(uniqid());
             $path = $this->uploadImage($this->picture, 'recipes/' . $id, ['width' => 1500, 'height' => 500]);
-            if ($path !== null) {
+            if ($path !== false) {
                 $recipe->picture = $id;
             }
-            $this->picture = false;
-            $this->actpicture = $this->getImage('recipes/' . $recipe->picture);
+            $this->picture = null;
+            $this->actpicture = $this->getImage('recipes/' . $recipe->picture) ?: null;
         }
         $recipe->save();
 
@@ -109,7 +109,7 @@ class Edit extends Component
 
     public function updatePicture()
     {
-        $this->validate(['picture' => ['integer', 'mimes:jpg,jpeg,png']]);
+        $this->validate(['picture' => ['nullable', 'mimes:jpg,jpeg,png']]);
     }
 
     public function deletePicture()
@@ -122,6 +122,7 @@ class Edit extends Component
             $this->recipe->save();
         }
 
-        $this->picture = false;
+        $this->picture = null;
+        $this->actpicture = null;
     }
 }

@@ -25,7 +25,7 @@
                 {{ __('Select a picture') }}
             </x-button>
 
-            @isset($recipe)
+            @isset($actpicture)
                 <x-button class="mt-2" secondary wire:click="deletePicture">
                     {{ __('Remove picture') }}
                 </x-button>

@@ -18,7 +18,7 @@ class Create extends Component
     use HasImage;
 
     public $name = null;
-    public $picture = false;
+    public $picture = null;
     public $category = null;
     public $cooked = false;
     public $source = null;
@@ -26,7 +26,7 @@ class Create extends Component
     public $time = null;
     public $description = null;
     public $active = false;
-    public $actpicture = false;
+    public $actpicture = null;
 
     public function render()
     {
