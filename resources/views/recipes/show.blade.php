@@ -131,11 +131,21 @@
                     </div>
                 @endforeach
             </div>
-            @if ($recipe->source)
-                <div class="mt-4 text-sm text-gray-500">
-                    {{ __('Source:') }} {{ $recipe->source }}
+            <div class="mt-4 flex justify-between gap-4 text-sm text-gray-500">
+                <div>
+                    @if ($recipe->source)
+                        {{ __('Source:') }} {{ $recipe->source }}
+                    @endif
                 </div>
-            @endif
+                <div>
+                    {{ __('Last change:') }}
+                    {{ $updated_at }}
+                    @if ($updated_by)
+                        {{ __('by') }}
+                        {{ $updated_by }}
+                    @endif
+                </div>
+            </div>
         </div>
 
     </x-page-card>

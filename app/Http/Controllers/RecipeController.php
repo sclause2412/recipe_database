@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Files\HasImage;
 use App\Models\Recipe;
+use App\Models\User;
 
 class RecipeController extends Controller
 {
@@ -43,13 +44,18 @@ class RecipeController extends Controller
 
         $picture = $this->getImage('recipes/' . $recipe->picture);
 
+        $updated_at = $recipe->updated_at->timezone('Europe/Vienna')->isoFormat('LLLL');
+        $updated_by = User::where('id', $recipe->updated_by)->first()?->fullname;
+
         return view('recipes.show', [
             'recipe' => $recipe,
             'ingredients' => $ingredients,
             'steps' => $steps,
             'comments' => $comments,
             'ingredient_list' => $ingredient_list,
-            'picture' => $picture
+            'picture' => $picture,
+            'updated_at' => $updated_at,
+            'updated_by' => $updated_by,
         ]);
     }
 

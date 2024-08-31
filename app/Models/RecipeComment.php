@@ -16,6 +16,7 @@ class RecipeComment extends Model
     use UserStamps;
     use HasUlids;
 
+    protected $touches = ['recipe'];
 
     public function recipe(): BelongsTo
     {

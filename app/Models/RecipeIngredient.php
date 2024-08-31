@@ -21,6 +21,8 @@ class RecipeIngredient extends Model
         'fix' => 'boolean',
     ];
 
+    protected $touches = ['recipe'];
+
     protected static function booted(): void
     {
         static::creating(function (RecipeIngredient $ingredient) {
