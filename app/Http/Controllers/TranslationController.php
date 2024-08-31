@@ -53,7 +53,7 @@ class TranslationController extends Controller
         $translations = Translation::whereNot('locale', $locale)->whereNotIn(
             'key',
             Translation::where('locale', $locale)->pluck('key')->toArray()
-        )->orderBy('key')->orderBy('done', 'desc')->groupBy(['group', 'key'])->select(['group', 'key'])->get();
+        )->orderBy('key')->groupBy(['group', 'key'])->select(['group', 'key'])->get();
         foreach ($translations as $entry) {
             $trans = new Translation();
             $trans->locale = $locale;
