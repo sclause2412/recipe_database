@@ -70,11 +70,7 @@
             <div class="mt-4">
                 <x-checkbox label="{{ __('Fraction') }}" wire:model="fraction">
                     <x-slot name="description">
-                        {!! str_replace(
-                            '1/4',
-                            '<span class="diagonal-fractions">1/4</span>',
-                            e(__('If this option is set the display of the recipe will try to convert numbers to fractions (e.g. 0.25 = 1/4)')),
-                        ) !!}
+                        {{ __('If this option is set the display of the recipe will try to convert numbers to fractions (e.g. 0.25 = ¼)') }}
                     </x-slot>
                 </x-checkbox>
             </div>

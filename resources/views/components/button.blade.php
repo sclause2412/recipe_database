@@ -66,6 +66,9 @@
         $iconSize = 'w-7 h-7';
     }
 
+    if($attributes->has('disabled') && $attributes->get('disabled') !== false)
+        $attributes= $attributes->except('href');
+
 @endphp
 @if ($show)
     @if ($circle)

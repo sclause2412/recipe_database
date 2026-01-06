@@ -36,11 +36,59 @@ class RecipeController extends Controller
      */
     public function show(Recipe $recipe)
     {
-        $ingredients = $recipe->ingredients->sortBy('sort');
-        $steps = $recipe->steps->sortBy('step');
-        $comments = $recipe->comments->sortBy('step');
+        $temp = request()->get('temp', 'C');
+        if ($temp != 'F') {
+            $temp = 'C';
+        }
+        $portions = request()->get('portions', 0);
+        if ($portions <= 0) {
+            $portions = $recipe->portions ?? 1;
+        }
+        $portions = floor($portions * 8) / 8;
+        if ($portions < 0.125) {
+            $portions = 0.125;
+        }
+        if ($portions > 10000) {
+            $portions = 10000;
+        }
 
-        $ingredient_list = $ingredients->pluck('ingredient.name', 'reference');
+        $factor = $portions / ($recipe->portions ?? 1);
+
+        $ingredients_db = $recipe->ingredients->sortBy('sort');
+        $ingredients = [];
+        $ingredient_list = [];
+        foreach ($ingredients_db as $ingredient) {
+            $amount = ($ingredient->amount ?? 0) * ($ingredient->fix ? 1 : $factor);
+            $ingredient_entry = [
+                'group' => $ingredient->group,
+                'amount' => $amount == 0 ? null : calculate_number($amount, $ingredient->unit?->fraction ?? false),
+                'unit' => calculate_unit($ingredient->unit?->unit, $amount),
+                'approximately' => $ingredient->approximately,
+                'reference' => $ingredient->reference,
+                'name' => $ingredient->ingredient?->name,
+                'info' => $ingredient->ingredient?->info,
+            ];
+            $ingredient_list[$ingredient->reference] = [
+                'amount' => $amount,
+                'unit' => $ingredient->unit,
+                'name' => $ingredient->ingredient?->name,
+            ];
+            array_push($ingredients, (object) $ingredient_entry);
+        }
+
+        $steps_db = $recipe->steps->sortBy('step');
+        $steps = [];
+        foreach ($steps_db as $step) {
+            $text = text_code_format($step->text, $ingredient_list, ['factor' => $factor, 'temp' => $temp]);
+            array_push($steps, $text);
+        }
+
+        $comments_db = $recipe->comments->sortBy('step');
+        $comments = [];
+        foreach ($comments_db as $comment) {
+            $text = text_code_format($comment->text, $ingredient_list, ['factor' => $factor, 'temp' => $temp]);
+            array_push($comments, $text);
+        }
 
         $picture = $this->getImage('recipes/' . $recipe->picture);
 
@@ -49,10 +97,11 @@ class RecipeController extends Controller
 
         return view('recipes.show', [
             'recipe' => $recipe,
+            'portions' => $portions,
+            'temp' => $temp,
             'ingredients' => $ingredients,
             'steps' => $steps,
             'comments' => $comments,
-            'ingredient_list' => $ingredient_list,
             'picture' => $picture,
             'updated_at' => $updated_at,
             'updated_by' => $updated_by,

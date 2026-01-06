@@ -10,29 +10,9 @@
         @endif
     </x-slot>
 
+
     <x-page-card>
-        <div x-data="{
-            portions: {{ $recipe->portions ?? 1 }},
-            portions_frac: {{ $recipe->portions ?? 1 }},
-            temp_type: 'C',
-            factor: 1,
-            init() {
-                $watch('portions', value => { this.recalculate() });
-                $watch('temp_type', value => { this.recalculate() });
-                $nextTick(() => { this.recalculate() });
-            },
-            recalculate() {
-                this.portions = Math.floor(this.portions * 8) / 8;
-                if (this.portions < 0.125)
-                    this.portions = 0.125;
-                if (this.portions > 10000)
-                    this.portions = 10000;
-                this.factor = this.portions / {{ $recipe->portions ?? 1 }};
-                this.portions_frac = calculate_fraction(this.portions);
-                $dispatch('update_ingredients');
-                $dispatch('update_numbers');
-            }
-        }">
+        <div>
             <h1 class="text-4xl font-bold">{{ $recipe->name }}</h1>
             <h2 class="text-xl font-bold">{{ $recipe->category?->name }}</h2>
             @if ($picture)
@@ -40,21 +20,18 @@
                         class="h-80 w-auto rounded-md object-cover print:h-auto print:w-full"
                         src="{{ $picture }}"></div>
             @endif
-            <div class="mt-2">{{ __('Portions:') }} <span x-html="portions_frac"></span>
+            <div class="mt-2">{{ __('Portions:') }} <span>{{ calculate_fraction($portions) }}</span>
                 <div class="ml-8 inline-block print:hidden">
-                    <x-button secondary sm x-bind:disabled="portions <= 0.125"
-                        x-on:click="portions = portions / 2"><span class="diagonal-fractions">1/2</span></x-button>
-                    <x-button secondary sm x-bind:disabled="portions <= 1" x-on:click="portions--">-1</x-button>
-                    <x-button secondary sm x-on:click="portions++">+1</x-button>
-                    <x-button secondary sm x-on:click="portions = portions * 2">&times;2</x-button>
+                    <x-button secondary sm :disabled="$portions <= 0.125" :href="url_with_query_string(['portions' => $portions / 2])">½</x-button>
+                    <x-button secondary sm :disabled="$portions <= 1" :href="url_with_query_string(['portions' => $portions - 1])">-1</x-button>
+                    <x-button secondary sm :href="url_with_query_string(['portions' => $portions + 1])">+1</x-button>
+                    <x-button secondary sm :href="url_with_query_string(['portions' => $portions * 2])">&times;2</x-button>
                 </div>
             </div>
             <div class="">{{ __('Time:') }} {{ calculate_time($recipe->time) }}</div>
             <div class="mt-2 print:hidden">
-                <x-button icon="thermometer" sm x-bind:disabled="temp_type == 'C'"
-                    x-on:click="temp_type = 'C'">°C</x-button>
-                <x-button icon="thermometer" sm x-bind:disabled="temp_type == 'F'"
-                    x-on:click="temp_type = 'F'">°F</x-button>
+                <x-button icon="thermometer" sm :disabled="$temp == 'C'" :href="url_with_query_string(['temp' => 'C'])">°C</x-button>
+                <x-button icon="thermometer" sm :disabled="$temp == 'F'" :href="url_with_query_string(['temp' => 'F'])">°F</x-button>
             </div>
             <div
                 class="flex flex-row flex-wrap items-stretch divide-y-2 divide-dotted divide-gray-400 dark:divide-gray-600 sm:flex-nowrap sm:divide-x-2 sm:divide-y-0">
@@ -74,37 +51,21 @@
                                     </td>
                                 </tr>
                             @endif
-                            <tr x-data="{
-                                amount: {{ $ingredient->amount ?? 0 }},
-                                unit: '{{ $ingredient->unit?->unit }}',
-                                fix: {{ $ingredient->fix ? 'true' : 'false' }},
-                                fraction: {{ $ingredient->unit?->fraction ? 'true' : 'false' }},
-                                amount_out: {{ $ingredient->amount ?? 0 }},
-                                unit_out: '',
-                                update() {
-                                    if (this.fix)
-                                        var amount = this.amount;
-                                    else
-                                        var amount = this.amount * this.factor;
-                                    this.amount_out = calculate_number(amount, this.fraction);
-                                    this.unit_out = calculate_unit(this.unit, amount);
-                                }
-                            }" x-on:update_ingredients.window="update()">
+                            <tr>
                                 @if (is_null($ingredient->amount))
                                     <td class="pb-1 pr-4 align-top" colspan="2">
-                                        <span x-html="unit_out"></span>
+                                        <span>{{ $ingredient->unit }}</span>
                                     </td>
                                 @else
                                     <td class="whitespace-nowrap pb-1 pr-1 text-right align-top">
-                                        {{ $ingredient->approximately ? __('appr.') : '' }} <span
-                                            x-html="amount_out"></span>
+                                        {{ $ingredient->approximately ? __('appr.') : '' }} <span>{{ $ingredient->amount }}</span>
                                     </td>
                                     <td class="pb-1 pr-4 align-top">
-                                        <span x-html="unit_out"></span>
+                                        <span>{{ $ingredient->unit }}</span>
                                     </td>
                                 @endif
                                 <td class="pb-1 align-top"><span class="ingredient transition-colors"
-                                        x-orig="{{ $ingredient->reference }}">{{ $ingredient->ingredient?->name }}{{ is_null($ingredient->ingredient?->info) ? '' : ' (' . $ingredient->ingredient?->info . ')' }}</span>
+                                        x-orig="{{ $ingredient->reference }}">{{ $ingredient->name }}{{ wrap_if_not_null($ingredient->info,' (',')') }}</span>
                                 </td>
                             </tr>
                         @endforeach
@@ -113,9 +74,9 @@
                 <div class="divide-y divide-gray-400 pb-4 pt-8 dark:divide-gray-600 sm:pl-4 sm:pt-0">
                     @foreach ($steps as $step)
                         <div class="flex break-inside-avoid gap-4 py-2">
-                            <div class="text-4xl text-gray-400 dark:text-gray-600">{{ $step->step }}</div>
+                            <div class="text-4xl text-gray-400 dark:text-gray-600 w-12">{{ $loop->iteration }}</div>
                             <div>
-                                {!! text_code_format($step->text, $ingredient_list) !!}
+                                {!! $step !!}
                             </div>
                         </div>
                     @endforeach
@@ -126,7 +87,7 @@
                 @foreach ($comments as $comment)
                     <div class="py-2">
                         <div>
-                            {!! text_code_format($comment->text, $ingredient_list) !!}
+                            {!! $comment !!}
                         </div>
                     </div>
                 @endforeach

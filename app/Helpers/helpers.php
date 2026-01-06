@@ -3,15 +3,16 @@
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\View\ComponentSlot;
 
 if (!function_exists('backorgo')) {
     function backorgo($url): RedirectResponse
     {
         // request()->fullUrl() reorders query parameters, therefore it is not reliable to get the correct comparison
         // Url must be compared manually
-
 
         if (request()->method() == 'GET') {
             $back = parse_url(back()->getTargetUrl());
@@ -36,7 +37,7 @@ if (!function_exists('backorhome')) {
 }
 
 if (!function_exists('user_icon_color')) {
-    function user_icon_color(\App\Models\User $user)
+    function user_icon_color(User $user)
     {
         if (is_null($user)) {
             return 'text-gray-800 dark:text-gray-200';
@@ -81,7 +82,7 @@ if (!function_exists('from_array')) {
 }
 
 if (!function_exists('is_user')) {
-    function is_user(User $user = null)
+    function is_user(?User $user = null)
     {
         if (is_null($user)) {
             $user = Auth::user();
@@ -96,7 +97,7 @@ if (!function_exists('is_user')) {
 }
 
 if (!function_exists('is_admin')) {
-    function is_admin(User $user = null)
+    function is_admin(?User $user = null)
     {
         if (is_null($user)) {
             $user = Auth::user();
@@ -115,7 +116,7 @@ if (!function_exists('is_admin')) {
 }
 
 if (!function_exists('is_last_admin')) {
-    function is_last_admin(User $user = null)
+    function is_last_admin(?User $user = null)
     {
         if (is_null($user)) {
             $user = Auth::user();
@@ -138,7 +139,7 @@ if (!function_exists('is_last_admin')) {
 }
 
 if (!function_exists('is_elevated')) {
-    function is_elevated(User $user = null)
+    function is_elevated(?User $user = null)
     {
         if (is_null($user)) {
             $user = Auth::user();
@@ -161,7 +162,6 @@ if (!function_exists('is_elevated')) {
 }
 
 if (!function_exists('random_float')) {
-
     function random_float($min, $max)
     {
         return random_int($min * 10000, $max * 10000) / 10000;
@@ -169,9 +169,8 @@ if (!function_exists('random_float')) {
 }
 
 if (!function_exists('HSVtoRGB')) {
-
     /**
-     * Convert HSV color to RGB
+     * Convert HSV color to RGB.
      *
      * This function converts colors in HSV format to RGB format. The calculation
      * is described at https://en.wikipedia.org/wiki/HSL_and_HSV
@@ -184,9 +183,7 @@ if (!function_exists('HSVtoRGB')) {
      *
      * @return array Returns an array of the red, green and blue component of the
      *               color. The range is from 0 to 255.
-     *
      */
-
     function HSVtoRGB($iH, $iS = 0, $iV = 0)
     {
         if (is_array($iH)) {
@@ -268,22 +265,19 @@ if (!function_exists('HSVtoRGB')) {
     }
 }
 
-
 if (!function_exists('RGBtoHEX')) {
-
     /**
-     * Prints a RGB number as hex value valid for HTML
+     * Prints a RGB number as hex value valid for HTML.
      *
-     * @param int|array $iR The red value in the range from 0 to 255. Instead of a
+     * @param array|int $iR The red value in the range from 0 to 255. Instead of a
      *                      single value an array holding all parameters at once can
      *                      be used.
-     * @param int $iG The green value in the range from 0 to 255.
-     * @param int $iB The blue value in the range from 0 to 255.
-     * @param string $sP Optional. The Prefix. Default: #
+     * @param int       $iG the green value in the range from 0 to 255
+     * @param int       $iB the blue value in the range from 0 to 255
+     * @param string    $sP Optional. The Prefix. Default: #
      *
      * @return string
      */
-
     function RGBtoHEX($iR, $iG = 0, $iB = 0, $sP = '#')
     {
         if (is_array($iR)) {
@@ -330,7 +324,7 @@ if (!function_exists('replace_umlaut')) {
             'ß',
             'Ä',
             'Ö',
-            'Ü'
+            'Ü',
         ], [
             'ae',
             'oe',
@@ -338,16 +332,16 @@ if (!function_exists('replace_umlaut')) {
             'ss',
             'Ae',
             'Oe',
-            'Ue'
+            'Ue',
         ], $text ?? '');
     }
 }
 
 if (!function_exists('check_rights')) {
-    function check_rights($rights, $write, Project $project = null, User $user = null)
+    function check_rights($rights, $write, ?Project $project = null, ?User $user = null)
     {
         if (is_null($user)) {
-            /** @var $user \App\Models\User */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
         }
         if (is_null($user)) {
@@ -360,31 +354,31 @@ if (!function_exists('check_rights')) {
 
         if ($write) {
             return $user->can_write($rights, $project);
-        } else {
-            return $user->can_read($rights, $project);
         }
+
+        return $user->can_read($rights, $project);
     }
 }
 
 if (!function_exists('check_read')) {
-    function check_read($rights, Project $project = null, User $user = null)
+    function check_read($rights, ?Project $project = null, ?User $user = null)
     {
         return check_rights($rights, false, $project, $user);
     }
 }
 
 if (!function_exists('check_write')) {
-    function check_write($rights, Project $project = null, User $user = null)
+    function check_write($rights, ?Project $project = null, ?User $user = null)
     {
         return check_rights($rights, true, $project, $user);
     }
 }
 
 if (!function_exists('has_project')) {
-    function has_project(Project $project = null, User $user = null)
+    function has_project(?Project $project = null, ?User $user = null)
     {
         if (is_null($user)) {
-            /** @var $user \App\Models\User */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
         }
         if (is_null($user)) {
@@ -392,6 +386,20 @@ if (!function_exists('has_project')) {
         }
 
         return $user->has_project($project);
+    }
+}
+
+if (!function_exists('url_with_query_string')) {
+    function url_with_query_string($attributes = [])
+    {
+        $query = array_merge(request()->query(), $attributes);
+        $url = url()->current();
+
+        if (count($query) > 0) {
+            $url .= '?' . Arr::query($query);
+        }
+
+        return $url;
     }
 }
 
@@ -403,9 +411,8 @@ if (!function_exists('text_format')) {
         $text = preg_replace_callback('/\[([^\|\]]*)\|?(.*)\]/', fn ($m) => '<a href="' . $m[1] . '">' . (empty($m[2]) ? $m[1] : $m[2]) . '</a>', $text);
         $text = str_replace('<a href=', '<a class="inline-flex items-center underline hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 text-gray-600 dark:text-gray-400" href=', $text);
         $text = trim($text);
-        $text = nl2br($text);
 
-        return $text;
+        return nl2br($text);
     }
 }
 
@@ -445,7 +452,6 @@ if (!function_exists('text_code_hint')) {
         $hint .= Blade::render('<x-link route="textcode" target="_blank">' . e(__('For more information click here')) . '</x-link>');
         $hint .= '</p>';
 
-
         return $hint;
     }
 }
@@ -453,7 +459,7 @@ if (!function_exists('text_code_hint')) {
 if (!function_exists('text_code_icons')) {
     function text_code_icons()
     {
-        $icons = [
+        return [
             // Thermomix
             'tm5',
             'tm6',
@@ -594,15 +600,13 @@ if (!function_exists('text_code_icons')) {
             'storefront',
             'wallet',
         ];
-
-        return $icons;
     }
 }
 
 if (!function_exists('text_code_colors')) {
     function text_code_colors()
     {
-        $colors = [
+        return [
             'gray' => 'text-gray-500',
             'red' => 'text-red-500',
             'orange' => 'text-orange-500',
@@ -621,16 +625,19 @@ if (!function_exists('text_code_colors')) {
             'pink' => 'text-pink-500',
             'rose' => 'text-rose-500',
         ];
-
-        return $colors;
     }
 }
 
 if (!function_exists('text_code_format')) {
-    function text_code_format($text, $ingredients = [], $preview = false)
+    function text_code_format($text, $ingredients = [], $options = [])
     {
+        $preview = $options['preview'] ?? false;
+        $factor = $options['factor'] ?? 1;
+        $temp = $options['temp'] ?? 'C';
+
         $text = e($text);
 
+        // Thermomix instructions
         $text = preg_replace_callback('/~(?:(\d+(?:-\d+)?M?)(?:\/(\d+|V))?\/)?(-?[0-9DS\.]+)~/', function ($matches) {
             $time = $matches[1];
             $temp = $matches[2];
@@ -802,36 +809,38 @@ if (!function_exists('text_code_format')) {
                         array_push($text, $text_speed . ' ' . $s);
                     }
                 }
-
             }
 
             $text = implode('/', $text);
             if ($text != '') {
                 $text = '<span class="thermomix font-bold">' . $text . '</span>';
             }
+
             return $text;
         }, $text);
 
+        // Ingredients
         $text = preg_replace_callback('/\[([a-z]+\d+)\]/', function ($matches) use ($ingredients, $preview) {
             $i = $matches[1];
             $text = $i;
             if (isset($ingredients[$i])) {
-                $text = $ingredients[$i];
+                $text = $ingredients[$i]['name'];
             }
 
             if ($preview) {
                 return '<span class="bg-green-200 dark:bg-green-800">' . $text . ' (' . $i . ')</span>';
             }
+
             return '<span class="ingredient transition-colors" x-orig="' . $i . '">' . $text . '</span>';
         }, $text);
 
         $text = trim($text);
         $text = nl2br($text);
 
+        // Colors
         $colors = text_code_colors();
         $spans = 0;
         $text = preg_replace_callback('/\{([a-z]+|-)\}/', function ($matches) use ($colors, &$spans) {
-
             $text = '';
             if ($matches[1] == '-') {
                 $text = str_repeat('</span>', $spans);
@@ -845,73 +854,66 @@ if (!function_exists('text_code_format')) {
             }
 
             return $text;
-
         }, $text);
 
-        $text = preg_replace_callback('/\[T(-?\d+?)\]/', function ($matches) use ($preview) {
+        // Temperatures
+        $text = preg_replace_callback('/\[T(-?\d+?)\]/', function ($matches) use ($preview, $temp) {
             $t = intval($matches[1]);
 
             if ($preview) {
                 return '<span class="bg-blue-200 dark:bg-blue-800">' . $t . '°C</span>';
             }
 
-            return '<span x-data="{
-                    temp: ' . $t . ',
-                    temp_out: ' . $t . ',
-                    update() {
-                        if(this.temp_type == \'F\')
-                            this.temp_out = calculate_round(this.temp * 9 / 5 + 32, -1) + \'°F\';
-                        else
-                            this.temp_out = calculate_round(this.temp, 0) + \'°C\';
-                    }
-                }" x-on:update_numbers.window="update()" x-html="temp_out"></span>';
-        }, $text);
-
-        $text = preg_replace_callback('/\[(\d+(?:\.\d+)?(!?))\]/', function ($matches) use ($preview) {
-            $n = floatval($matches[1]);
-            if ($preview) {
-                return '<span class="' . ($matches[2] == '!' ? 'bg-red-200 dark:bg-red-800' : 'bg-yellow-200 dark:bg-yellow-800') . '">' . $n . '</span>';
+            if ($temp == 'F') {
+                $text = calculate_round($t * 9 / 5 + 32, -1) . '°F';
+            } else {
+                $text = calculate_round($t, 0) . '°C';
             }
 
-            return '<span x-data="{
-                    num: ' . $n . ',
-                    num_out: ' . $n . ',
-                    fix: ' . ($matches[2] == '!' ? 'true' : 'false') . ',
-                    update() {
-                        if(this.fix)
-                            this.num_out = calculate_round(this.num,\'A\');
-                        else
-                            this.num_out = calculate_round(this.num * this.factor, \'A\');
-                    }
-                }" x-on:update_numbers.window="update()" x-html="num_out"></span>';
+            return $text;
         }, $text);
 
-        $text = preg_replace_callback('/\[(\d+)\/(\d+)(!?)\]/', function ($matches) use ($preview) {
+        // Numbers
+        $text = preg_replace_callback('/\[(\d+(?:\.\d+)?(!?))\]/', function ($matches) use ($preview, $factor) {
+            $n = floatval($matches[1]);
+            $fix = $matches[2] == '!';
+            if ($preview) {
+                return '<span class="' . ($fix ? 'bg-red-200 dark:bg-red-800' : 'bg-yellow-200 dark:bg-yellow-800') . '">' . $n . '</span>';
+            }
+
+            if (!$fix) {
+                $n *= $factor;
+            }
+
+            return calculate_round($n, 'A');
+        }, $text);
+
+        // Fraction numbers
+        $text = preg_replace_callback('/\[(\d+)\/(\d+)(!?)\]/', function ($matches) use ($preview, $factor) {
             $n1 = intval($matches[1]);
             $n2 = intval($matches[2]);
             if ($n2 == 0) {
                 return '0';
             }
 
+            $fix = $matches[3] == '!';
+
             if ($preview) {
-                return '<span class="diagonal-fractions ' . ($matches[3] == '!' ? 'bg-red-200 dark:bg-red-800' : 'bg-yellow-200 dark:bg-yellow-800') . '">' . $n1 . '/' . $n2 . '</span>';
+                return '<span class="' . ($fix ? 'bg-red-200 dark:bg-red-800' : 'bg-yellow-200 dark:bg-yellow-800') . '">' . $n1 . '/' . $n2 . ' (' . calculate_fraction($n1 / $n2) . ')</span>';
             }
 
-            return '<span x-data="{
-                    num: ' . ($n1 / $n2) . ',
-                    num_out: ' . ($n1 / $n2) . ',
-                    fix: ' . ($matches[3] == '!' ? 'true' : 'false') . ',
-                    update() {
-                        if(this.fix)
-                            this.num_out = calculate_fraction(this.num);
-                        else
-                            this.num_out = calculate_fraction(this.num * this.factor);
-                    }
-                }" x-on:update_numbers.window="update()" x-html="num_out"></span>';
+            $n = $n1 / $n2;
+
+            if (!$fix) {
+                $n *= $factor;
+            }
+
+            return calculate_fraction($n);
         }, $text);
 
+        // Icons
         $icons = text_code_icons();
-        $text = preg_replace_callback('/:([a-z-]+):/', function ($matches) use ($icons) {
+        $text = preg_replace_callback('/:([a-z-]+\d?):/', function ($matches) use ($icons) {
 
             if (in_array($matches[1], $icons)) {
                 $key = 'recipe-icon-cache-' . $matches[1];
@@ -920,6 +922,7 @@ if (!function_exists('text_code_format')) {
                     $icon = Blade::render('<x-recipe-icon  name="' . $matches[1] . '" />');
                     cache([$key => $icon], 3600);
                 }
+
                 return $icon;
             }
 
@@ -941,12 +944,163 @@ if (!function_exists('calculate_time')) {
         if ($m) {
             array_push($t2, $m . ' ' . __('minutes'));
         }
+
         return implode(' ', $t2);
     }
 }
 
+if (!function_exists('calculate_number')) {
+    function calculate_number($v, $frac)
+    {
+        if ($frac) {
+            return calculate_fraction($v);
+        }
+
+        return calculate_round($v, 'A');
+    }
+}
+
+if (!function_exists('calculate_fraction')) {
+    function calculate_fraction($v)
+    {
+        if ($v == 0) {
+            return '0';
+        }
+
+        $f1 = floor($v);
+        $f2 = $v - $f1;
+
+        $a = ['⅛', '¼', '⅜', '½', '⅝', '¾', '⅞'];
+        $b = ['⅓', '⅔'];
+
+        if ($f2 == 0) {
+            return $f1;
+        }
+
+        $r = '';
+        if ($f1 > 0) {
+            $r = $f1 . ' ';
+        }
+
+        $f3 = round($f2 * 8, 4); // avoid errors in decimal place 5 and up (e.g. 0.33333 can be seen as 1/3 even if not 100% exact)
+        if ($f3 > 0 && $f3 == floor($f3)) {
+            return $r . $a[$f3 - 1];
+        }
+
+        $f3 = round($f2 * 3, 4);
+        if ($f3 > 0 && $f3 == floor($f3)) {
+            return $r . $b[$f3 - 1];
+        }
+
+        return calculate_round($v, 'A');
+    }
+}
+
+if (!function_exists('calculate_round')) {
+    function calculate_round($v, $d)
+    {
+        if ($v == 0) {
+            return 0;
+        }
+
+        $min = 0;
+
+        if ($d == 'A') {
+            $d = 2;
+            if ($v > 1) {
+                $d = 1;
+            }
+            if ($v > 10) {
+                $d = 0;
+            }
+            $min = 0.01;
+        }
+
+        $v = round($v, $d);
+
+        if ($v == 0) {
+            $v = $min;
+        }
+
+        $ret = number_format($v, 2, ',', '.');
+        if (str_ends_with($ret, '0')) {
+            $ret = substr($ret, 0, -1);
+        }
+        if (str_ends_with($ret, ',0')) {
+            $ret = substr($ret, 0, -2);
+        }
+
+        return $ret;
+    }
+}
+
+if (!function_exists('calculate_unit')) {
+    function calculate_unit($rule, $amount)
+    {
+        if (!str_starts_with($rule, '[')) {
+            return $rule;
+        }
+
+        $amount = abs($amount);
+
+        $foundunit = null;
+        if (preg_match_all('/\[([<=>]*)([\.\d]+)\]([^\[]+)/', $rule, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $cond = $match[1];
+                $value = $match[2];
+                $unit = $match[3];
+
+                $cs = false; // smaller
+                $ce = false; // equal
+                $cg = false; // greater
+                if ($cond == '') {
+                    $ce = true;
+                } else {
+                    if (strpos($cond, '<') !== false) {
+                        $cs = true;
+                    }
+                    if (strpos($cond, '=') !== false) {
+                        $ce = true;
+                    }
+                    if (strpos($cond, '>') !== false) {
+                        $cg = true;
+                    }
+                }
+
+                if ($ce && $amount == $value) {
+                    return $unit;
+                }
+                if ($cs && $amount < $value) {
+                    $foundunit = $unit;
+                }
+                if ($cg && $amount > $value) {
+                    $foundunit = $unit;
+                }
+            }
+        }
+
+        if ($foundunit != null) {
+            return $foundunit;
+        }
+
+        $p = strrpos($rule, ']');
+        if ($p === false) {
+            return '!!! ' + $rule + ' !!!';
+        }
+
+        return substr($rule, $p + 1);
+    }
+}
+
+if (!function_exists('wrap_if_not_null')) {
+    function wrap_if_not_null($value, string $prepend = '', string $append = ''): ?string
+    {
+        return $value !== null ? $prepend . $value . $append : null;
+    }
+}
+
 if (!function_exists('IsSlotEmpty')) {
-    function IsSlotEmpty(\Illuminate\View\ComponentSlot $slot): bool
+    function IsSlotEmpty(ComponentSlot $slot): bool
     {
         if ($slot->isEmpty()) {
             return true;
@@ -968,9 +1122,9 @@ if (!function_exists('IsSlotEmpty')) {
 if (!function_exists('default_colors')) {
     function default_colors()
     {
-        //Based on the Web colors of CSS3
+        // Based on the Web colors of CSS3
         return [
-            //Gray and black
+            // Gray and black
             ['name' => __('colors.Black'), 'value' => '#000000'],
             ['name' => __('colors.DarkSlateGray'), 'value' => '#2f4f4f'],
             ['name' => __('colors.DimGray'), 'value' => '#696969'],
@@ -981,7 +1135,7 @@ if (!function_exists('default_colors')) {
             ['name' => __('colors.Silver'), 'value' => '#c0c0c0'],
             ['name' => __('colors.LightGray'), 'value' => '#d3d3d3'],
             ['name' => __('colors.Gainsboro'), 'value' => '#dcdcdc'],
-            //White
+            // White
             ['name' => __('colors.MistyRose'), 'value' => '#ffe4e1'],
             ['name' => __('colors.AntiqueWhite'), 'value' => '#faebd7'],
             ['name' => __('colors.Linen'), 'value' => '#faf0e6'],
@@ -999,7 +1153,7 @@ if (!function_exists('default_colors')) {
             ['name' => __('colors.Snow'), 'value' => '#fffafa'],
             ['name' => __('colors.Ivory'), 'value' => '#fffff0'],
             ['name' => __('colors.White'), 'value' => '#ffffff'],
-            //Red
+            // Red
             ['name' => __('colors.DarkRed'), 'value' => '#8b0000'],
             ['name' => __('colors.Red'), 'value' => '#ff0000'],
             ['name' => __('colors.Firebrick'), 'value' => '#b22222'],
@@ -1009,13 +1163,13 @@ if (!function_exists('default_colors')) {
             ['name' => __('colors.Salmon'), 'value' => '#fa8072'],
             ['name' => __('colors.DarkSalmon'), 'value' => '#e9967a'],
             ['name' => __('colors.LightSalmon'), 'value' => '#ffa07a'],
-            //Orange
+            // Orange
             ['name' => __('colors.OrangeRed'), 'value' => '#ff4500'],
             ['name' => __('colors.Tomato'), 'value' => '#ff6347'],
             ['name' => __('colors.DarkOrange'), 'value' => '#ff8c00'],
             ['name' => __('colors.Coral'), 'value' => '#ff7f50'],
             ['name' => __('colors.Orange'), 'value' => '#ffa500'],
-            //Yellow
+            // Yellow
             ['name' => __('colors.DarkKhaki'), 'value' => '#bdb76b'],
             ['name' => __('colors.Gold'), 'value' => '#ffd700'],
             ['name' => __('colors.Khaki'), 'value' => '#f0e68c'],
@@ -1027,7 +1181,7 @@ if (!function_exists('default_colors')) {
             ['name' => __('colors.LightGoldenrodYellow'), 'value' => '#fafad2'],
             ['name' => __('colors.LemonChiffon'), 'value' => '#fffacd'],
             ['name' => __('colors.LightYellow'), 'value' => '#ffffe0'],
-            //Brown
+            // Brown
             ['name' => __('colors.Maroon'), 'value' => '#800000'],
             ['name' => __('colors.Brown'), 'value' => '#a52a2a'],
             ['name' => __('colors.SaddleBrown'), 'value' => '#8b4513'],
@@ -1045,14 +1199,14 @@ if (!function_exists('default_colors')) {
             ['name' => __('colors.Bisque'), 'value' => '#ffe4c4'],
             ['name' => __('colors.BlanchedAlmond'), 'value' => '#ffebcd'],
             ['name' => __('colors.Cornsilk'), 'value' => '#fff8dc'],
-            //Pink
+            // Pink
             ['name' => __('colors.MediumVioletRed'), 'value' => '#c71585'],
             ['name' => __('colors.DeepPink'), 'value' => '#ff1493'],
             ['name' => __('colors.PaleVioletRed'), 'value' => '#db7093'],
             ['name' => __('colors.HotPink'), 'value' => '#ff69b4'],
             ['name' => __('colors.LightPink'), 'value' => '#ffb6c1'],
             ['name' => __('colors.Pink'), 'value' => '#ffc0cb'],
-            //Purple
+            // Purple
             ['name' => __('colors.Indigo'), 'value' => '#4b0082'],
             ['name' => __('colors.Purple'), 'value' => '#800080'],
             ['name' => __('colors.DarkMagenta'), 'value' => '#8b008b'],
@@ -1071,7 +1225,7 @@ if (!function_exists('default_colors')) {
             ['name' => __('colors.Plum'), 'value' => '#dda0dd'],
             ['name' => __('colors.Thistle'), 'value' => '#d8bfd8'],
             ['name' => __('colors.Lavender'), 'value' => '#e6e6fa'],
-            //Blue
+            // Blue
             ['name' => __('colors.MidnightBlue'), 'value' => '#191970'],
             ['name' => __('colors.Navy'), 'value' => '#000080'],
             ['name' => __('colors.DarkBlue'), 'value' => '#00008b'],
@@ -1087,7 +1241,7 @@ if (!function_exists('default_colors')) {
             ['name' => __('colors.LightSteelBlue'), 'value' => '#b0c4de'],
             ['name' => __('colors.LightBlue'), 'value' => '#add8e6'],
             ['name' => __('colors.PowderBlue'), 'value' => '#b0e0e6'],
-            //Cyan
+            // Cyan
             ['name' => __('colors.Teal'), 'value' => '#008080'],
             ['name' => __('colors.DarkCyan'), 'value' => '#008b8b'],
             ['name' => __('colors.LightSeaGreen'), 'value' => '#20b2aa'],
@@ -1100,7 +1254,7 @@ if (!function_exists('default_colors')) {
             ['name' => __('colors.Aquamarine'), 'value' => '#7fffd4'],
             ['name' => __('colors.PaleTurquoise'), 'value' => '#afeeee'],
             ['name' => __('colors.LightCyan'), 'value' => '#e0ffff'],
-            //Green
+            // Green
             ['name' => __('colors.DarkGreen'), 'value' => '#006400'],
             ['name' => __('colors.Green'), 'value' => '#008000'],
             ['name' => __('colors.DarkOliveGreen'), 'value' => '#556b2f'],

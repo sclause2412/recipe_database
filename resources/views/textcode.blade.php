@@ -54,7 +54,7 @@
         <div class="grid grid-cols-4 gap-4">
             @foreach (text_code_icons() as $icon)
                 <div>
-                    <x-recipe-icon name="{{ $icon }}" /> {{ $icon }}
+                    {!! text_code_format(':'.$icon.': '.$icon) !!}
                 </div>
             @endforeach
         </div>
@@ -67,7 +67,7 @@
         <div>{{ __('Use {-} to switch off color') }}</div>
         <div class="grid grid-cols-4 gap-4">
             @foreach (text_code_colors() as $color => $css)
-                <div class="{{ $css }}">{{ $color }}</div>
+                {!! text_code_format('{'.$color.'}'.$color.'{-}') !!}
             @endforeach
         </div>
 

@@ -6,7 +6,7 @@
         </x-slot>
         @forelse ($comments as $comment)
             <x-table.row wire:loading.class.delay="opacity-50">
-                <x-table.cell>{!! text_code_format($comment->text, $ingredients, true) !!}</x-table.cell>
+                <x-table.cell>{!! $comment->text !!}</x-table.cell>
                 <x-table.cell buttons>
                     <x-button :disabled="$loop->first" icon="arrow-up" secondary title="{{ __('Up') }}"
                         wire:click="stepUp('{{ $comment->id }}')" />

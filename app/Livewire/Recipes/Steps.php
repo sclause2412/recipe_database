@@ -15,17 +15,33 @@ class Steps extends Component
     use WireUiActions;
 
     public $recipe;
-    public $rid = null;
-    public $text = null;
+    public $rid;
+    public $text;
 
     public function render()
     {
         $this->authorize('view', $this->recipe);
 
-        $steps = $this->recipe->steps()->orderBy('step');
-        $ingredients = $this->recipe->ingredients->pluck('ingredient.name', 'reference');
+        $ingredients = [];
+        foreach ($this->recipe->ingredients as $ingredient) {
+            $ingredients[$ingredient->reference] = [
+                'amount' => $ingredient->amount,
+                'unit' => $ingredient->unit,
+                'name' => $ingredient->ingredient?->name,
+            ];
+        }
 
-        return view('livewire.recipes.steps', ['steps' => $steps->get(), 'ingredients' => $ingredients]);
+        $steps_db = $this->recipe->steps()->orderBy('step')->get();
+        $steps = [];
+        foreach ($steps_db as $step) {
+            $step_entry = [
+                'id' => $step->id,
+                'text' => text_code_format($step->text, $ingredients, ['preview' => true]),
+            ];
+            array_push($steps, (object) $step_entry);
+        }
+
+        return view('livewire.recipes.steps', ['steps' => $steps]);
     }
 
     public function editStep(RecipeStep $step)
@@ -52,7 +68,6 @@ class Steps extends Component
             'text' => ['required', 'string'],
         ]);
 
-
         if (is_null($step)) {
             $step = new RecipeStep();
             $step->recipe_id = $this->recipe->id;
@@ -66,7 +81,6 @@ class Steps extends Component
         $this->text = null;
 
         $this->notification()->success(__('Step saved'), __('The step was successfully saved'));
-
     }
 
     public function deleteStep(RecipeStep $step)
@@ -116,8 +130,4 @@ class Steps extends Component
         $step->step++;
         $step->save();
     }
-
-
-
-
 }

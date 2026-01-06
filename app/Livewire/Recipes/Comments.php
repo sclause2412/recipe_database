@@ -15,17 +15,33 @@ class Comments extends Component
     use WireUiActions;
 
     public $recipe;
-    public $rid = null;
-    public $text = null;
+    public $rid;
+    public $text;
 
     public function render()
     {
         $this->authorize('view', $this->recipe);
 
-        $comments = $this->recipe->comments()->orderBy('step');
-        $ingredients = $this->recipe->ingredients->pluck('ingredient.name', 'reference');
+        $ingredients = [];
+        foreach ($this->recipe->ingredients as $ingredient) {
+            $ingredients[$ingredient->reference] = [
+                'amount' => $ingredient->amount,
+                'unit' => $ingredient->unit,
+                'name' => $ingredient->ingredient?->name,
+            ];
+        }
 
-        return view('livewire.recipes.comments', ['comments' => $comments->get(), 'ingredients' => $ingredients]);
+        $comments_db = $this->recipe->comments()->orderBy('step')->get();
+        $comments = [];
+        foreach ($comments_db as $comment) {
+            $comment_entry = [
+                'id' => $comment->id,
+                'text' => text_code_format($comment->text, $ingredients, ['preview' => true]),
+            ];
+            array_push($comments, (object) $comment_entry);
+        }
+
+        return view('livewire.recipes.comments', ['comments' => $comments]);
     }
 
     public function editComment(RecipeComment $comment)
@@ -52,7 +68,6 @@ class Comments extends Component
             'text' => ['required', 'string'],
         ]);
 
-
         if (is_null($comment)) {
             $comment = new RecipeComment();
             $comment->recipe_id = $this->recipe->id;
@@ -66,7 +81,6 @@ class Comments extends Component
         $this->text = null;
 
         $this->notification()->success(__('Comment saved'), __('The comment was successfully saved'));
-
     }
 
     public function deleteComment(RecipeComment $comment)
@@ -116,8 +130,4 @@ class Comments extends Component
         $comment->step++;
         $comment->save();
     }
-
-
-
-
 }
