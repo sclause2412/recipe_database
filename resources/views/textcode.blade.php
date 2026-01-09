@@ -52,7 +52,7 @@
 
         <x-slot name="title">{{ __('Icons') }}</x-slot>
         <div class="grid grid-cols-4 gap-4">
-            @foreach (text_code_icons() as $icon)
+            @foreach (collect(text_code_icons())->sort() as $icon)
                 <div>
                     {!! text_code_format(':'.$icon.': '.$icon) !!}
                 </div>

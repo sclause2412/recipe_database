@@ -9,6 +9,8 @@
                 </x-table.head>
                 <x-table.head :direction="$sort === 'description' ? $dir : null" sortable wire:click="sortBy('description')">{{ __('Description') }}
                 </x-table.head>
+                <x-table.head :direction="$sort === 'thermomix' ? $dir : null" sortable wire:click="sortBy('thermomix')">{{ __('Thermomix') }}
+                </x-table.head>
                 <x-table.head :direction="$sort === 'cooked' ? $dir : null" sortable wire:click="sortBy('cooked')">{{ __('Cooked') }}
                 </x-table.head>
                 @if (check_read('recipe'))
@@ -22,6 +24,7 @@
                     <x-table.cell class="align-top">{{ $recipe->name }}</x-table.cell>
                     <x-table.cell class="align-top">{{ $recipe->category?->name }}</x-table.cell>
                     <x-table.cell class="align-top">{!! text_format($recipe->description) !!}</x-table.cell>
+                    <x-table.cell class="align-top">{{ $recipe->thermomix ? __('Yes') : __('No') }}</x-table.cell>
                     <x-table.cell class="align-top">{{ $recipe->cooked ? __('Yes') : __('No') }}</x-table.cell>
                     @if (check_read('recipe'))
                         <x-table.cell class="align-top">{{ $recipe->active ? __('Yes') : __('No') }}</x-table.cell>

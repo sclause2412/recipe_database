@@ -23,4 +23,10 @@ class RecipeComment extends Model
         return $this->belongsTo(Recipe::class);
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function (RecipeComment $comment) {
+            $comment->recipe->calculateThermomix();
+        });
+    }
 }

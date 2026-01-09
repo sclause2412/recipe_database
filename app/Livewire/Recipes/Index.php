@@ -24,7 +24,7 @@ class Index extends Component
         } else {
             $this->dir = 'asc';
         }
-        $this->sort = in_array($field, ['name', 'category', 'description', 'cooked', 'active']) ? $field : 'name';
+        $this->sort = in_array($field, ['name', 'category', 'description', 'thermomix', 'cooked', 'active']) ? $field : 'name';
     }
 
     public function updatingSearch()
@@ -51,6 +51,7 @@ class Index extends Component
                 break;
             case 'active':
             case 'cooked':
+            case 'thermomix':
                 $recipes = $recipes->orderBy($this->sort, $this->dir == 'asc' ? 'desc' : 'asc');
                 break;
             default:

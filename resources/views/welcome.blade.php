@@ -21,12 +21,15 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ($category['recipes'] as $recipe)
                         <x-link class="no-underline" route="recipes.show,{{ $recipe->slug }}">
-                            <div class="w-full rounded-xl bg-gray-100 p-4 shadow-lg dark:bg-gray-900">
+                            <div class="w-full rounded-xl bg-gray-100 p-4 shadow-lg dark:bg-gray-900 flex flex-col">
                                 @if ($recipe->picture)
                                     <img class="mb-2 mt-0 h-auto w-full rounded-md object-cover"
                                         src="{{ $controller->getImage('recipes/' . $recipe->picture) }}">
                                 @endif
-                                <div>{{ $recipe->name }}</div>
+                                <div class="flex justify-between">
+                                    <div>{{ $recipe->name }}</div>
+                                    <div><x-recipe-icon.thermomix class="text-green-600 w-8 h-8" /></div>
+                                </div>
                             </div>
                         </x-link>
                     @endforeach

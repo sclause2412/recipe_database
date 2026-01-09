@@ -20,13 +20,19 @@
                         class="h-80 w-auto rounded-md object-cover print:h-auto print:w-full"
                         src="{{ $picture }}"></div>
             @endif
-            <div class="mt-2">{{ __('Portions:') }} <span>{{ calculate_fraction($portions) }}</span>
-                <div class="ml-8 inline-block print:hidden">
-                    <x-button secondary sm :disabled="$portions <= 0.125" :href="url_with_query_string(['portions' => $portions / 2])">½</x-button>
-                    <x-button secondary sm :disabled="$portions <= 1" :href="url_with_query_string(['portions' => $portions - 1])">-1</x-button>
-                    <x-button secondary sm :href="url_with_query_string(['portions' => $portions + 1])">+1</x-button>
-                    <x-button secondary sm :href="url_with_query_string(['portions' => $portions * 2])">&times;2</x-button>
+            @if($recipe->thermomix)
+            
+            @endif
+            <div class="mt-2 flex justify-between">
+                <div>{{ __('Portions:') }} <span>{{ calculate_fraction($portions) }}</span>
+                    <div class="ml-8 inline-block print:hidden">
+                        <x-button secondary sm :disabled="$portions <= 0.125" :href="url_with_query_string(['portions' => $portions / 2])">½</x-button>
+                        <x-button secondary sm :disabled="$portions <= 1" :href="url_with_query_string(['portions' => $portions - 1])">-1</x-button>
+                        <x-button secondary sm :href="url_with_query_string(['portions' => $portions + 1])">+1</x-button>
+                        <x-button secondary sm :href="url_with_query_string(['portions' => $portions * 2])">&times;2</x-button>
+                    </div>
                 </div>
+                <div><x-recipe-icon.thermomix class="w-8 h-8 text-green-600" /></div>
             </div>
             <div class="">{{ __('Time:') }} {{ calculate_time($recipe->time) }}</div>
             <div class="mt-2 print:hidden">

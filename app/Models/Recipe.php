@@ -23,6 +23,7 @@ class Recipe extends Model
     protected $casts = [
         'cooked' => 'boolean',
         'active' => 'boolean',
+        'thermomix' => 'boolean',
     ];
 
     public function getRouteKeyName(): string
@@ -48,5 +49,25 @@ class Recipe extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(RecipeComment::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Recipe $recipe) {
+            $recipe->calculateThermomix();
+        });
+    }
+
+    public function calculateThermomix(): void
+    {
+        $texts = $this->steps()->pluck('text')
+            ->merge($this->comments()->pluck('text'))
+            ->join(' ');
+        $thermomix = preg_match('/~(?:(\d+(?:-\d+)?M?)(?:\/(\d+|V))?\/)?(-?[0-9DS\.]+)~/', $texts) === 1;
+
+        if ($this->thermomix != $thermomix) {
+            $this->thermomix = $thermomix;
+            $this->save();
+        }
     }
 }

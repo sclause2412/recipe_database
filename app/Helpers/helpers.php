@@ -461,8 +461,10 @@ if (!function_exists('text_code_icons')) {
     {
         return [
             // Thermomix
+            'thermomix',
             'tm5',
             'tm6',
+            'tm7',
             'tm-dough',
             'tm-stir',
             'tm-rev',
