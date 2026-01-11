@@ -15,6 +15,7 @@ class Steps extends Component
     use WireUiActions;
 
     public $recipe;
+    public $editMode = false;
     public $rid;
     public $text;
 
@@ -44,10 +45,17 @@ class Steps extends Component
         return view('livewire.recipes.steps', ['steps' => $steps]);
     }
 
+    public function newStep(): void
+    {
+        $this->editMode = false;
+        $this->rid = null;
+    }
+
     public function editStep(RecipeStep $step)
     {
         $this->authorize('update', $this->recipe);
 
+        $this->editMode = true;
         $this->rid = $step->id;
         $this->text = $step->text;
     }
@@ -77,6 +85,7 @@ class Steps extends Component
         $step->text = $this->text;
         $step->save();
 
+        $this->editMode = false;
         $this->rid = null;
         $this->text = null;
 
@@ -90,6 +99,11 @@ class Steps extends Component
         foreach ($this->recipe->steps()->where('step', '>', $step->step)->get() as $row) {
             $row->step--;
             $row->save();
+        }
+
+        if ($step->id == $this->rid) {
+            $this->editMode = false;
+            $this->rid = null;
         }
 
         $step->delete();

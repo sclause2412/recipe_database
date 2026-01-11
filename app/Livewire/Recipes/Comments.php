@@ -15,6 +15,7 @@ class Comments extends Component
     use WireUiActions;
 
     public $recipe;
+    public $editMode = false;
     public $rid;
     public $text;
 
@@ -44,10 +45,17 @@ class Comments extends Component
         return view('livewire.recipes.comments', ['comments' => $comments]);
     }
 
+    public function newComment(): void
+    {
+        $this->editMode = false;
+        $this->rid = null;
+    }
+
     public function editComment(RecipeComment $comment)
     {
         $this->authorize('update', $this->recipe);
 
+        $this->editMode = true;
         $this->rid = $comment->id;
         $this->text = $comment->text;
     }
@@ -77,6 +85,7 @@ class Comments extends Component
         $comment->text = $this->text;
         $comment->save();
 
+        $this->editMode = false;
         $this->rid = null;
         $this->text = null;
 
@@ -90,6 +99,11 @@ class Comments extends Component
         foreach ($this->recipe->comments()->where('step', '>', $comment->step)->get() as $row) {
             $row->step--;
             $row->save();
+        }
+
+        if ($comment->id == $this->rid) {
+            $this->editMode = false;
+            $this->rid = null;
         }
 
         $comment->delete();

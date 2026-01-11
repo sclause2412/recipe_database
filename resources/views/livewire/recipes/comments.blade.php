@@ -26,13 +26,11 @@
         @endforelse
     </x-table>
 
-    <div x-data="{ edit: false }" x-init="$watch('$wire.rid', (value, ov) => edit = value != '');">
+    <div x-data="{ edit: $wire.entangle('editMode') }">
         <x-form wire:submit="saveComment">
 
             <div class="mb-2 text-lg font-medium" x-show="!edit">{{ __('Add comment') }}</div>
             <div class="mb-2 text-lg font-medium" x-cloak x-show="edit">{{ __('Edit comment') }}</div>
-
-            <input type="hidden" wire:model="rid" />
 
             <div class="">
                 <x-textarea required wire:model="text">
@@ -41,7 +39,7 @@
             </div>
 
             <div class="buttonrow mt-4">
-                <x-button icon="plus" secondary x-cloak x-on:click.prevent="$wire.rid=''" x-show="edit">
+                <x-button icon="plus" secondary x-cloak wire:click="newComment()" x-show="edit">
                     {{ __('New') }}
                 </x-button>
 
