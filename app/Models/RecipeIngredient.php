@@ -30,7 +30,7 @@ class RecipeIngredient extends Model
                 return;
             }
 
-            $reference = str_pad(substr(preg_replace('/[^a-z]/', '', replace_umlaut(strtolower($ingredient->ingredient?->name))), 0, 3), 3, 'x');
+            $reference = str_pad(substr(preg_replace('/[^a-z]/', '', replace_umlaut(strtolower(calculate_unit($ingredient->ingredient?->name, 1)))), 0, 3), 3, 'x');
             $i = 1;
             while ($ingredient->recipe?->ingredients()->where('reference', $reference . str_pad($i, 2, '0', STR_PAD_LEFT))->exists()) {
                 $i++;

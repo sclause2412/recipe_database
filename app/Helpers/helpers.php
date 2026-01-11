@@ -822,18 +822,30 @@ if (!function_exists('text_code_format')) {
         }, $text);
 
         // Ingredients
-        $text = preg_replace_callback('/\[([a-z]+\d+)\]/', function ($matches) use ($ingredients, $preview) {
-            $i = $matches[1];
-            $text = $i;
-            if (isset($ingredients[$i])) {
-                $text = $ingredients[$i]['name'];
+        $text = preg_replace_callback('/(\[?(\d+(?:\.\d+)?)(!?)(\]?) )?\[([a-z]+\d+)\]/', function ($matches) use ($ingredients, $preview, $factor) {
+            $ref = $matches[5];
+            $text = $ref;
+            if (isset($ingredients[$ref])) {
+                $num = $matches[2];
+                $fix = $matches[3] == '!';
+                $calc = $matches[4] == ']';
+                $ingredient = $ingredients[$ref];
+                $amount = $ingredient['amount'];
+                if (!is_null($ingredient['unit']))
+                    $amount = null;
+                if ($num != '') {
+                    $amount = floatval($num);
+                    if ($calc && !$fix)
+                        $amount *= $factor;
+                }
+                $text = calculate_unit($ingredient['name'], $amount);
             }
 
             if ($preview) {
-                return '<span class="bg-green-200 dark:bg-green-800">' . $text . ' (' . $i . ')</span>';
+                return $matches[1] . '<span class="bg-green-200 dark:bg-green-800">' . $text . ' (' . $ref . ')</span>';
             }
 
-            return '<span class="ingredient transition-colors" x-orig="' . $i . '">' . $text . '</span>';
+            return $matches[1] . '<span class="ingredient transition-colors" x-orig="' . $ref . '">' . $text . '</span>';
         }, $text);
 
         $text = trim($text);

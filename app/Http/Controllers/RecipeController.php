@@ -65,7 +65,7 @@ class RecipeController extends Controller
                 'unit' => calculate_unit($ingredient->unit?->unit, $amount),
                 'approximately' => $ingredient->approximately,
                 'reference' => $ingredient->reference,
-                'name' => $ingredient->ingredient?->name,
+                'name' => calculate_unit($ingredient->ingredient?->name, is_null($ingredient->unit) ? $amount : null),
                 'info' => $ingredient->ingredient?->info,
             ];
             $ingredient_list[$ingredient->reference] = [
