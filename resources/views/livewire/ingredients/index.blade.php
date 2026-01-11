@@ -5,14 +5,14 @@
     <x-table>
         <x-slot name="header">
             <x-table.head :direction="$sort === 'name' ? $dir : null" sortable wire:click="sortBy('name')">{{ __('Name') }}</x-table.head>
-            <x-table.head :direction="$sort === 'info' ? $dir : null" sortable wire:click="sortBy('info')">{{ __('Information') }}</x-table.head>
+            <x-table.head :direction="$sort === 'fraction' ? $dir : null" sortable wire:click="sortBy('fraction')">{{ __('Fraction') }}</x-table.head>
             <x-table.head :direction="$sort === 'recipes' ? $dir : null" sortable wire:click="sortBy('recipes')">{{ __('Recipes') }}</x-table.head>
             <x-table.head />
         </x-slot>
         @forelse ($ingredients as $ingredient)
             <x-table.row wire:loading.class.delay="opacity-50">
                 <x-table.cell>{{ $ingredient->name }}</x-table.cell>
-                <x-table.cell>{{ $ingredient->info }}</x-table.cell>
+                <x-table.cell>{{ $ingredient->fraction ? __('Yes') : __('No') }}</x-table.cell>
                 <x-table.cell>{{ $ingredient->recipes->count() }}</x-table.cell>
                 <x-table.cell buttons>
                     @if (check_write('recipe'))
@@ -47,7 +47,15 @@
             </div>
 
             <div class="mt-4">
-                <x-input label="{{ __('Information') }}" required wire:model="info" />
+                <x-checkbox label="{{ __('Fraction') }}" wire:model="fraction">
+                    <x-slot name="description">
+                        {!! str_replace(
+    '1/4',
+    '<span class="diagonal-fractions">1/4</span>',
+    e(__('If this option is set the display of the recipe will try to convert numbers to fractions (e.g. 0.25 = 1/4)')),
+) !!}
+                    </x-slot>
+                </x-checkbox>
             </div>
 
             <div class="buttonrow mt-4">

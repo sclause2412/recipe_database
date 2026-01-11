@@ -17,6 +17,10 @@ class Ingredient extends Model
     use UserStamps;
     use HasUlids;
 
+    protected $casts = [
+        'fraction' => 'boolean',
+    ];
+
 
     public function recipeingredients(): HasMany
     {

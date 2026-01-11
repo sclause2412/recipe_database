@@ -16,6 +16,7 @@ class Index extends Component
 
     public $rid = null;
     public $name = null;
+    public $fraction = false;
 
     public $search = '';
     public $sort;
@@ -31,7 +32,7 @@ class Index extends Component
         } else {
             $this->dir = 'asc';
         }
-        $this->sort = in_array($field, ['name', 'recipes']) ? $field : 'name';
+        $this->sort = in_array($field, ['name', 'fraction', 'recipes']) ? $field : 'name';
     }
 
     public function updatingSearch()
@@ -51,6 +52,9 @@ class Index extends Component
 
         switch ($this->sort) {
             case null:
+                break;
+            case 'fraction':
+                $ingredients = $ingredients->orderBy($this->sort, $this->dir == 'asc' ? 'desc' : 'asc');
                 break;
             case 'recipes':
                 break;
@@ -81,6 +85,7 @@ class Index extends Component
 
         $this->rid = $ingredient->id;
         $this->name = $ingredient->name;
+        $this->fraction = $ingredient->fraction;
     }
 
     public function saveIngredient()
@@ -92,6 +97,7 @@ class Index extends Component
 
         $this->rid = $this->cleanInput($this->rid);
         $this->name = $this->cleanInput($this->name);
+        $this->fraction = $this->cleanInput($this->fraction);
 
         $ingredient = null;
         if (!is_null($this->rid)) {
@@ -100,6 +106,7 @@ class Index extends Component
 
         $this->validate([
             'name' => ['required', 'string', 'max:255'],
+            'fraction' => ['boolean'],
         ]);
 
 
@@ -108,10 +115,12 @@ class Index extends Component
         }
 
         $ingredient->name = $this->name;
+        $ingredient->fraction = $this->fraction;
         $ingredient->save();
 
         $this->rid = null;
         $this->name = null;
+        $this->fraction = null;
 
         $this->notification()->success(__('Ingredient saved'), __('The ingredient was successfully saved'));
 
