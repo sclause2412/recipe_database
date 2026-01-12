@@ -28,7 +28,9 @@
                                 @endif
                                 <div class="flex justify-between">
                                     <div>{{ $recipe->name }}</div>
-                                    <div><x-recipe-icon.thermomix class="text-green-600 w-8 h-8" /></div>
+                                    @if($recipe->thermomix)
+                                        <div><x-recipe-icon.thermomix class="text-green-600 w-8 h-8" /></div>
+                                    @endif
                                 </div>
                             </div>
                         </x-link>
