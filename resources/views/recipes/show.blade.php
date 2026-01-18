@@ -2,7 +2,8 @@
     <x-slot name="title">{{ __('Recipe') }}</x-slot>
     <x-slot name="subtitle">{{ $recipe->name }}</x-slot>
     <x-slot name="nav">
-        <x-link route="recipes.index">{{ __('Recipes') }}</x-link> &gt; <x-link route="recipes.show,{{ $recipe->slug }}">
+        <x-link route="recipes.index">{{ __('Recipes') }}</x-link> &gt; <x-link
+            route="recipes.show,{{ $recipe->slug }}">
             {{ __('Details') }}</x-link>
         @if (check_write('recipe'))
             <x-link button class="ml-4" icon="pencil" route="recipes.edit,{{ $recipe->slug }}" sm>
@@ -15,18 +16,20 @@
         <div>
             <h1 class="text-4xl font-bold">{{ $recipe->name }}</h1>
             <h2 class="text-xl font-bold">{{ $recipe->category?->name }}</h2>
+            <div class="text-sm">{{ $recipe->description }}</div>
             @if ($picture)
                 <div class="mt-2 print:flex print:justify-center"><img
-                        class="h-80 w-auto rounded-md object-cover print:h-auto print:w-full"
-                        src="{{ $picture }}"></div>
+                        class="h-80 w-auto rounded-md object-cover print:h-auto print:w-full" src="{{ $picture }}"></div>
             @endif
             <div class="mt-2 flex justify-between">
                 <div>{{ __('Portions:') }} <span>{{ calculate_fraction($portions) }}</span>
                     <div class="ml-8 inline-block print:hidden">
                         <x-button secondary sm :disabled="$portions <= 0.125" :href="url_with_query_string(['portions' => $portions / 2])">½</x-button>
                         <x-button secondary sm :disabled="$portions <= 1" :href="url_with_query_string(['portions' => $portions - 1])">-1</x-button>
-                        <x-button secondary sm :href="url_with_query_string(['portions' => $portions + 1])">+1</x-button>
-                        <x-button secondary sm :href="url_with_query_string(['portions' => $portions * 2])">&times;2</x-button>
+                        <x-button secondary sm
+                            :href="url_with_query_string(['portions' => $portions + 1])">+1</x-button>
+                        <x-button secondary sm
+                            :href="url_with_query_string(['portions' => $portions * 2])">&times;2</x-button>
                     </div>
                 </div>
                 @if($recipe->thermomix)
@@ -63,14 +66,15 @@
                                     </td>
                                 @else
                                     <td class="whitespace-nowrap pb-1 pr-1 text-right align-top">
-                                        {{ $ingredient->approximately ? __('appr.') : '' }} <span>{{ $ingredient->amount }}</span>
+                                        {{ $ingredient->approximately ? __('appr.') : '' }}
+                                        <span>{{ $ingredient->amount }}</span>
                                     </td>
                                     <td class="pb-1 pr-4 align-top">
                                         <span>{{ $ingredient->unit }}</span>
                                     </td>
                                 @endif
                                 <td class="pb-1 align-top"><span class="ingredient transition-colors"
-                                        x-orig="{{ $ingredient->reference }}">{{ $ingredient->name }}{{ wrap_if_not_null($ingredient->info,' (',')') }}</span>
+                                        x-orig="{{ $ingredient->reference }}">{{ $ingredient->name }}{{ wrap_if_not_null($ingredient->info, ' (', ')') }}</span>
                                 </td>
                             </tr>
                         @endforeach
